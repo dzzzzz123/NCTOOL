@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysToolPocketMapper">
+
+    <resultMap type="SysToolPocket" id="SysToolPocketResult">
+        <result property="toolPocketId" column="tool_pocket_id"/>
+        <result property="toolId" column="toolId"/>
+        <result property="featName" column="feat_name"/>
+        <!--        <result property="parameter" column="parameter" javaType="java.util.List"-->
+        <!--                typeHandler="com.ruoyi.system.domain.SysToolPocket$ParameterTypeHandler"/>-->
+        <result property="parameter" column="parameter" jdbcType="JAVA_OBJECT"
+                javaType="com.ruoyi.system.domain.SysToolPocket$SysParameter"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+    </resultMap>
+
+    <sql id="selectSysToolPocketVo">
+        select tool_pocket_id, toolId, feat_name, parameter
+        from sys_tool_pocket
+    </sql>
+
+    <select id="selectSysToolPocketList" parameterType="SysToolPocket" resultMap="SysToolPocketResult">
+        <include refid="selectSysToolPocketVo"/>
+        <where>
+            <if test="toolId != null  and toolId != ''">and toolId = #{toolId}</if>
+            <if test="featName != null  and featName != ''">and feat_name like concat('%', #{featName}, '%')</if>
+            <if test="parameter != null  and parameter != ''">and parameter like concat('%', #{parameter}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectSysToolPocketByToolPocketId" parameterType="Long" resultMap="SysToolPocketResult">
+        <include refid="selectSysToolPocketVo"/>
+        where tool_pocket_id = #{toolPocketId}
+    </select>
+
+    <select id="getParameter" parameterType="string" resultMap="SysToolPocketResult">
+        <include refid="selectSysToolPocketVo"/>
+        where tool_pocket_id = #{toolPocketId}
+    </select>
+
+    <insert id="insertSysToolPocket" parameterType="sysToolPocketToSql">
+        insert into sys_tool_pocket
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="toolPocketId != null">tool_pocket_id,</if>
+            <if test="toolId != null and toolId != ''">toolId,</if>
+            <if test="featName != null and featName != ''">feat_name,</if>
+            <if test="parameter != null and parameter != ''">parameter,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="toolPocketId != null">#{toolPocketId},</if>
+            <if test="toolId != null and toolId != ''">#{toolId},</if>
+            <if test="featName != null and featName != ''">#{featName},</if>
+            <if test="parameter != null and parameter != ''">'{\"Coolant\": \"FLOOD\", \"FeedRate\": \"330\", \"PeckDepth\": \"1\", \"SpindelSpeed\": \"3424\"}',</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysToolPocket" parameterType="sysToolPocketToSql">
+        update sys_tool_pocket
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="toolId != null and toolId != ''">toolId = #{toolId},</if>
+            <if test="featName != null and featName != ''">feat_name = #{featName},</if>
+            <if test="parameter != null and parameter != ''">parameter = #{parameter},</if>
+        </trim>
+        where tool_pocket_id = #{toolPocketId}
+    </update>
+
+    <delete id="deleteSysToolPocketByToolPocketId" parameterType="Long">
+        delete
+        from sys_tool_pocket
+        where tool_pocket_id = #{toolPocketId}
+    </delete>
+
+    <delete id="deleteSysToolPocketByToolPocketIds" parameterType="String">
+        delete from sys_tool_pocket where tool_pocket_id in
+        <foreach item="toolPocketId" collection="array" open="(" separator="," close=")">
+            #{toolPocketId}
+        </foreach>
+    </delete>
+</mapper>

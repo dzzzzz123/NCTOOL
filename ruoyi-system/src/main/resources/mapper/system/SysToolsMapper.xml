@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysToolsMapper">
+    
+    <resultMap type="SysTools" id="SysToolsResult">
+        <result property="toolId"    column="tool_id"    />
+        <result property="pocket6800"    column="pocket_6800"    />
+        <result property="pocket650"    column="pocket_650"    />
+        <result property="pocket7000"    column="pocket_7000"    />
+        <result property="pocketHaas"    column="pocket_haas"    />
+        <result property="toolDescription"    column="tool_description"    />
+        <result property="toolSap"    column="tool_sap"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysToolsVo">
+        select tool_id, pocket_6800, pocket_650, pocket_7000, pocket_haas, tool_description, tool_sap, del_flag from sys_tools t
+    </sql>
+
+    <select id="selectSysToolsList" parameterType="SysTools" resultMap="SysToolsResult">
+        <include refid="selectSysToolsVo"/>
+        <where>  
+            <if test="pocket6800 != null "> and pocket_6800 = #{pocket6800}</if>
+            <if test="pocket650 != null "> and pocket_650 = #{pocket650}</if>
+            <if test="pocket7000 != null "> and pocket_7000 = #{pocket7000}</if>
+            <if test="pocketHaas != null "> and pocket_haas = #{pocketHaas}</if>
+            <if test="toolDescription != null  and toolDescription != ''"> and tool_description like concat('%', #{toolDescription}, '%')</if>
+            <if test="toolSap != null  and toolSap != ''"> and tool_sap like concat('%', #{toolSap}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectSysToolsByToolId" parameterType="Long" resultMap="SysToolsResult">
+        <include refid="selectSysToolsVo"/>
+        where tool_id = #{toolId}
+    </select>
+    <select id="checkToolsDescriptionUnique" parameterType="string"  resultMap="SysToolsResult">
+        <include refid="selectSysToolsVo"/>
+        where t.tool_description=#{toolDescription} and t.del_flag = '0' limit 1
+    </select>
+    <select id="checkToolsParameterUnique" parameterType="string" resultMap="SysToolsResult">
+        <include refid="selectSysToolsVo"/>
+        where t.tool_sap=#{toolSap} and t.del_flag = '0' limit 1
+    </select>
+
+    <insert id="insertSysTools" parameterType="SysTools" useGeneratedKeys="true" keyProperty="toolId">
+        insert into sys_tools
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pocket6800 != null">pocket_6800,</if>
+            <if test="pocket650 != null">pocket_650,</if>
+            <if test="pocket7000 != null">pocket_7000,</if>
+            <if test="pocketHaas != null">pocket_haas,</if>
+            <if test="toolDescription != null and toolDescription != ''">tool_description,</if>
+            <if test="toolSap != null and toolSap != ''">tool_sap,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pocket6800 != null">#{pocket6800},</if>
+            <if test="pocket650 != null">#{pocket650},</if>
+            <if test="pocket7000 != null">#{pocket7000},</if>
+            <if test="pocketHaas != null">#{pocketHaas},</if>
+            <if test="toolDescription != null and toolDescription != ''">#{toolDescription},</if>
+            <if test="toolSap != null and toolSap != ''">#{toolSap},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysTools" parameterType="SysTools">
+        update sys_tools
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pocket6800 != null">pocket_6800 = #{pocket6800},</if>
+            <if test="pocket650 != null">pocket_650 = #{pocket650},</if>
+            <if test="pocket7000 != null">pocket_7000 = #{pocket7000},</if>
+            <if test="pocketHaas != null">pocket_haas = #{pocketHaas},</if>
+            <if test="toolDescription != null and toolDescription != ''">tool_description = #{toolDescription},</if>
+            <if test="toolSap != null and toolSap != ''">tool_sap = #{toolSap},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where tool_id = #{toolId}
+    </update>
+
+    <delete id="deleteSysToolsByToolId" parameterType="Long">
+        delete from sys_tools where tool_id = #{toolId}
+    </delete>
+
+    <delete id="deleteSysToolsByToolIds" parameterType="String">
+        delete from sys_tools where tool_id in 
+        <foreach item="toolId" collection="array" open="(" separator="," close=")">
+            #{toolId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysCreoDrawParameterMapper">
+
+    <select id="getProgramNumber" resultType="com.ruoyi.system.domain.SysProgramNumber">
+        SELECT number_one, number_two
+        FROM sys_program_number
+    </select>
+
+    <update id="addOne">
+        UPDATE sys_program_number
+        set number_two=number_two + 1
+    </update>
+
+    <update id="carryProgramNumber">
+        UPDATE sys_program_number
+        set number_one = number_one + 1
+          , number_two = 0
+    </update>
+</mapper>
