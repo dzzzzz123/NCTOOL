@@ -18,7 +18,7 @@ public class TransformTo6300 extends TransformBaseUtil {
         StringBuilder newStr = new StringBuilder();
         for (int i = 0; i < content.length; i++) {
             if (content[i].startsWith("T") && Objects.equals(content[i + 1], "M06")) {
-                newStr.append("G91G30X0.Y0.Z0.").append("\r\n").append("G54G90G0B0").append("\r\n").append(content[i]).append("\r\n");
+                newStr.append("G91G30X0.Y0.Z0.").append("\r\n").append("G54G90G0B0.").append("\r\n").append(content[i]).append("\r\n");
             } else if (Arrays.asList(TransformConstants.NH6300_M_TO_DELETE).contains(content[i])) {
             } else if (Objects.equals(content[i], "G65P8881")) {
                 newStr.append("M98P8881(Z AXIS HEIGHT MEASUREMENT)").append("\r\n");

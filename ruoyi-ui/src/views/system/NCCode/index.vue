@@ -60,14 +60,15 @@ export default {
             },
             diff: {
                 open: false,
-                oldStr: "test",
-                newStr: "text",
+                oldStr: "",
+                newStr: "",
                 // 不同地方上下间隔多少行不隐藏
                 context: 100,
                 // 展示的方式
                 outputFormat: "side-by-side",
-                // 展示对比文件列表	
+                // 每行中对比差异级别
                 diffStyle: 'char',
+                // 展示对比文件列表	
                 fileName: '',
                 // 当无对比时展示源代码
                 isShowNoChange: true,
@@ -157,8 +158,7 @@ export default {
             reader.readAsText(file.raw, 'UTF-8')//读取，转换字符编码
             var co = this.changeOldStr;
             reader.onload = function (e) {
-                let val = e.target.result;//获取数据
-                co(val);
+                co(e.target.result);//获取数据
             }
         },
         // 当前点击行index

@@ -42,8 +42,6 @@ public class SysNcCodeTransformServiceImpl implements ISysNcCodeTransformService
                 }
             }
         }
-        System.out.println("tapNames = " + Arrays.toString(tapNames));
-        System.out.println("TAP_LIST = " + TAP_LIST);
         return TAP_LIST;
     }
 

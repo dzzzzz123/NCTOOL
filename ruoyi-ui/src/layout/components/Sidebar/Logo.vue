@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      title: '马斯特刀具管理平台',
+      title: '',
       logo: logoImg
     }
   }
@@ -66,8 +66,8 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
-      width: 32px;
-      height: 32px;
+      width: 70px;
+      height: 40px;
       vertical-align: middle;
       margin-right: 12px;
     }
