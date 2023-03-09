@@ -95,7 +95,6 @@ export default {
             this.Transformed.loading = true;
             this.Transformed.tapList = null;
             newTapList(this.toTransForm.tapNames).then(response => {
-                console.info(response);
                 this.Transformed.tapList = response;
                 this.Transformed.loading = false;
             }
@@ -204,7 +203,9 @@ export default {
             }
             this.isTransFormed = true;
             this.fileList.forEach(file => {
-                this.toTransForm.tapNames.push(file.name);
+                if(!this.toTransForm.tapNames.includes(file.name)){
+                    this.toTransForm.tapNames.push(file.name);
+                }
             });
             if (this.toTransForm.tapNames.length === 0) {
                 this.$message.warning("没有可以转换的tap文件，请上传需要转换的tap文件！");

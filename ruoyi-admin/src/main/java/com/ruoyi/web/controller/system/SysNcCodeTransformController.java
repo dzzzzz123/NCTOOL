@@ -11,6 +11,9 @@ import com.ruoyi.common.exception.file.InvalidExtensionException;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.common.utils.file.MimeTypeUtils;
+import com.ruoyi.common.utils.transform.TransformTo6300;
+import com.ruoyi.common.utils.transform.TransformTo655;
+import com.ruoyi.common.utils.transform.TransformTo7000;
 import com.ruoyi.system.domain.SysDiffFiles;
 import com.ruoyi.system.domain.SysTapList;
 import com.ruoyi.system.service.ISysNcCodeTransformService;
@@ -23,12 +26,11 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 import static com.ruoyi.framework.datasource.DynamicDataSourceContextHolder.log;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
  * 转换NC代码控制层
@@ -88,7 +90,6 @@ public class SysNcCodeTransformController extends BaseController {
     }
 
 
-
     /**
      * 转换NC代码
      *
@@ -105,22 +106,22 @@ public class SysNcCodeTransformController extends BaseController {
             File file2 = new File("d:/upload/" + tapName.split("\\.")[0] + ".tap_MMC_NV7000");
             File file3 = new File("d:/upload/" + tapName.split("\\.")[0] + ".tap_V655");
             try {
-                FileUtil.copyFile(temp, file);
-                changeTo6300(file);
-            } catch (IORuntimeException | IOException e) {
-                log.info("tap_MMC_NH6300 File already exists");
+                FileUtil.copyFile(temp, file, REPLACE_EXISTING);
+                TransformTo6300.transform(file,0);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
             try {
-                FileUtil.copyFile(temp, file2);
-                changeTo7000(file);
-            } catch (IORuntimeException | IOException e) {
-                log.info("tap_MMC_NV7000 File already exists");
+                FileUtil.copyFile(temp, file2, REPLACE_EXISTING);
+                TransformTo7000.transform(file2,1);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
             try {
-                FileUtil.copyFile(temp, file3);
-                changeTo655(file);
-            } catch (IORuntimeException | IOException e) {
-                log.info("tap_V655 File already exists");
+                FileUtil.copyFile(temp, file3, REPLACE_EXISTING);
+                TransformTo655.transform(file3,2);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
         return new AjaxResult(200, "Success");
@@ -147,47 +148,5 @@ public class SysNcCodeTransformController extends BaseController {
         } catch (Exception e) {
             log.error("下载文件失败", e);
         }
-    }
-
-
-    private static void changeTo6300(File file) throws IOException {
-        byte[] fileContext = new byte[(int) file.length()];
-        FileInputStream in = null;
-        PrintWriter out = null;
-        try {
-            in = new FileInputStream(file);
-            in.read(fileContext);
-            String str = new String(fileContext, StandardCharsets.UTF_8);
-            String[] content = str.split("\r\n");
-            StringBuilder newStr = new StringBuilder();
-            // 对NC原始代码进行操作
-            for (String arg : content) {
-                if (arg.startsWith("G21")){
-                    newStr.append("\r\n");
-                }else {
-                    newStr.append(arg).append("\r\n");
-                }
-            }
-            out = new PrintWriter(file);
-            out.write(newStr.toString());
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        } finally {
-            try {
-                out.flush();
-                out.close();
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private static void changeTo7000(File file) throws IOException {
-
-    }
-
-    private static void changeTo655(File file) throws IOException {
-
     }
 }
