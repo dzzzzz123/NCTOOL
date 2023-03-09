@@ -88,8 +88,9 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('LogOut').then(() => {
-          location.href = '/index';
-        })
+          let indexUrl = this.$store.state.permission.indexPage;
+          location.href = indexUrl;
+          })
       }).catch(() => {});
     }
   }

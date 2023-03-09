@@ -11,7 +11,9 @@ const permission = {
     addRoutes: [],
     defaultRoutes: [],
     topbarRouters: [],
-    sidebarRouters: []
+    sidebarRouters: [],
+    // 修改默认首页
+    indexPage:''
   },
   mutations: {
     SET_ROUTES: (state, routes) => {
@@ -24,8 +26,8 @@ const permission = {
     SET_TOPBAR_ROUTES: (state, routes) => {
       state.topbarRouters = routes
     },
-    SET_SIDEBAR_ROUTERS: (state, routes) => {
-      state.sidebarRouters = routes
+    SET_SIDEBAR_ROUTERS: (state, routers) => {
+      state.sidebarRouters = constantRoutes.concat(routers)
     },
   },
   actions: {
@@ -36,6 +38,8 @@ const permission = {
         getRouters().then(res => {
           const sdata = JSON.parse(JSON.stringify(res.data))
           const rdata = JSON.parse(JSON.stringify(res.data))
+          // 修改默认首页
+          const indexdata = res.data[0].path+"/"+res.data[0].children[0].path
           const sidebarRoutes = filterAsyncRouter(sdata)
           const rewriteRoutes = filterAsyncRouter(rdata, false, true)
           const asyncRoutes = filterDynamicRoutes(dynamicRoutes);
@@ -45,6 +49,7 @@ const permission = {
           commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(sidebarRoutes))
           commit('SET_DEFAULT_ROUTES', sidebarRoutes)
           commit('SET_TOPBAR_ROUTES', sidebarRoutes)
+          commit('SET_INDEX_PAGE', indexdata)
           resolve(rewriteRoutes)
         })
       })
