@@ -1,23 +1,16 @@
 <template>
     <div style="margin: 20px;">
         <div style="width: 49%; min-height: 1000px; float: left; background-color: aliceblue;">
-            <el-upload class="upload-demo" action="#" :on-change="handleChange" :file-list="fileList"
-                :show-file-list="false" accept=".tap" style="margin: 10px;" multiple :auto-upload="false">
-                <el-button slot="trigger" size="small" type="primary">点击上传</el-button>
-                <file-upload class="btn btn-primary" v-model="fileList" :multiple="true" :directory="true" :drop="true"
-                    :drop-directory="true" extensions="tap" @input-filter="inputFilter" @input-file="inputFile"
-                    ref="upload">
-                    <el-button size="small" type="primary">点击上传2</el-button>
-                </file-upload>
-                <el-button @click="transform" size="small" type="primary" style="margin-left: 20px;">转换NC代码</el-button>
-                <el-table v-loading="toTransForm.loading" :data="toTransForm.tapList" :show-header="false"
-                    @row-click="toTransFormrowClick" :row-class-name="toTransFormrowClassName"
-                    :row-style="toTransFormrowStyle" :stripe="false"
-                    style=" background: aliceblue !important; margin-top: 20px; border:none;">
-                    <el-table-column key="tapFileName" prop="name" />
-                </el-table>
-            </el-upload>
-
+            <file-upload class="btn btn-primary" v-model="fileList" :multiple="true" :directory="true" :drop="true"
+                :drop-directory="true" extensions="tap" @input-filter="inputFilter" @input-file="inputFile" ref="upload">
+            </file-upload>
+            <el-button size="small" type="primary" @click="onAddFolader" style="margin-top: 13px; margin-left: 20px;">点击上传</el-button>
+            <el-button @click="transform" size="small" type="primary" style="margin-left: 20px;">转换NC代码</el-button>
+            <el-table v-loading="toTransForm.loading" :data="toTransForm.tapList" :show-header="false"
+                @row-click="toTransFormrowClick" :row-class-name="toTransFormrowClassName" :row-style="toTransFormrowStyle"
+                :stripe="false" style=" background: aliceblue !important; margin-top: 20px; border:none;">
+                <el-table-column key="tapFileName" prop="file.name" />
+            </el-table>
         </div>
         <div style="width: 49%;  min-height: 1000px; float: right; padding-top: 13px; background-color: beige;">
             <el-button @click="compare" size="small" type="warning" style="margin-left: 20px;">比较NC代码</el-button>
@@ -143,11 +136,6 @@ export default {
         },
         getNcList() {
             this.toTransForm.loading = true;
-            // this.fileList.forEach(file => {
-            //     if (!this.toTransForm.tapList.includes(file)) {
-            //         this.toTransForm.tapList.push(file)
-            //     }
-            // });
             this.toTransForm.tapList = this.fileList;
             this.toTransForm.loading = false;
         },
@@ -159,6 +147,10 @@ export default {
                 this.Transformed.loading = false;
             }
             );
+        },
+        onAddFolader(){
+            let input = this.$refs.upload.$el.querySelector('input');
+            input.click();
         },
         handleChange(file, fileList) {
             this.isTransFormed = false;
@@ -197,7 +189,7 @@ export default {
         async uploadTap() {
             let formData = new FormData();
             this.fileList.forEach(file => {
-                formData.append('file', file.raw);
+                formData.append('file', file.file);
             });
             uploadNcCode(formData).then(response => {
                 if (response.code === 200) {
@@ -208,7 +200,7 @@ export default {
         // 修改vue-diff的左边代码
         handleDiffLeft(file) {
             let reader = new FileReader();
-            reader.readAsText(file.raw, 'UTF-8')//读取，转换字符编码
+            reader.readAsText(file, 'UTF-8')//读取，转换字符编码
             var co = this.changeOldStr;
             reader.onload = function (e) {
                 co(e.target.result);//获取数据
@@ -217,8 +209,8 @@ export default {
         // 当前点击行index
         toTransFormrowClick(row) {
             this.toTransForm.rowIndex = row.index;
-            this.diffLeftFile = row.name;
-            this.handleDiffLeft(row);
+            this.diffLeftFile = row.file.name;
+            this.handleDiffLeft(row.file);
         },
         // 把每行的 index 放入 row 中
         toTransFormrowClassName({ row, rowIndex }) {
@@ -256,8 +248,8 @@ export default {
             }
             this.isTransFormed = true;
             this.fileList.forEach(file => {
-                if (!this.toTransForm.tapNames.includes(file.name)) {
-                    this.toTransForm.tapNames.push(file.name);
+                if (!this.toTransForm.tapNames.includes(file.file.name)) {
+                    this.toTransForm.tapNames.push(file.file.name);
                 }
             });
             if (this.toTransForm.tapNames.length === 0) {
