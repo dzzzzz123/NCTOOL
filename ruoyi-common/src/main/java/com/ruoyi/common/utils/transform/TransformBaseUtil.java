@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * 转换NC代码基类
@@ -31,6 +32,8 @@ public class TransformBaseUtil {
             in.read(fileContext);
             String str = new String(fileContext, StandardCharsets.UTF_8);
             String[] content = str.split("\r\n");
+            deleteT72Related(content);
+            editFileHeader(content, flag);
             StringBuilder newStr = new StringBuilder();
             // 对NC原始代码进行操作
             switch (flag) {
@@ -65,5 +68,42 @@ public class TransformBaseUtil {
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
         return simpleDateFormat.format(date);
+    }
+
+    /**
+     * 转换NC代码时，删除掉代码中所有带有T72刀具的部分
+     *
+     * @param content 老字符串
+     * @return 新字符串
+     */
+    static void deleteT72Related(String[] content) {
+        for (int i = 0; i < content.length; i++) {
+            // 删除掉T72相关代码块
+            if (Objects.equals(content[i], "T72")) {
+                content[i] = " ";
+                i++;
+                while (!Objects.equals(content[i], "M09")) {
+                    content[i] = " ";
+                    i++;
+                }
+                i++;
+            } else if (Objects.equals(content[i], "(72   T072      3\" FACE MILLING TOOL)") || Objects.equals(content[i], "(TOOL NAME : T072)")) {
+                content[i] = " ";
+            }
+        }
+    }
+
+    /**
+     * 编辑NC代码文件头
+     *
+     * @param content 老字符串
+     * @param flag    机型标识
+     */
+    static void editFileHeader(String[] content, int flag) {
+        for (int i = 0; i < 15; i++) {
+            if (i == 7) {
+                content[i] = content[i] + "\r\n" + "(Processed by Platform: " + getTime() + ")";
+            }
+        }
     }
 }
