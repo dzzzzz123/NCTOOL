@@ -38,7 +38,7 @@ public class MimeTypeUtils
             // pdf
             "pdf",
             // tap文件
-            "tap_Original","tap_MMC_NH6300","tap_MMC_NV7000","tap_V655"
+            "tap_Original","tap_MMC_NH6300","tap_MMC_NV7000","tap_V655","tap"
         };
 
     public static String getExtension(String prefix)

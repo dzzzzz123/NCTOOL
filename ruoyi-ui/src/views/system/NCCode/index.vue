@@ -1,10 +1,14 @@
 <template>
     <div style="margin: 20px;">
         <div style="width: 49%; min-height: 1000px; float: left; background-color: aliceblue;">
-            <el-upload class="upload-demo" action="#" :on-exceed="handleExceed" :on-change="handleChange"
-                :file-list="fileList" :show-file-list="false" accept=".tap_Original" style="margin: 10px;" multiple
-                :limit="50" :auto-upload="false">
+            <el-upload class="upload-demo" action="#" :on-change="handleChange" :file-list="fileList"
+                :show-file-list="false" accept=".tap" style="margin: 10px;" multiple :auto-upload="false">
                 <el-button slot="trigger" size="small" type="primary">点击上传</el-button>
+                <file-upload class="btn btn-primary" v-model="fileList" :multiple="true" :directory="true" :drop="true"
+                    :drop-directory="true" extensions="tap" @input-filter="inputFilter" @input-file="inputFile"
+                    ref="upload">
+                    <el-button size="small" type="primary">点击上传2</el-button>
+                </file-upload>
                 <el-button @click="transform" size="small" type="primary" style="margin-left: 20px;">转换NC代码</el-button>
                 <el-table v-loading="toTransForm.loading" :data="toTransForm.tapList" :show-header="false"
                     @row-click="toTransFormrowClick" :row-class-name="toTransFormrowClassName"
@@ -13,9 +17,7 @@
                     <el-table-column key="tapFileName" prop="name" />
                 </el-table>
             </el-upload>
-            <file-upload ref="upload"  :directory="true" :multiple="true" >
-                点击上传
-            </file-upload>
+
         </div>
         <div style="width: 49%;  min-height: 1000px; float: right; padding-top: 13px; background-color: beige;">
             <el-button @click="compare" size="small" type="warning" style="margin-left: 20px;">比较NC代码</el-button>
@@ -50,7 +52,7 @@ export default {
             diffRightFile: null,
             isTransFormed: false,
             toTransForm: {
-                tapList: null,
+                tapList: [],
                 loading: false,
                 rowIndex: null,
                 tapNames: [],
@@ -89,8 +91,63 @@ export default {
     },
     mounted() { },
     methods: {
+        inputFilter(newFile, oldFile, prevent) {
+            if (newFile && !oldFile) {
+                // Before adding a file
+                // 添加文件前
+
+                // Filter system files or hide files
+                // 过滤系统文件 和隐藏文件
+                if (/(\/|^)(Thumbs\.db|desktop\.ini|\..+)$/.test(newFile.name)) {
+                    return prevent()
+                }
+
+                // Filter php html js file
+                // 过滤 php html js 文件
+                if (/\.(php5?|html?|jsx?)$/i.test(newFile.name)) {
+                    return prevent()
+                }
+            }
+        },
+
+        inputFile(newFile, oldFile) {
+            if (newFile && !oldFile) {
+                // add
+                console.log('add', newFile)
+                this.isTransFormed = false;
+                let arr = this.filterRepetition(this.fileList);
+                if (arr.length !== this.fileList.length) {
+                    this.$message.warning("上传重复文件，已过滤重复文件");
+                }
+                this.fileList = arr;
+                // 上传文件后，自动把文件传给后台，这里做了一个防抖，等待500ms后在传给后台
+                this.debounce(this.uploadTap, 500);
+                this.getNcList();
+            }
+            if (newFile && oldFile) {
+                // update
+                // console.log('update', newFile)
+            }
+
+            if (!newFile && oldFile) {
+                // remove
+                // console.log('remove', oldFile)
+            }
+
+            // Automatically activate upload
+            if (Boolean(newFile) !== Boolean(oldFile) || oldFile.error !== newFile.error) {
+                if (!this.$refs.upload.active) {
+                    this.$refs.upload.active = true
+                }
+            }
+        },
         getNcList() {
             this.toTransForm.loading = true;
+            // this.fileList.forEach(file => {
+            //     if (!this.toTransForm.tapList.includes(file)) {
+            //         this.toTransForm.tapList.push(file)
+            //     }
+            // });
             this.toTransForm.tapList = this.fileList;
             this.toTransForm.loading = false;
         },
@@ -113,9 +170,6 @@ export default {
             // 上传文件后，自动把文件传给后台，这里做了一个防抖，等待500ms后在传给后台
             this.debounce(this.uploadTap, 500);
             this.getNcList();
-        },
-        handleExceed(files, fileList) {
-            this.$message.warning(`当前限制选择 50 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
         },
         // 过滤重复
         filterRepetition(arr) {
@@ -150,9 +204,6 @@ export default {
                     this.$message.success("上传成功！");
                 }
             });
-        },
-        refresh() {
-            this.getTapList();
         },
         // 修改vue-diff的左边代码
         handleDiffLeft(file) {
