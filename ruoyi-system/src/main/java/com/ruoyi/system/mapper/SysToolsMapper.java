@@ -67,11 +67,4 @@ public interface SysToolsMapper
      */
     public SysTools checkToolsDescriptionUnique(String toolDescription);
 
-    /**
-     * 校验刀具参数是否唯一
-     *
-     * @param toolSap 工具sap
-     * @return {@link SysTools}
-     */
-    public SysTools checkToolsParameterUnique(String toolSap);
 }

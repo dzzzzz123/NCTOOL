@@ -24,13 +24,13 @@ public class SysToolPocketServiceImpl implements ISysToolPocketService
     /**
      * 查询刀具加工参数
      * 
-     * @param toolPocketId 刀具加工参数主键
+     * @param toolId 刀具加工参数主键
      * @return 刀具加工参数
      */
     @Override
-    public SysToolPocket selectSysToolPocketByToolPocketId(Long toolPocketId)
+    public SysToolPocket selectSysToolPocketByToolPocketId(String  toolId)
     {
-        return sysToolPocketMapper.selectSysToolPocketByToolPocketId(toolPocketId);
+        return sysToolPocketMapper.selectSysToolPocketByToolPocketId(toolId);
     }
 
     /**
@@ -72,25 +72,25 @@ public class SysToolPocketServiceImpl implements ISysToolPocketService
     /**
      * 批量删除刀具加工参数
      * 
-     * @param toolPocketIds 需要删除的刀具加工参数主键
+     * @param toolIds 需要删除的刀具加工参数主键
      * @return 结果
      */
     @Override
-    public int deleteSysToolPocketByToolPocketIds(Long[] toolPocketIds)
+    public int deleteSysToolPocketByToolPocketIds(String[] toolIds)
     {
-        return sysToolPocketMapper.deleteSysToolPocketByToolPocketIds(toolPocketIds);
+        return sysToolPocketMapper.deleteSysToolPocketByToolPocketIds(toolIds);
     }
 
     /**
      * 删除刀具加工参数信息
      * 
-     * @param toolPocketId 刀具加工参数主键
+     * @param toolId 刀具加工参数主键
      * @return 结果
      */
     @Override
-    public int deleteSysToolPocketByToolPocketId(Long toolPocketId)
+    public int deleteSysToolPocketByToolPocketId(String toolId)
     {
-        return sysToolPocketMapper.deleteSysToolPocketByToolPocketId(toolPocketId);
+        return sysToolPocketMapper.deleteSysToolPocketByToolPocketId(toolId);
     }
 
     /**

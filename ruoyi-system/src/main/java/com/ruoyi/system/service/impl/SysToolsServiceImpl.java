@@ -113,20 +113,4 @@ public class SysToolsServiceImpl implements ISysToolsService
         return ToolsConstants.UNIQUE;
     }
 
-    /**
-     * 校验刀具参数是否唯一
-     *
-     * @param sysTools 刀具
-     * @return {@link String}
-     */
-    @Override
-    public String checkToolsParameterUnique(SysTools sysTools) {
-        Long toolsId = StringUtils.isNull(sysTools.getToolId()) ? -1L : sysTools.getToolId();
-        SysTools parameter = sysToolsMapper.checkToolsParameterUnique(sysTools.getToolSap());
-        if (StringUtils.isNotNull(parameter) && parameter.getToolId().longValue() != toolsId.longValue())
-        {
-            return ToolsConstants.NOT_UNIQUE;
-        }
-        return ToolsConstants.UNIQUE;
-    }
 }

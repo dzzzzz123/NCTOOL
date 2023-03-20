@@ -36,8 +36,6 @@ public class SysToolPocketToSql extends BaseEntity {
     private String parameter;
 
     public SysToolPocketToSql(SysToolPocket sysToolPocket) {
-        this.toolPocketId = sysToolPocket.getToolPocketId();
-        this.featName = sysToolPocket.getFeatName();
         this.toolId = sysToolPocket.getToolId();
         if (sysToolPocket.getParameter() == null) {
             this.parameter = "1";

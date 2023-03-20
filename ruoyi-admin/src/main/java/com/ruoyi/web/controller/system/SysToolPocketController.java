@@ -56,9 +56,9 @@ public class SysToolPocketController extends BaseController {
      * 获取刀具加工参数详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:pocket:query')")
-    @GetMapping(value = "/{toolPocketId}")
-    public AjaxResult getInfo(@PathVariable("toolPocketId") Long toolPocketId) {
-        return success(sysToolPocketService.selectSysToolPocketByToolPocketId(toolPocketId));
+    @GetMapping(value = "/{toolId}")
+    public AjaxResult getInfo(@PathVariable("toolId") String toolId) {
+        return success(sysToolPocketService.selectSysToolPocketByToolPocketId(toolId));
     }
 
     /**
@@ -86,9 +86,9 @@ public class SysToolPocketController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:pocket:remove')")
     @Log(title = "刀具加工参数", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{toolPocketIds}")
-    public AjaxResult remove(@PathVariable Long[] toolPocketIds) {
-        return toAjax(sysToolPocketService.deleteSysToolPocketByToolPocketIds(toolPocketIds));
+    @DeleteMapping("/{toolIds}")
+    public AjaxResult remove(@PathVariable String[] toolIds) {
+        return toAjax(sysToolPocketService.deleteSysToolPocketByToolPocketIds(toolIds));
     }
 
     /**

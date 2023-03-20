@@ -37,6 +37,7 @@ import VueMeta from 'vue-meta'
 // import locale from 'element-ui/lib/locale/lang/en' 
 import ElementUI from 'element-ui'
 
+
 // 全局方法挂载
 Vue.prototype.getConfigKey = getConfigKey
 Vue.prototype.parseTime = parseTime
@@ -55,7 +56,6 @@ Vue.component('Editor', Editor)
 Vue.component('FileUpload', FileUpload)
 Vue.component('ImageUpload', ImageUpload)
 Vue.component('ImagePreview', ImagePreview)
-
 
 Vue.use(directive)
 Vue.use(plugins)

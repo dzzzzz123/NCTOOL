@@ -79,8 +79,6 @@ public class SysToolsController extends BaseController {
         if (ToolsConstants.NOT_UNIQUE.equals(sysToolsService.checkToolsDescriptionUnique(sysTools)))
         {
             return error("新增刀具'" + sysTools.getToolDescription() + "'失败，刀具描述已存在");
-        }else if(ToolsConstants.NOT_UNIQUE.equals(sysToolsService.checkToolsParameterUnique(sysTools))){
-            return error("新增刀具'" + sysTools.getToolSap() + "'失败，刀具参数已存在");
         }
         return toAjax(sysToolsService.insertSysTools(sysTools));
     }
@@ -95,8 +93,6 @@ public class SysToolsController extends BaseController {
         if (ToolsConstants.NOT_UNIQUE.equals(sysToolsService.checkToolsDescriptionUnique(sysTools)))
         {
             return error("新增刀具'" + sysTools.getToolDescription() + "'失败，刀具描述已存在");
-        }else if(ToolsConstants.NOT_UNIQUE.equals(sysToolsService.checkToolsParameterUnique(sysTools))){
-            return error("新增刀具'" + sysTools.getToolSap() + "'失败，刀具参数已存在");
         }
         return toAjax(sysToolsService.updateSysTools(sysTools));
     }

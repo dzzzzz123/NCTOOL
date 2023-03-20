@@ -126,6 +126,12 @@ public class SysNcCodeTransformController extends BaseController {
         return new AjaxResult(200, "Success");
     }
 
+    /**
+     * 用上传文件的文件名，获取到文件列表
+     * @param tapNames 上传的文件名
+     * @return tapList的列表
+     * @throws IOException 读写异常
+     */
     @PreAuthorize("@ss.hasAnyPermi('system:NcCode:tapList')")
     @Log(title = "获取已转换tap文件列表", businessType = BusinessType.SELECT)
     @GetMapping("/newTapList/{tapNames}")
@@ -133,6 +139,12 @@ public class SysNcCodeTransformController extends BaseController {
         return transformService.selectTapList(tapNames);
     }
 
+    /**
+     * 将需要比较的文件上传到前端
+     * @param files 自定义用来存储文件差异的类型
+     * @param request request
+     * @param response response
+     */
     @PreAuthorize("@ss.hasAnyPermi('system:NcCode:compare')")
     @Log(title = "比较NC代码", businessType = BusinessType.COMPARE)
     @PutMapping("/compare")
@@ -149,10 +161,15 @@ public class SysNcCodeTransformController extends BaseController {
         }
     }
 
+    /**
+     * 将本地文件上传到DNC
+     * @param tapNames 上传文件名
+     * @return 返回集
+     */
     @PreAuthorize("@ss.hasAnyPermi('system:NcCode:ToDNC')")
     @Log(title = "上传NC代码到DNC", businessType = BusinessType.UPLOAD)
     @GetMapping("/ToDNC/{tapNames}")
-    public void uploadToDnc(@PathVariable String[] tapNames) {
+    public AjaxResult uploadToDnc(@PathVariable String[] tapNames) {
         for (String tapName : tapNames) {
             File temp = new File("d:/upload/" + tapName);
             File file = new File("d:/upload/" + tapName.split("\\.")[0] + ".tap_MMC_NH6300");

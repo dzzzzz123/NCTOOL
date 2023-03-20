@@ -16,7 +16,7 @@ export function transFormNcCode(tapNames) {
   })
 }
 
-export function newTapList(tapNames){
+export function newTapList(tapNames) {
   return request({
     url: '/system/nccode/newTapList/' + tapNames,
     method: 'get',
@@ -24,9 +24,9 @@ export function newTapList(tapNames){
 }
 
 export function compareDownload(oldFileName, newFileName) {
-    const data = {
-      oldFileName,
-      newFileName
+  const data = {
+    oldFileName,
+    newFileName
   }
   return request({
     url: '/system/nccode/compare',
@@ -35,9 +35,9 @@ export function compareDownload(oldFileName, newFileName) {
   })
 }
 
-export function uploadToDNC() {
+export function uploadToDNC(tapNames) {
   return request({
-    url: '/system/nccode/ToDNC',
+    url: '/system/nccode/ToDNC'+tapNames,
     method: 'get'
   })
 }

@@ -66,11 +66,4 @@ public interface ISysToolsService
      */
     public String checkToolsDescriptionUnique(SysTools sysTools);
 
-    /**
-     * 校验刀具参数是否唯一
-     *
-     * @param sysTools 刀具
-     * @return {@link String}
-     */
-    public String checkToolsParameterUnique(SysTools sysTools);
 }

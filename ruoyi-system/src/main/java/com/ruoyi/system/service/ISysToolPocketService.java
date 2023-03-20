@@ -16,10 +16,10 @@ public interface ISysToolPocketService
     /**
      * 查询刀具加工参数
      * 
-     * @param toolPocketId 刀具加工参数主键
+     * @param toolId 刀具加工参数主键
      * @return 刀具加工参数
      */
-    public SysToolPocket selectSysToolPocketByToolPocketId(Long toolPocketId);
+    public SysToolPocket selectSysToolPocketByToolPocketId(String toolId);
 
     /**
      * 查询刀具加工参数列表
@@ -48,18 +48,18 @@ public interface ISysToolPocketService
     /**
      * 批量删除刀具加工参数
      * 
-     * @param toolPocketIds 需要删除的刀具加工参数主键集合
+     * @param toolIds 需要删除的刀具加工参数主键集合
      * @return 结果
      */
-    public int deleteSysToolPocketByToolPocketIds(Long[] toolPocketIds);
+    public int deleteSysToolPocketByToolPocketIds(String[] toolIds);
 
     /**
      * 删除刀具加工参数信息
      * 
-     * @param toolPocketId 刀具加工参数主键
+     * @param toolId 刀具加工参数主键
      * @return 结果
      */
-    public int deleteSysToolPocketByToolPocketId(Long toolPocketId);
+    public int deleteSysToolPocketByToolPocketId(String toolId);
 
     /**
      * Creo软件根据刀具id获取参数

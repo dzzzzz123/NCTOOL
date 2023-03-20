@@ -5,9 +5,6 @@
         <el-input v-model="queryParams.toolDescription" placeholder="请输入需要查询的刀具描述" clearable
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="刀具参数" prop="toolSap">
-        <el-input v-model="queryParams.toolSap" placeholder="请输入需要查询的刀具参数" clearable @keyup.enter.native="handleQuery" />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -41,7 +38,6 @@
       <el-table-column label="Pocket_7000" align="center" prop="pocket7000" width="180px" />
       <el-table-column label="Pocket_Haas" align="center" prop="pocketHaas" width="180px" />
       <el-table-column label="Tool Description" prop="toolDescription"/>
-      <el-table-column label="Tool SAP#" align="center" prop="toolSap" width="250px"/>
       <el-table-column label="operation" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -72,9 +68,6 @@
         </el-form-item>
         <el-form-item label="刀具描述" prop="toolDescription">
           <el-input v-model="form.toolDescription" placeholder="请输入刀具描述" />
-        </el-form-item>
-        <el-form-item label="刀具参数" prop="toolSap">
-          <el-input v-model="form.toolSap" placeholder="请输入刀具参数" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -119,7 +112,6 @@ export default {
         pocket7000: null,
         pocketHaas: null,
         toolDescription: null,
-        toolSap: null,
       },
       // 表单参数
       form: {},
@@ -127,10 +119,7 @@ export default {
       rules: {
         toolDescription: [
           { required: true, message: "刀具描述不能为空", trigger: "blur" }
-        ],
-        toolSap: [
-          { required: true, message: "刀具参数不能为空", trigger: "blur" }
-        ],
+        ]
       }
     };
   },
@@ -161,7 +150,6 @@ export default {
         pocket7000: null,
         pocketHaas: null,
         toolDescription: null,
-        toolSap: null,
         delFlag: null
       };
       this.resetForm("form");

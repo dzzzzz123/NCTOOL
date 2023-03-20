@@ -38,10 +38,6 @@ public class SysTools extends BaseEntity
     @Excel(name = "刀具描述")
     private String toolDescription;
 
-    /** 刀具参数 */
-    @Excel(name = "刀具参数")
-    private String toolSap;
-
     /** 删除标准，1删除，0正常 */
     private String delFlag;
 
@@ -99,15 +95,7 @@ public class SysTools extends BaseEntity
     {
         return toolDescription;
     }
-    public void setToolSap(String toolSap) 
-    {
-        this.toolSap = toolSap;
-    }
 
-    public String getToolSap() 
-    {
-        return toolSap;
-    }
     public void setDelFlag(String delFlag) 
     {
         this.delFlag = delFlag;
@@ -127,7 +115,6 @@ public class SysTools extends BaseEntity
             .append("pocket7000", getPocket7000())
             .append("pocketHaas", getPocketHaas())
             .append("toolDescription", getToolDescription())
-            .append("toolSap", getToolSap())
             .append("delFlag", getDelFlag())
             .toString();
     }

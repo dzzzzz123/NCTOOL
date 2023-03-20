@@ -13,11 +13,12 @@
                     <el-table-column key="tapFileName" prop="name" />
                 </el-table>
             </el-upload>
+            <file-upload ref="upload"  :directory="true" :multiple="true" >
+                点击上传
+            </file-upload>
         </div>
         <div style="width: 49%;  min-height: 1000px; float: right; padding-top: 13px; background-color: beige;">
-            <el-button @click="refresh" size="small" type="warning" style="margin-right: 20px;">刷新列表</el-button>
-            <el-button @click="compare" size="small" type="warning" style="margin-right: 20px;">比较NC代码</el-button>
-            <el-button @click="uploadToDNC" size="small" type="warning">上传到DNC</el-button>
+            <el-button @click="compare" size="small" type="warning" style="margin-left: 20px;">比较NC代码</el-button>
             <el-table v-loading="Transformed.loading" :data="Transformed.tapList" :show-header="false"
                 @row-click="TransformedrowClick" :row-class-name="TransformedrowClassName" :row-style="TransformedrowStyle"
                 :stripe="false" style=" background: beige !important; margin-top: 20px; border:none;">
@@ -35,10 +36,11 @@
  
 <script>
 import CodeDiff from 'vue-code-diff'
+import FileUpload from 'vue-upload-component'
 import { uploadNcCode, transFormNcCode, newTapList, compareDownload, uploadToDNC } from "@/api/system/nccode.js"
 export default {
     name: 'NCCode',
-    components: { CodeDiff },
+    components: { CodeDiff, FileUpload },
     props: [],
     data() {
         return {
@@ -239,8 +241,11 @@ export default {
         },
         uploadDNC(code) {
             if (code == 200) {
-                uploadToDNC();
-                this.$message.success("上传到DNC!");
+                uploadToDNC(this.toTransForm.tapNames).then(response => {
+                    if (response.code == 200) {
+                        this.$message.success("上传到DNC!");
+                    }
+                })
             } else {
                 this.$message.error("转换NC代码失败，无法上传到DNC！");
             }

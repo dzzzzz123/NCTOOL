@@ -11,12 +11,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="pocket7000"    column="pocket_7000"    />
         <result property="pocketHaas"    column="pocket_haas"    />
         <result property="toolDescription"    column="tool_description"    />
-        <result property="toolSap"    column="tool_sap"    />
         <result property="delFlag"    column="del_flag"    />
     </resultMap>
 
     <sql id="selectSysToolsVo">
-        select tool_id, pocket_6800, pocket_650, pocket_7000, pocket_haas, tool_description, tool_sap, del_flag from sys_tools t
+        select tool_id, pocket_6800, pocket_650, pocket_7000, pocket_haas, tool_description, del_flag from sys_tools t
     </sql>
 
     <select id="selectSysToolsList" parameterType="SysTools" resultMap="SysToolsResult">
@@ -27,7 +26,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pocket7000 != null "> and pocket_7000 = #{pocket7000}</if>
             <if test="pocketHaas != null "> and pocket_haas = #{pocketHaas}</if>
             <if test="toolDescription != null  and toolDescription != ''"> and tool_description like concat('%', #{toolDescription}, '%')</if>
-            <if test="toolSap != null  and toolSap != ''"> and tool_sap like concat('%', #{toolSap}, '%')</if>
         </where>
     </select>
     
@@ -39,10 +37,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSysToolsVo"/>
         where t.tool_description=#{toolDescription} and t.del_flag = '0' limit 1
     </select>
-    <select id="checkToolsParameterUnique" parameterType="string" resultMap="SysToolsResult">
-        <include refid="selectSysToolsVo"/>
-        where t.tool_sap=#{toolSap} and t.del_flag = '0' limit 1
-    </select>
 
     <insert id="insertSysTools" parameterType="SysTools" useGeneratedKeys="true" keyProperty="toolId">
         insert into sys_tools
@@ -52,7 +46,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pocket7000 != null">pocket_7000,</if>
             <if test="pocketHaas != null">pocket_haas,</if>
             <if test="toolDescription != null and toolDescription != ''">tool_description,</if>
-            <if test="toolSap != null and toolSap != ''">tool_sap,</if>
             <if test="delFlag != null">del_flag,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -61,7 +54,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pocket7000 != null">#{pocket7000},</if>
             <if test="pocketHaas != null">#{pocketHaas},</if>
             <if test="toolDescription != null and toolDescription != ''">#{toolDescription},</if>
-            <if test="toolSap != null and toolSap != ''">#{toolSap},</if>
             <if test="delFlag != null">#{delFlag},</if>
          </trim>
     </insert>
@@ -74,7 +66,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pocket7000 != null">pocket_7000 = #{pocket7000},</if>
             <if test="pocketHaas != null">pocket_haas = #{pocketHaas},</if>
             <if test="toolDescription != null and toolDescription != ''">tool_description = #{toolDescription},</if>
-            <if test="toolSap != null and toolSap != ''">tool_sap = #{toolSap},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
         </trim>
         where tool_id = #{toolId}

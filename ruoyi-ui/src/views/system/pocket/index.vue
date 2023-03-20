@@ -4,9 +4,6 @@
       <el-form-item label="刀具ID" prop="toolId">
         <el-input v-model="queryParams.toolId" placeholder="请输入刀具ID" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="特征名称" prop="featName">
-        <el-input v-model="queryParams.featName" placeholder="请输入特征名称" clearable @keyup.enter.native="handleQuery" />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -59,7 +56,7 @@
         <el-form-item label="刀具ID" prop="toolId">
           <el-input v-model="form.toolId" placeholder="请输入刀具ID" />
         </el-form-item>
-        <el-form-item v-if="form.toolPocketId != undefined" label="参数" prop="parameter">
+        <el-form-item v-if="title != '添加刀具加工参数'" label="参数" prop="parameter">
           <vue-json-pretty v-model:data="form.parameter" :editable=true />
         </el-form-item>
       </el-form>
@@ -111,7 +108,6 @@ export default {
         pageNum: 1,
         pageSize: 10,
         toolId: null,
-        featName: null,
         parameter: null
       },
       // 表单参数
@@ -154,9 +150,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        toolPocketId: null,
         toolId: null,
-        featName: null,
         parameter: null
       };
       this.resetForm("form");
@@ -173,7 +167,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.toolPocketId)
+      this.ids = selection.map(item => item.toolId)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -186,8 +180,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const toolPocketId = row.toolPocketId || this.ids
-      getPocket(toolPocketId).then(response => {
+      const toolId = row.toolId || this.ids
+      getPocket(toolId).then(response => {
         this.form = response.data;
         this.form.parameter = _.pick(row.parameter, ['Coolant', 'FeedRate', 'PeckDepth', 'SpindelSpeed']);
         this.open = true;
@@ -217,10 +211,10 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const toolPocketIds = row.toolPocketId || this.ids;
+      const toolIds = row.toolId || this.ids;
       const toolId = row.toolId || this.toolId;
       this.$modal.confirm('是否确认删除刀具加工参数编号为"' + toolId + '"的数据项？').then(function () {
-        return delPocket(toolPocketIds);
+        return delPocket(toolIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

@@ -22,21 +22,10 @@ public class SysToolPocket extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 刀具加工参数id
-     */
-    private Long toolPocketId;
-
-    /**
      * 刀具ID
      */
     @Excel(name = "刀具ID")
     private String toolId;
-
-    /**
-     * 特征名称
-     */
-    @Excel(name = "特征名称")
-    private String featName;
 
     /**
      * 参数
@@ -45,28 +34,12 @@ public class SysToolPocket extends BaseEntity {
     @TableField(typeHandler = JacksonTypeHandler.class)
     private SysParameter parameter;
 
-    public void setToolPocketId(Long toolPocketId) {
-        this.toolPocketId = toolPocketId;
-    }
-
-    public Long getToolPocketId() {
-        return toolPocketId;
-    }
-
     public void setToolId(String toolId) {
         this.toolId = toolId;
     }
 
     public String getToolId() {
         return toolId;
-    }
-
-    public void setFeatName(String featName) {
-        this.featName = featName;
-    }
-
-    public String getFeatName() {
-        return featName;
     }
 
     public SysParameter getParameter() {
@@ -80,9 +53,7 @@ public class SysToolPocket extends BaseEntity {
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("toolPocketId", getToolPocketId())
                 .append("toolId", getToolId())
-                .append("featName", getFeatName())
                 .append("parameter", getParameter())
                 .toString();
     }
