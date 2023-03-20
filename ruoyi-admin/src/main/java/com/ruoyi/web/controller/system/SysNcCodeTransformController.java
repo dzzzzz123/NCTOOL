@@ -55,7 +55,7 @@ public class SysNcCodeTransformController extends BaseController {
     @PostMapping("/upload")
     public AjaxResult uploadFile(@RequestParam("file") MultipartFile[] files) throws IOException, InvalidExtensionException {
         for (MultipartFile file : files) {
-            String fileName = file.getOriginalFilename();
+            String fileName = file.getOriginalFilename().split("/")[-1];
             File fileDir = new File("d:/upload");
             if (!fileDir.exists()) {
                 fileDir.mkdirs();
@@ -79,9 +79,9 @@ public class SysNcCodeTransformController extends BaseController {
     private static File createAbsoluteFile(String fileName) throws IOException {
         File desc = new File("d:/upload" + File.separator + fileName);
 
-        if (!desc.getParentFile().exists()) {
-            desc.getParentFile().mkdirs();
-        }
+        // if (!desc.getParentFile().exists()) {
+        //     desc.getParentFile().mkdirs();
+        // }
         if (!desc.exists()) {
             desc.createNewFile();
         }

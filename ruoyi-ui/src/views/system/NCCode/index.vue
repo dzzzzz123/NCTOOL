@@ -4,7 +4,8 @@
             <file-upload class="btn btn-primary" v-model="fileList" :multiple="true" :directory="true" :drop="true"
                 :drop-directory="true" extensions="tap" @input-filter="inputFilter" @input-file="inputFile" ref="upload">
             </file-upload>
-            <el-button size="small" type="primary" @click="onAddFolader" style="margin-top: 13px; margin-left: 20px;">点击上传</el-button>
+            <el-button size="small" type="primary" @click="onAddFolader"
+                style="margin-top: 13px; margin-left: 20px;">点击上传</el-button>
             <el-button @click="transform" size="small" type="primary" style="margin-left: 20px;">转换NC代码</el-button>
             <el-table v-loading="toTransForm.loading" :data="toTransForm.tapList" :show-header="false"
                 @row-click="toTransFormrowClick" :row-class-name="toTransFormrowClassName" :row-style="toTransFormrowStyle"
@@ -148,7 +149,7 @@ export default {
             }
             );
         },
-        onAddFolader(){
+        onAddFolader() {
             let input = this.$refs.upload.$el.querySelector('input');
             input.click();
         },
@@ -168,8 +169,8 @@ export default {
             let arr1 = []; //存id
             let newArr = []; //存新数组
             for (let i in arr) {
-                if (arr1.indexOf(arr[i].name) == -1) {
-                    arr1.push(arr[i].name);
+                if (arr1.indexOf(arr[i].file.name) == -1) {
+                    arr1.push(arr[i].file.name);
                     newArr.push(arr[i]);
                 }
             }
