@@ -26,9 +26,10 @@ public class TransformTo6300 extends TransformBaseUtil {
                 newStr.append(content[i]).append("\r\n");
                 i++;
                 newStr.append(content[i]).append("\r\n");
-                newStr.append(TOOL_SET_DETECTION);
+                if (Arrays.asList(TOOLS_TO_SET_DETECTION).contains(content[i-2])) {
+                    newStr.append(TOOL_SET_DETECTION);
+                }
             } else if (Arrays.asList(NH6300_M_TO_DELETE).contains(content[i])) {
-                newStr.append("   ");
             } else if (Objects.equals(content[i], "G65P8881")) {
                 newStr.append("M98P8881(Z AXIS HEIGHT MEASUREMENT)");
             } else if (content[i].startsWith("G43Z35.H")) {
@@ -41,8 +42,6 @@ public class TransformTo6300 extends TransformBaseUtil {
                 }
             } else if (content[i].startsWith("G84")) {
                 newStr.append(TAPPING_TEETH).append(content[i]);
-            } else if (Objects.equals(content[i], ORIGIN_M_PROGCAT)) {
-                newStr.append(NH6300_M_PROGCAT);
             } else if (Objects.equals(content[i], "M01") && !Objects.equals(flag, "")) {
                 newStr.append(WEAR_DETECTION.get(flag)).append("M01");
                 flag = "";

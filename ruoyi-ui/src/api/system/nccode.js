@@ -37,7 +37,7 @@ export function compareDownload(oldFileName, newFileName) {
 
 export function uploadToDNC(tapNames) {
   return request({
-    url: '/system/nccode/ToDNC'+tapNames,
+    url: '/system/nccode/ToDNC/'+tapNames,
     method: 'get'
   })
 }

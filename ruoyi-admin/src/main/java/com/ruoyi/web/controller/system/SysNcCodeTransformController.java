@@ -170,30 +170,6 @@ public class SysNcCodeTransformController extends BaseController {
     @Log(title = "上传NC代码到DNC", businessType = BusinessType.UPLOAD)
     @GetMapping("/ToDNC/{tapNames}")
     public AjaxResult uploadToDnc(@PathVariable String[] tapNames) {
-        for (String tapName : tapNames) {
-            File temp = new File("d:/upload/" + tapName);
-            File file = new File("d:/upload/" + tapName.split("\\.")[0] + ".tap_MMC_NH6300");
-            File file2 = new File("d:/upload/" + tapName.split("\\.")[0] + ".tap_MMC_NV7000");
-            File file3 = new File("d:/upload/" + tapName.split("\\.")[0] + ".tap_V655");
-            try {
-                FileUtil.copyFile(temp, file, REPLACE_EXISTING);
-                TransformTo6300.transform(file, 0);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                FileUtil.copyFile(temp, file2, REPLACE_EXISTING);
-                TransformTo7000.transform(file2, 1);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                FileUtil.copyFile(temp, file3, REPLACE_EXISTING);
-                TransformTo655.transform(file3, 2);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
         return new AjaxResult(200, "Success");
     }
 }

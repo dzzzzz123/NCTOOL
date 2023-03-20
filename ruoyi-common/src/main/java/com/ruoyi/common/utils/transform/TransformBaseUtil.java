@@ -7,7 +7,11 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+
+import static com.ruoyi.common.constant.TransformConstants.*;
 
 /**
  * 转换NC代码基类
@@ -33,6 +37,7 @@ public class TransformBaseUtil {
             String str = new String(fileContext, StandardCharsets.UTF_8);
             String[] content = str.split("\r\n");
             deleteT72Related(content);
+            processAllReplace(content, flag);
             editFileHeader(content, flag);
             StringBuilder newStr = new StringBuilder();
             // 对NC原始代码进行操作
@@ -82,7 +87,7 @@ public class TransformBaseUtil {
             if (Objects.equals(content[i], "T72")) {
                 content[i] = " ";
                 i++;
-                while (!Objects.equals(content[i], "M09")) {
+                while (!Objects.equals(content[i], "N50")) {
                     content[i] = " ";
                     i++;
                 }
@@ -100,9 +105,61 @@ public class TransformBaseUtil {
      * @param flag    机型标识
      */
     static void editFileHeader(String[] content, int flag) {
-        for (int i = 0; i < 15; i++) {
-            if (i == 7) {
+        for (int i = 0; i < 150; i++) {
+            if (i == 3) {
+                switch (flag) {
+                    case 0:
+                        content[i] = NH6300_M_PROGCAT;
+                        break;
+                    case 1:
+                        content[i] = NV7000_M_PROGCAT;
+                        break;
+                    case 2:
+                        content[i] = MAZAK655_M_PROGCAT;
+                        break;
+                    default:
+                        break;
+                }
+            } else if (i == 7) {
                 content[i] = content[i] + "\r\n" + "(Processed by Platform: " + getTime() + ")";
+            }
+            // 给刀具最开始的(TOOL TABLE SUMMARY)加  ,
+            else if (Objects.equals(content[i], "(TOOL NUMBER   TOOL ID OFFSET NO  TOOL COMMENT)") && (flag == 1 || flag == 2)) {
+                i++;
+                while (!content[i].startsWith("(TOOL NAME")) {
+                    if (content[i].startsWith("(67") && flag == 1) {
+                        content[i] = content[i].replace("(67", "(56");
+                    } else if (content[i].startsWith("(67") && flag == 2) {
+                        content[i] = content[i].replace("(67", "(43");
+                    } else if (content[i].startsWith("(96")) {
+                        content[i] = content[i].replace("(96", "(44");
+                    } else if (content[i].startsWith(" ")) {
+                        i++;
+                        continue;
+                    }
+                    String[] str = content[i].split("\\s+", 2);
+                    content[i] = str[0] + ", " + str[1];
+                    i++;
+                }
+                i++;
+            }
+        }
+    }
+
+    /**
+     * 为所有需要修改的字符串修改
+     *
+     * @param content 用来处理的字符串
+     */
+    static void processAllReplace(String[] content, int flag) {
+        if (flag == 1 || flag == 2) {
+            Map<String, String> temp = (flag == 1) ? NV7000_ALL_TO_CHANGE : MAZAK655_ALL_TO_CHANGE;
+            for (int i = 0; i < content.length; i++) {
+                for (String s : temp.keySet()) {
+                    if (content[i].contains(s) && !content[i].startsWith("(")) {
+                        content[i] = content[i].replace(s, temp.get(s));
+                    }
+                }
             }
         }
     }

@@ -2,7 +2,10 @@ package com.ruoyi.common.utils.transform;
 
 import com.ruoyi.common.constant.TransformConstants;
 
+import java.util.Arrays;
 import java.util.Objects;
+
+import static com.ruoyi.common.constant.TransformConstants.*;
 
 /**
  * 将NC代码转换为655机床使用的G代码
@@ -12,23 +15,18 @@ import java.util.Objects;
  */
 public class TransformTo655 extends TransformBaseUtil {
 
-
     static StringBuilder processNcCode(String[] content) {
         StringBuilder newStr = new StringBuilder();
         for (int i = 0; i < content.length; i++) {
-            if (true) {
-
-            } else if (TransformConstants.MAZAK655_M_TO_CHANGE.containsKey(content[i])) {
-                for (String s : TransformConstants.MAZAK655_M_TO_CHANGE.keySet()) {
-                    if (Objects.equals(content[i], s)) {
-                        newStr.append(TransformConstants.MAZAK655_M_TO_CHANGE.get(s)).append("\r\n");
-                    }
-                }
-            } else if (Objects.equals(content[i], TransformConstants.ORIGIN_M_PROGCAT)) {
-                newStr.append(TransformConstants.MAZAK655_M_PROGCAT).append("\r\n");
+            if (Arrays.asList(MAZAK655_M_TO_DELETE).contains(content[i])) {
+            } else if (content[i].contains("T96")) {
+                newStr.append(content[i].replace("T96", MAZAK655_T_TO_CHANGE.get("T96")));
+            } else if (content[i].contains("T67")) {
+                newStr.append(content[i].replace("T67", MAZAK655_T_TO_CHANGE.get("T67")));
             } else {
-                newStr.append(content[i]).append("\r\n");
+                newStr.append(content[i]);
             }
+            newStr.append("\r\n");
         }
         return newStr;
     }

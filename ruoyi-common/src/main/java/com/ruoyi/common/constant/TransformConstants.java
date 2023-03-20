@@ -12,15 +12,17 @@ import java.util.Map;
 public class TransformConstants {
 
     public static final String ORIGIN_M_PROGCAT = "(PROGCAT MAZAK HORIZONTAL)";
+    public static final String NH6300_M_PROGCAT = "(PROGCAT MORI SEIKI NH6300)";
+    public static final String NV7000_M_PROGCAT = "(PROGCAT MORI SEIKI NV7000)";
+    public static final String MAZAK655_M_PROGCAT = "(PROGCAT MAZAK V655 PALLET)";
 
     public static final String[] NH6300_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
-
-    public static final Map<String, String> NH6300_M_TO_CHANGE = Map.of("M50", "M51", "M09", "M89", "M51", "M88");
-
-    public static final String NH6300_M_PROGCAT = "(PROGCAT MORI SEIKI NH6300)";
-
-
     public static final String[] NV7000_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
+
+    public static final Map<String, String> NH6300_M_TO_CHANGE = Map.of(
+            "M50", "M51",
+            "M09", "M89",
+            "M51", "M88");
 
     public static final Map<String, String> NV7000_M_TO_CHANGE = Map.of(
             "M50", "M51",
@@ -29,16 +31,13 @@ public class TransformConstants {
             "M88", "M08",
             "M51", "M08"
     );
-
     public static final Map<String, String> NV7000_H_TO_CHANGE = Map.of(
             "H67", "H56",
             "H96", "H44"
     );
-
     public static final Map<String, String> NV7000_G_TO_CHANGE = Map.of(
             "G28", "G30"
     );
-
     public static final Map<String, String> NV7000_T_TO_CHANGE = Map.of(
             "T40", "T9940",
             "T8", "T9908",
@@ -47,10 +46,7 @@ public class TransformConstants {
             "T53", "T9953",
             "T26", "T9926"
     );
-
-
     public static final Map<String, String> NV7000_ALL_TO_CHANGE = new HashMap<>();
-
     static {
         NV7000_ALL_TO_CHANGE.putAll(NV7000_M_TO_CHANGE);
         NV7000_ALL_TO_CHANGE.putAll(NV7000_H_TO_CHANGE);
@@ -58,11 +54,29 @@ public class TransformConstants {
         NV7000_ALL_TO_CHANGE.putAll(NV7000_T_TO_CHANGE);
     }
 
-    public static final String NV7000_M_PROGCAT = "(PROGCAT MORI SEIKI NV7000)";
+    public static final String[] MAZAK655_M_TO_DELETE = {};
 
-    public static final Map<String, String> MAZAK655_M_TO_CHANGE = Map.of("M51", "M08", "M99", "M30");
-
-    public static final String MAZAK655_M_PROGCAT = "(PROGCAT MAZAK V655 PALLET)";
+    public static final Map<String, String> MAZAK655_M_TO_CHANGE = Map.of(
+            "M51", "M08",
+            "M99", "M30");
+    public static final Map<String, String> MAZAK655_H_TO_CHANGE = Map.of(
+            "H67", "H43",
+            "H96", "H44"
+    );
+    public static final Map<String, String> MAZAK655_G_TO_CHANGE = Map.of(
+            "G28", "G30"
+    );
+    public static final Map<String, String> MAZAK655_T_TO_CHANGE = Map.of(
+            "T96","T44",
+            "T67","T43"
+    );
+    public static final Map<String, String> MAZAK655_ALL_TO_CHANGE = new HashMap<>();
+    static {
+        MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_M_TO_CHANGE);
+        MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_H_TO_CHANGE);
+        MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_G_TO_CHANGE);
+        // MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_T_TO_CHANGE);
+    }
 
     public static final Map<String, String> WEAR_DETECTION = Map.of(
             "T1",
@@ -86,6 +100,7 @@ public class TransformConstants {
                     "G325X2.200Y3.300H01Q0.3T9002\n"
     );
 
+    public static final String[] TOOLS_TO_SET_DETECTION={"T1","T8","T10","T26","T27","T40","T53","T67","T96","T104"};
     public static final String TOOL_SET_DETECTION =
             "#991=-2\n" +
                     "#992=1\n" +
