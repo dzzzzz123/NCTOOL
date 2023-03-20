@@ -1,9 +1,9 @@
 package com.ruoyi.common.utils.transform;
 
-import com.ruoyi.common.constant.TransformConstants;
-
 import java.util.Arrays;
 import java.util.Objects;
+
+import static com.ruoyi.common.constant.TransformConstants.*;
 
 /**
  * 将NC代码转换为6300机床使用的G代码
@@ -15,26 +15,37 @@ public class TransformTo6300 extends TransformBaseUtil {
 
     static StringBuilder processNcCode(String[] content) {
         StringBuilder newStr = new StringBuilder();
+        String flag = "";
         for (int i = 0; i < content.length; i++) {
+            if (WEAR_DETECTION.containsKey(content[i])) {
+                flag = content[i];
+            }
             if (content[i].startsWith("T") && Objects.equals(content[i + 1], "M06")) {
-                newStr.append("G91G30X0.Y0.Z0.").append("\r\n").append("G54G90G0B0.").append("\r\n").append(content[i]);
-            } else if (Arrays.asList(TransformConstants.NH6300_M_TO_DELETE).contains(content[i])) {
+                newStr.append("G91G30X0.Y0.Z0.").append("\r\n").append("G54G90G0B0.").append("\r\n").append(content[i]).append("\r\n");
+                i++;
+                newStr.append(content[i]).append("\r\n");
+                i++;
+                newStr.append(content[i]).append("\r\n");
+                newStr.append(TOOL_SET_DETECTION);
+            } else if (Arrays.asList(NH6300_M_TO_DELETE).contains(content[i])) {
+                newStr.append("   ");
             } else if (Objects.equals(content[i], "G65P8881")) {
                 newStr.append("M98P8881(Z AXIS HEIGHT MEASUREMENT)");
             } else if (content[i].startsWith("G43Z35.H")) {
                 newStr.append("G43Z35.H1");
-            } else if (TransformConstants.NH6300_M_TO_CHANGE.containsKey(content[i])) {
-                for (String s : TransformConstants.NH6300_M_TO_CHANGE.keySet()) {
+            } else if (NH6300_M_TO_CHANGE.containsKey(content[i])) {
+                for (String s : NH6300_M_TO_CHANGE.keySet()) {
                     if (Objects.equals(content[i], s)) {
-                        newStr.append(TransformConstants.NH6300_M_TO_CHANGE.get(s));
+                        newStr.append(NH6300_M_TO_CHANGE.get(s));
                     }
                 }
-            } else if (Objects.equals(content[i], TransformConstants.ORIGIN_M_PROGCAT)) {
-                newStr.append(TransformConstants.NH6300_M_PROGCAT);
-            } else if (i == 2) {
-                newStr.append("(FILENAME E:\\NH6300\\").append(content[i].split("\\\\")[2]);
-            } else if (i == 7) {
-                newStr.append(content[i]).append("\r\n").append("(Processed by Platform: ").append(getTime()).append(")");
+            } else if (content[i].startsWith("G84")) {
+                newStr.append(TAPPING_TEETH).append(content[i]);
+            } else if (Objects.equals(content[i], ORIGIN_M_PROGCAT)) {
+                newStr.append(NH6300_M_PROGCAT);
+            } else if (Objects.equals(content[i], "M01") && !Objects.equals(flag, "")) {
+                newStr.append(WEAR_DETECTION.get(flag)).append("M01");
+                flag = "";
             } else {
                 newStr.append(content[i]);
             }

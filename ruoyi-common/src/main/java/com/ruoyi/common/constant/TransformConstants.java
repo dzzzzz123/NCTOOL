@@ -1,5 +1,6 @@
 package com.ruoyi.common.constant;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -18,14 +19,86 @@ public class TransformConstants {
 
     public static final String NH6300_M_PROGCAT = "(PROGCAT MORI SEIKI NH6300)";
 
+
     public static final String[] NV7000_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
 
-    public static final Map<String, String> NV7000_M_TO_CHANGE = Map.of("M50", "M51", "M99", "M30");
+    public static final Map<String, String> NV7000_M_TO_CHANGE = Map.of(
+            "M50", "M51",
+            "M99", "M30",
+            "M89", "M09",
+            "M88", "M08",
+            "M51", "M08"
+    );
+
+    public static final Map<String, String> NV7000_H_TO_CHANGE = Map.of(
+            "H67", "H56",
+            "H96", "H44"
+    );
+
+    public static final Map<String, String> NV7000_G_TO_CHANGE = Map.of(
+            "G28", "G30"
+    );
+
+    public static final Map<String, String> NV7000_T_TO_CHANGE = Map.of(
+            "T40", "T9940",
+            "T8", "T9908",
+            "T10", "T9910",
+            "T27", "T9927",
+            "T53", "T9953",
+            "T26", "T9926"
+    );
+
+
+    public static final Map<String, String> NV7000_ALL_TO_CHANGE = new HashMap<>();
+
+    static {
+        NV7000_ALL_TO_CHANGE.putAll(NV7000_M_TO_CHANGE);
+        NV7000_ALL_TO_CHANGE.putAll(NV7000_H_TO_CHANGE);
+        NV7000_ALL_TO_CHANGE.putAll(NV7000_G_TO_CHANGE);
+        NV7000_ALL_TO_CHANGE.putAll(NV7000_T_TO_CHANGE);
+    }
 
     public static final String NV7000_M_PROGCAT = "(PROGCAT MORI SEIKI NV7000)";
 
     public static final Map<String, String> MAZAK655_M_TO_CHANGE = Map.of("M51", "M08", "M99", "M30");
 
     public static final String MAZAK655_M_PROGCAT = "(PROGCAT MAZAK V655 PALLET)";
+
+    public static final Map<String, String> WEAR_DETECTION = Map.of(
+            "T1",
+            "G325X-11.900Y1.400H01Q0.3T9002\n" +
+                    "G325X7.200Y7.600H01Q0.3T9002\n" +
+                    "G325X4.500Y-11.000H01Q0.3T9002\n",
+            "T26",
+            "G325X1.800Y-6.500H01Q0.3T9002\n" +
+                    "G325X3.100Y3.500H01Q0.3T9002\n" +
+                    "G325X-5.900Y0.500H01Q0.3T9002\n",
+            "T30",
+            "G325X2.400Y-8.100H01Q0.3T9002\n" +
+                    "G325X5.300Y4.200H01Q0.3T9002\n" +
+                    "G325X-6.600Y1.3000H01Q0.3T9002\n",
+            "T84",
+            "G325X7.300Y-0.500H01Q0.3T9002\n" +
+                    "G325X-8.400Y0.500H01Q0.3T9002\n",
+            "T104",
+            "G325X1.800Y-4.900H01Q0.3T9002\n" +
+                    "G325X-5.300Y0.000H01Q0.3T9002\n" +
+                    "G325X2.200Y3.300H01Q0.3T9002\n"
+    );
+
+    public static final String TOOL_SET_DETECTION =
+            "#991=-2\n" +
+                    "#992=1\n" +
+                    "#1133=4\n" +
+                    "M67\n" +
+                    "G04\n" +
+                    "#1133=200\n" +
+                    "M101\n" +
+                    "M102\n" +
+                    "IF[#1004NE1]GOTO9000";
+
+    public static final String TAPPING_TEETH =
+            "G95\n" +
+                    "M29S243\n";
 
 }
