@@ -26,7 +26,10 @@ public class TransformTo655 extends TransformBaseUtil {
                 }
             } else if (Objects.equals(content[i], TransformConstants.ORIGIN_M_PROGCAT)) {
                 newStr.append(TransformConstants.MAZAK655_M_PROGCAT).append("\r\n");
-            } else if (i == 7) {
+            }else if (i == 2) {
+                newStr.append("(FILENAME E:\\MZK502\\").append(content[i].split("\\\\")[2]);
+            }
+            else if (i == 7) {
                 newStr.append(content[i]).append("\r\n").append("(Processed by Platform: ").append(getTime()).append(")").append("\r\n");
             } else {
                 newStr.append(content[i]).append("\r\n");

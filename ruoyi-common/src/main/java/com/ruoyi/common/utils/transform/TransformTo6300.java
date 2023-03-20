@@ -13,30 +13,32 @@ import java.util.Objects;
  */
 public class TransformTo6300 extends TransformBaseUtil {
 
-
     static StringBuilder processNcCode(String[] content) {
         StringBuilder newStr = new StringBuilder();
         for (int i = 0; i < content.length; i++) {
             if (content[i].startsWith("T") && Objects.equals(content[i + 1], "M06")) {
-                newStr.append("G91G30X0.Y0.Z0.").append("\r\n").append("G54G90G0B0.").append("\r\n").append(content[i]).append("\r\n");
+                newStr.append("G91G30X0.Y0.Z0.").append("\r\n").append("G54G90G0B0.").append("\r\n").append(content[i]);
             } else if (Arrays.asList(TransformConstants.NH6300_M_TO_DELETE).contains(content[i])) {
             } else if (Objects.equals(content[i], "G65P8881")) {
-                newStr.append("M98P8881(Z AXIS HEIGHT MEASUREMENT)").append("\r\n");
+                newStr.append("M98P8881(Z AXIS HEIGHT MEASUREMENT)");
             } else if (content[i].startsWith("G43Z35.H")) {
-                newStr.append("G43Z35.H1").append("\r\n");
+                newStr.append("G43Z35.H1");
             } else if (TransformConstants.NH6300_M_TO_CHANGE.containsKey(content[i])) {
                 for (String s : TransformConstants.NH6300_M_TO_CHANGE.keySet()) {
                     if (Objects.equals(content[i], s)) {
-                        newStr.append(TransformConstants.NH6300_M_TO_CHANGE.get(s)).append("\r\n");
+                        newStr.append(TransformConstants.NH6300_M_TO_CHANGE.get(s));
                     }
                 }
             } else if (Objects.equals(content[i], TransformConstants.ORIGIN_M_PROGCAT)) {
-                newStr.append(TransformConstants.NH6300_M_PROGCAT).append("\r\n");
+                newStr.append(TransformConstants.NH6300_M_PROGCAT);
+            } else if (i == 2) {
+                newStr.append("(FILENAME E:\\NH6300\\").append(content[i].split("\\\\")[2]);
             } else if (i == 7) {
-                newStr.append(content[i]).append("\r\n").append("(Processed by Platform: ").append(getTime()).append(")").append("\r\n");
+                newStr.append(content[i]).append("\r\n").append("(Processed by Platform: ").append(getTime()).append(")");
             } else {
-                newStr.append(content[i]).append("\r\n");
+                newStr.append(content[i]);
             }
+            newStr.append("\r\n");
         }
         return newStr;
     }

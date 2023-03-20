@@ -35,7 +35,7 @@
  
 <script>
 import CodeDiff from 'vue-code-diff'
-import { uploadNcCode, transFormNcCode, newTapList, compareDownload } from "@/api/system/nccode.js"
+import { uploadNcCode, transFormNcCode, newTapList, compareDownload, uploadToDNC } from "@/api/system/nccode.js"
 export default {
     name: 'NCCode',
     components: { CodeDiff },
@@ -203,12 +203,12 @@ export default {
             }
             this.isTransFormed = true;
             this.fileList.forEach(file => {
-                if(!this.toTransForm.tapNames.includes(file.name)){
+                if (!this.toTransForm.tapNames.includes(file.name)) {
                     this.toTransForm.tapNames.push(file.name);
                 }
             });
             if (this.toTransForm.tapNames.length === 0) {
-                this.$message.warning("没有可以转换的tap文件，请上传需要转换的tap文件！");
+                this.$message.error("没有可以转换的tap文件，请上传需要转换的tap文件！");
                 return;
             }
             this.$message.warning("转换NC代码!");
@@ -216,6 +216,8 @@ export default {
                 if (response.code === 200) {
                     this.$message.success("转换NC代码成功！");
                     this.getTapList(this.fileList);
+                    this.$message.info("正在将NC代码上传到DNC！");
+                    this.uploadDNC(response.code);
                 }
             });
         },
@@ -235,8 +237,13 @@ export default {
         changeOldStr(str) {
             this.diff.oldStr = str;
         },
-        uploadToDNC() {
-            this.$message.warning("上传到DNC!");
+        uploadDNC(code) {
+            if (code == 200) {
+                uploadToDNC();
+                this.$message.success("上传到DNC!");
+            } else {
+                this.$message.error("转换NC代码失败，无法上传到DNC！");
+            }
         },
     }
 }

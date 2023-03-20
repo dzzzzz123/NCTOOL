@@ -34,3 +34,10 @@ export function compareDownload(oldFileName, newFileName) {
     data: data
   })
 }
+
+export function uploadToDNC() {
+  return request({
+    url: '/system/nccode/ToDNC',
+    method: 'get'
+  })
+}
