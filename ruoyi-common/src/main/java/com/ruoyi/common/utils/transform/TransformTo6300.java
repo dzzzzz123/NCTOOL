@@ -16,6 +16,7 @@ public class TransformTo6300 extends TransformBaseUtil {
     static StringBuilder processNcCode(String[] content) {
         StringBuilder newStr = new StringBuilder();
         String flag = "";
+        int flag2 = 0;
         for (int i = 0; i < content.length; i++) {
             if (WEAR_DETECTION.containsKey(content[i])) {
                 flag = content[i];
@@ -26,20 +27,13 @@ public class TransformTo6300 extends TransformBaseUtil {
                 newStr.append(content[i]).append("\r\n");
                 i++;
                 newStr.append(content[i]).append("\r\n");
-                if (Arrays.asList(TOOLS_TO_SET_DETECTION).contains(content[i-2])) {
+                if (Arrays.asList(TOOLS_TO_SET_DETECTION).contains(content[i - 2]) && flag2 > 1) {
                     newStr.append(TOOL_SET_DETECTION);
+                    continue;
                 }
-            } else if (Arrays.asList(NH6300_M_TO_DELETE).contains(content[i])) {
-            } else if (Objects.equals(content[i], "G65P8881")) {
-                newStr.append("M98P8881(Z AXIS HEIGHT MEASUREMENT)");
+                flag2++;
             } else if (content[i].startsWith("G43Z35.H")) {
                 newStr.append("G43Z35.H1");
-            } else if (NH6300_M_TO_CHANGE.containsKey(content[i])) {
-                for (String s : NH6300_M_TO_CHANGE.keySet()) {
-                    if (Objects.equals(content[i], s)) {
-                        newStr.append(NH6300_M_TO_CHANGE.get(s));
-                    }
-                }
             } else if (content[i].startsWith("G84")) {
                 newStr.append(TAPPING_TEETH).append(content[i]);
             } else if (Objects.equals(content[i], "M01") && !Objects.equals(flag, "")) {

@@ -1,15 +1,15 @@
 package com.ruoyi.common.utils.transform;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static com.ruoyi.common.constant.TransformConstants.*;
 
@@ -20,6 +20,13 @@ import static com.ruoyi.common.constant.TransformConstants.*;
  * @date 2023-03-08
  */
 public class TransformBaseUtil {
+
+    private static String DELETE_FLAG;
+    private static String[] TO_DELETE;
+
+    private static String WHICH_PROGCAT;
+
+    private static Map<String, String> ALL_TO_CHANGE;
 
     /**
      * 转换NC代码基类
@@ -36,9 +43,10 @@ public class TransformBaseUtil {
             in.read(fileContext);
             String str = new String(fileContext, StandardCharsets.UTF_8);
             String[] content = str.split("\r\n");
-            deleteT72Related(content);
-            processAllReplace(content, flag);
+            initProcess(flag);
             editFileHeader(content, flag);
+            content = processAllDelete(content);
+            processAllReplace(content);
             StringBuilder newStr = new StringBuilder();
             // 对NC原始代码进行操作
             switch (flag) {
@@ -76,25 +84,32 @@ public class TransformBaseUtil {
     }
 
     /**
-     * 转换NC代码时，删除掉代码中所有带有T72刀具的部分
+     * 用来初始化增删改数组或map的函数
      *
-     * @param content 老字符串
-     * @return 新字符串
+     * @param flag 标识
      */
-    static void deleteT72Related(String[] content) {
-        for (int i = 0; i < content.length; i++) {
-            // 删除掉T72相关代码块
-            if (Objects.equals(content[i], "T72")) {
-                content[i] = " ";
-                i++;
-                while (!Objects.equals(content[i], "N50")) {
-                    content[i] = " ";
-                    i++;
-                }
-                i++;
-            } else if (Objects.equals(content[i], "(72   T072      3\" FACE MILLING TOOL)") || Objects.equals(content[i], "(TOOL NAME : T072)")) {
-                content[i] = " ";
-            }
+    static void initProcess(int flag) {
+        switch (flag) {
+            case 0:
+                TO_DELETE = NH6300_M_TO_DELETE;
+                WHICH_PROGCAT = NH6300_M_PROGCAT;
+                ALL_TO_CHANGE = NH6300_ALL_TO_CHANGE;
+                DELETE_FLAG = "T72";
+                break;
+            case 1:
+                TO_DELETE = NV7000_M_TO_DELETE;
+                WHICH_PROGCAT = NV7000_M_PROGCAT;
+                ALL_TO_CHANGE = NV7000_ALL_TO_CHANGE;
+                DELETE_FLAG = "(100, T100      PROBE)";
+                break;
+            case 2:
+                TO_DELETE = MAZAK655_M_TO_DELETE;
+                WHICH_PROGCAT = MAZAK655_M_PROGCAT;
+                ALL_TO_CHANGE = MAZAK655_ALL_TO_CHANGE;
+                DELETE_FLAG = "(100, T100      PROBE)";
+                break;
+            default:
+                break;
         }
     }
 
@@ -105,21 +120,9 @@ public class TransformBaseUtil {
      * @param flag    机型标识
      */
     static void editFileHeader(String[] content, int flag) {
-        for (int i = 0; i < 150; i++) {
+        for (int i = 0; i < 75; i++) {
             if (i == 3) {
-                switch (flag) {
-                    case 0:
-                        content[i] = NH6300_M_PROGCAT;
-                        break;
-                    case 1:
-                        content[i] = NV7000_M_PROGCAT;
-                        break;
-                    case 2:
-                        content[i] = MAZAK655_M_PROGCAT;
-                        break;
-                    default:
-                        break;
-                }
+                content[i] = WHICH_PROGCAT;
             } else if (i == 7) {
                 content[i] = content[i] + "\r\n" + "(Processed by Platform: " + getTime() + ")";
             }
@@ -133,6 +136,8 @@ public class TransformBaseUtil {
                         content[i] = content[i].replace("(67", "(43");
                     } else if (content[i].startsWith("(96")) {
                         content[i] = content[i].replace("(96", "(44");
+                    } else if (content[i].startsWith("(84")) {
+                        content[i] = content[i].replace("(84", "(40");
                     } else if (content[i].startsWith(" ")) {
                         i++;
                         continue;
@@ -147,18 +152,43 @@ public class TransformBaseUtil {
     }
 
     /**
+     * 转换NC代码时，删除掉代码中所有需要删除的部分
+     *
+     * @param content 老字符串
+     * @return 新字符串
+     */
+    static String[] processAllDelete(String[] content) {
+        ArrayList<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < content.length; i++) {
+            // 删除掉T72相关代码块
+            if (Objects.equals(content[i], DELETE_FLAG)) {
+                indices.add(i);
+                i++;
+                while (!Objects.equals(content[i], "N50")) {
+                    indices.add(i);
+                    i++;
+                }
+                i++;
+            } else if (Objects.equals(content[i], "(72, T072      3\" FACE MILLING TOOL)") || Objects.equals(content[i], "(TOOL NAME : T072)")) {
+                indices.add(i);
+            } else if (Arrays.asList(TO_DELETE).contains(content[i])) {
+                indices.add(i);
+            }
+        }
+        return ArrayUtils.removeAll(content, indices.stream().mapToInt(Integer::intValue).toArray());
+    }
+
+
+    /**
      * 为所有需要修改的字符串修改
      *
      * @param content 用来处理的字符串
      */
-    static void processAllReplace(String[] content, int flag) {
-        if (flag == 1 || flag == 2) {
-            Map<String, String> temp = (flag == 1) ? NV7000_ALL_TO_CHANGE : MAZAK655_ALL_TO_CHANGE;
-            for (int i = 0; i < content.length; i++) {
-                for (String s : temp.keySet()) {
-                    if (content[i].contains(s) && !content[i].startsWith("(")) {
-                        content[i] = content[i].replace(s, temp.get(s));
-                    }
+    static void processAllReplace(String[] content) {
+        for (int i = 0; i < content.length; i++) {
+            for (String s : ALL_TO_CHANGE.keySet()) {
+                if (content[i].contains(s) && !content[i].startsWith("(")) {
+                    content[i] = content[i].replace(s, ALL_TO_CHANGE.get(s));
                 }
             }
         }

@@ -1,11 +1,6 @@
 package com.ruoyi.common.utils.transform;
 
-
-import java.util.Arrays;
-import java.util.Objects;
-
-import static com.ruoyi.common.constant.TransformConstants.*;
-import static com.ruoyi.common.constant.TransformConstants.NV7000_ALL_TO_CHANGE;
+import static com.ruoyi.common.constant.TransformConstants.TAPPING_TEETH;
 
 /**
  * 将NC代码转换为7000机床使用的G代码
@@ -22,10 +17,12 @@ public class TransformTo7000 extends TransformBaseUtil {
             if (content[i].startsWith("T")) {
                 newStr.append("G91G30X0.Y0.Z0.\n");
             }
-
-            if (Arrays.asList(NV7000_M_TO_DELETE).contains(content[i])) {
-            } else if (content[i].contains("T1") && !content[i].contains("(") && !content[i].contains("T10")) {
+            if (content[i].startsWith("G84")) {
+                newStr.append(TAPPING_TEETH).append(content[i]);
+            } else if (content[i].contains("T1") && !content[i].contains("(") && !content[i].contains("T10") && !content[i].contains("T11")) {
                 newStr.append(content[i].replace("T1", "T9901"));
+            } else if (content[i].contains("T8") && !content[i].contains("(") && !content[i].contains("T84")) {
+                newStr.append(content[i].replace("T8", "T9908"));
             } else if (content[i].contains("96")) {
                 if (content[i].contains(".H")) {
                     newStr.append(content[i].replaceFirst("96", "44"));
@@ -42,8 +39,14 @@ public class TransformTo7000 extends TransformBaseUtil {
                 } else {
                     newStr.append(content[i]);
                 }
-            } else if (content[i].startsWith("G84")) {
-                newStr.append(TAPPING_TEETH).append(content[i]);
+            } else if (content[i].contains("40")) {
+                if (content[i].contains(".H")) {
+                    newStr.append(content[i].replaceFirst("40", "84"));
+                } else if (content[i].contains("T40")) {
+                    newStr.append(content[i].replace("T40", "T84"));
+                } else {
+                    newStr.append(content[i]);
+                }
             } else {
                 newStr.append(content[i]);
             }

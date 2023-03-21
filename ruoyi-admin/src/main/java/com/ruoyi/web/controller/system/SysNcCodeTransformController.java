@@ -55,7 +55,10 @@ public class SysNcCodeTransformController extends BaseController {
     @PostMapping("/upload")
     public AjaxResult uploadFile(@RequestParam("file") MultipartFile[] files) throws IOException, InvalidExtensionException {
         for (MultipartFile file : files) {
-            String fileName = file.getOriginalFilename().split("/")[-1];
+            String fileName = file.getOriginalFilename();
+            if (fileName != null) {
+                fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+            }
             File fileDir = new File("d:/upload");
             if (!fileDir.exists()) {
                 fileDir.mkdirs();
@@ -128,6 +131,7 @@ public class SysNcCodeTransformController extends BaseController {
 
     /**
      * 用上传文件的文件名，获取到文件列表
+     *
      * @param tapNames 上传的文件名
      * @return tapList的列表
      * @throws IOException 读写异常
@@ -141,8 +145,9 @@ public class SysNcCodeTransformController extends BaseController {
 
     /**
      * 将需要比较的文件上传到前端
-     * @param files 自定义用来存储文件差异的类型
-     * @param request request
+     *
+     * @param files    自定义用来存储文件差异的类型
+     * @param request  request
      * @param response response
      */
     @PreAuthorize("@ss.hasAnyPermi('system:NcCode:compare')")
@@ -163,6 +168,7 @@ public class SysNcCodeTransformController extends BaseController {
 
     /**
      * 将本地文件上传到DNC
+     *
      * @param tapNames 上传文件名
      * @return 返回集
      */
