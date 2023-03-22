@@ -1,14 +1,12 @@
 package com.ruoyi.system.service.impl;
 
-import com.ruoyi.system.domain.SysDiffFiles;
 import com.ruoyi.system.domain.SysTapList;
 import com.ruoyi.system.service.ISysNcCodeTransformService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -19,50 +17,67 @@ import java.util.Objects;
 public class SysNcCodeTransformServiceImpl implements ISysNcCodeTransformService {
     private static ArrayList<File> SCAN_FILES_NAMES;
 
-    private static ArrayList<String> SCAN_FILES_FILTER_NAMES;
+    @Value("${upload.path}")
+    private String path;
 
-    private static ArrayList<SysTapList> TAP_LIST;
+    @Value("${upload.toDNCPath}")
+    private String toDncPath;
 
     @Override
     public ArrayList<SysTapList> selectTapList(String[] tapNames) {
         SCAN_FILES_NAMES = new ArrayList<>();
-        SCAN_FILES_FILTER_NAMES = new ArrayList<>();
-        TAP_LIST = new ArrayList<>();
+        ArrayList<String> scanFilesFilterNames = new ArrayList<>();
+        ArrayList<SysTapList> tapList = new ArrayList<>();
         scanFilesWithRecursion("D:\\upload");
         for (File scanFiles : SCAN_FILES_NAMES) {
-            if (scanFiles.getName().endsWith(".tap_MMC_NH6300") ||scanFiles.getName().endsWith(".tap_MMC_NV7000") || scanFiles.getName().endsWith(".tap_V655")) {
-                SCAN_FILES_FILTER_NAMES.add(scanFiles.getName());
+            if (scanFiles.getName().endsWith(".tap_MMC_NH6300") || scanFiles.getName().endsWith(".tap_MMC_NV7000") || scanFiles.getName().endsWith(".tap_V655")) {
+                scanFilesFilterNames.add(scanFiles.getName());
             }
         }
-        for (String scanFilesName : SCAN_FILES_FILTER_NAMES) {
+        for (String scanFilesName : scanFilesFilterNames) {
             for (String tapName : tapNames) {
                 if (Objects.equals(scanFilesName.split("\\.")[0], tapName.split("\\.")[0])) {
                     SysTapList tap = new SysTapList(scanFilesName);
-                    TAP_LIST.add(tap);
+                    tapList.add(tap);
                 }
             }
         }
-        return TAP_LIST;
+        return tapList;
     }
 
     /**
      * 选中前端返回的NC代码名，后端传输文件给前端
      *
-     * @param filesNames 需要比较的NC代码文件名
+     * @param fileName 需要比较的NC代码文件名
      * @return NC代码
      */
     @Override
-    public SysDiffFiles compareNcCode(SysDiffFiles filesNames) {
+    public File compareNcCode(String fileName) {
+        String[] split = fileName.split("\\.");
+        String pathToScan = toDncPath;
+        String fileNameWithoutSuffix = split[0];
         SCAN_FILES_NAMES = new ArrayList<>();
-        scanFilesWithRecursion("D:\\upload");
+        File file = null;
+        switch (split[1]) {
+            case "tap_MMC_NH6300":
+                pathToScan += File.separator + "tap_MMC_NH6300";
+                break;
+            case "tap_MMC_NV7000":
+                pathToScan += File.separator + "Final_NV7000";
+                break;
+            case "tap_V655":
+                pathToScan += File.separator + "tap_V655";
+                break;
+            default:
+                break;
+        }
+        scanFilesWithRecursion(pathToScan);
         for (File scanFile : SCAN_FILES_NAMES) {
-            if (scanFile.getName().equals(filesNames.getOldFileName())){
-                filesNames.setOldFile(scanFile);
-            }else if(scanFile.getName().equals(filesNames.getNewFileName())){
-                filesNames.setNewFile(scanFile);
+            if (scanFile.getName().equals(fileNameWithoutSuffix)) {
+                file = scanFile;
             }
         }
-        return filesNames;
+        return file;
     }
 
     public static void scanFilesWithRecursion(String folderPath) {

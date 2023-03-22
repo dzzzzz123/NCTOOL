@@ -272,7 +272,7 @@ export default {
                 this.$message.warning("请选中需要比较的NC代码后比较!");
                 return;
             }
-            compareDownload(this.diffLeftFile, this.diffRightFile).then(response => {
+            compareDownload(this.diffRightFile).then(response => {
                 this.changeNewStr(response);
             });
             this.diff.open = true;

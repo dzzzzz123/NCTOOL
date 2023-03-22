@@ -33,11 +33,10 @@
 
     <el-table v-loading="loading" :data="toolsList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="Pocket_6800" align="center" prop="pocket6800" width="180px" />
-      <el-table-column label="Pocket_650" align="center" prop="pocket650" width="180px" />
-      <el-table-column label="Pocket_7000" align="center" prop="pocket7000" width="180px" />
-      <el-table-column label="Pocket_Haas" align="center" prop="pocketHaas" width="180px" />
-      <el-table-column label="Tool Description" prop="toolDescription"/>
+      <el-table-column label="NH6300" align="center" prop="nh6300" width="220px" sortable />
+      <el-table-column label="NV7000" align="center" prop="nv7000" width="220px" sortable />
+      <el-table-column label="MAZAK655" align="center" prop="mazak655" width="220px" sortable />
+      <el-table-column label="Tool Description" prop="toolDescription" />
       <el-table-column label="operation" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -54,17 +53,14 @@
     <!-- 添加或修改刀具管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="60%" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="350px">
-        <el-form-item label="刀具在机床6800上的位置" prop="pocket6800">
-          <el-input v-model="form.pocket6800" placeholder="请输入刀具在机床6800上的位置" />
+        <el-form-item label="刀具在机床NH6300上的位置" prop="nh6300">
+          <el-input v-model="form.nh6300" placeholder="请输入刀具在机床NH6300上的位置" />
         </el-form-item>
-        <el-form-item label="刀具在机床650上的位置" prop="pocket650">
-          <el-input v-model="form.pocket650" placeholder="请输入刀具在机床650上的位置" />
+        <el-form-item label="刀具在机床NV7000上的位置" prop="nv7000">
+          <el-input v-model="form.nv7000" placeholder="请输入刀具在机床NV7000上的位置" />
         </el-form-item>
-        <el-form-item label="刀具在机床7000上的位置" prop="pocket7000">
-          <el-input v-model="form.pocket7000" placeholder="请输入刀具在机床7000上的位置" />
-        </el-form-item>
-        <el-form-item label="刀具在机床Haas上的位置" prop="pocketHaas">
-          <el-input v-model="form.pocketHaas" placeholder="请输入刀具在机床Haas上的位置" />
+        <el-form-item label="刀具在机床MAZAK655上的位置" prop="mazak655">
+          <el-input v-model="form.mazak655" placeholder="请输入刀具在机床MAZAK655上的位置" />
         </el-form-item>
         <el-form-item label="刀具描述" prop="toolDescription">
           <el-input v-model="form.toolDescription" placeholder="请输入刀具描述" />
@@ -107,10 +103,9 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        pocket6800: null,
-        pocket650: null,
-        pocket7000: null,
-        pocketHaas: null,
+        nh6300: null,
+        nv7000: null,
+        mazak655: null,
         toolDescription: null,
       },
       // 表单参数
@@ -145,10 +140,9 @@ export default {
     reset() {
       this.form = {
         toolId: null,
-        pocket6800: null,
-        pocket650: null,
-        pocket7000: null,
-        pocketHaas: null,
+        nh6300: null,
+        nv7000: null,
+        mazak655: null,
         toolDescription: null,
         delFlag: null
       };

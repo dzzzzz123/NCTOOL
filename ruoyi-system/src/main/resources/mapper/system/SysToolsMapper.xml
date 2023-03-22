@@ -6,25 +6,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="SysTools" id="SysToolsResult">
         <result property="toolId"    column="tool_id"    />
-        <result property="pocket6800"    column="pocket_6800"    />
-        <result property="pocket650"    column="pocket_650"    />
-        <result property="pocket7000"    column="pocket_7000"    />
-        <result property="pocketHaas"    column="pocket_haas"    />
+        <result property="nh6300"    column="NH6300"    />
+        <result property="nv7000"    column="NV7000"    />
+        <result property="mazak655"    column="MAZAK655"    />
         <result property="toolDescription"    column="tool_description"    />
         <result property="delFlag"    column="del_flag"    />
     </resultMap>
 
     <sql id="selectSysToolsVo">
-        select tool_id, pocket_6800, pocket_650, pocket_7000, pocket_haas, tool_description, del_flag from sys_tools t
+        select tool_id, NH6300, NV7000, MAZAK655, tool_description, del_flag from sys_tools t
     </sql>
 
     <select id="selectSysToolsList" parameterType="SysTools" resultMap="SysToolsResult">
         <include refid="selectSysToolsVo"/>
         <where>  
-            <if test="pocket6800 != null "> and pocket_6800 = #{pocket6800}</if>
-            <if test="pocket650 != null "> and pocket_650 = #{pocket650}</if>
-            <if test="pocket7000 != null "> and pocket_7000 = #{pocket7000}</if>
-            <if test="pocketHaas != null "> and pocket_haas = #{pocketHaas}</if>
+            <if test="nh6300 != null "> and nh6300 = #{nh6300}</if>
+            <if test="nv7000 != null "> and nv7000 = #{nv7000}</if>
+            <if test="mazak655 != null "> and mazak655 = #{mazak655}</if>
             <if test="toolDescription != null  and toolDescription != ''"> and tool_description like concat('%', #{toolDescription}, '%')</if>
         </where>
     </select>
@@ -41,18 +39,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertSysTools" parameterType="SysTools" useGeneratedKeys="true" keyProperty="toolId">
         insert into sys_tools
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="pocket6800 != null">pocket_6800,</if>
-            <if test="pocket650 != null">pocket_650,</if>
-            <if test="pocket7000 != null">pocket_7000,</if>
-            <if test="pocketHaas != null">pocket_haas,</if>
+            <if test="nh6300 != null">nh6300,</if>
+            <if test="nv7000 != null">nv7000,</if>
+            <if test="mazak655 != null">mazak655,</if>
             <if test="toolDescription != null and toolDescription != ''">tool_description,</if>
             <if test="delFlag != null">del_flag,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="pocket6800 != null">#{pocket6800},</if>
-            <if test="pocket650 != null">#{pocket650},</if>
-            <if test="pocket7000 != null">#{pocket7000},</if>
-            <if test="pocketHaas != null">#{pocketHaas},</if>
+            <if test="nh6300 != null">#{nh6300},</if>
+            <if test="nv7000 != null">#{nv7000},</if>
+            <if test="mazak655 != null">#{mazak655},</if>
             <if test="toolDescription != null and toolDescription != ''">#{toolDescription},</if>
             <if test="delFlag != null">#{delFlag},</if>
          </trim>
@@ -61,10 +57,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateSysTools" parameterType="SysTools">
         update sys_tools
         <trim prefix="SET" suffixOverrides=",">
-            <if test="pocket6800 != null">pocket_6800 = #{pocket6800},</if>
-            <if test="pocket650 != null">pocket_650 = #{pocket650},</if>
-            <if test="pocket7000 != null">pocket_7000 = #{pocket7000},</if>
-            <if test="pocketHaas != null">pocket_haas = #{pocketHaas},</if>
+            <if test="nh6300 != null">nh6300 = #{nh6300},</if>
+            <if test="nv7000 != null">nv7000 = #{nv7000},</if>
+            <if test="mazak655 != null">mazak655 = #{mazak655},</if>
             <if test="toolDescription != null and toolDescription != ''">tool_description = #{toolDescription},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
         </trim>

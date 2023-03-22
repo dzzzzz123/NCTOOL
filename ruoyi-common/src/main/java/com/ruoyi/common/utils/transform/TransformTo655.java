@@ -1,8 +1,6 @@
 package com.ruoyi.common.utils.transform;
 
-import java.util.Arrays;
 
-import static com.ruoyi.common.constant.TransformConstants.MAZAK655_M_TO_DELETE;
 import static com.ruoyi.common.constant.TransformConstants.MAZAK655_T_TO_CHANGE;
 
 /**
@@ -20,11 +18,11 @@ public class TransformTo655 extends TransformBaseUtil {
                 newStr.append(content[i].replace("T96", MAZAK655_T_TO_CHANGE.get("T96")));
             } else if (content[i].contains("T67")) {
                 newStr.append(content[i].replace("T67", MAZAK655_T_TO_CHANGE.get("T67")));
-            } else if (content[i].contains("40")) {
+            } else if (content[i].contains("84")) {
                 if (content[i].contains(".H")) {
-                    newStr.append(content[i].replaceFirst("40", "84"));
-                } else if (content[i].contains("T40")) {
-                    newStr.append(content[i].replace("T40", "T84"));
+                    newStr.append(content[i].replaceFirst("84", "40"));
+                } else if (content[i].contains("T84")) {
+                    newStr.append(content[i].replace("T84", "T40"));
                 } else {
                     newStr.append(content[i]);
                 }

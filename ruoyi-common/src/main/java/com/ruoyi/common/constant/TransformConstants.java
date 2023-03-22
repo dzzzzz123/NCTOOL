@@ -75,8 +75,8 @@ public class TransformConstants {
     public static final String[] MAZAK655_M_TO_DELETE = {};
 
     public static final Map<String, String> MAZAK655_M_TO_CHANGE = Map.of(
-            "M51", "M08",
-            "M99", "M30");
+            "M99", "M30"
+    );
     public static final Map<String, String> MAZAK655_H_TO_CHANGE = Map.of(
             "H67", "H43",
             "H96", "H44"

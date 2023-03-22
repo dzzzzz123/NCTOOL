@@ -1,8 +1,8 @@
 package com.ruoyi.system.service;
 
-import com.ruoyi.system.domain.SysDiffFiles;
 import com.ruoyi.system.domain.SysTapList;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
@@ -22,8 +22,8 @@ public interface ISysNcCodeTransformService {
 
     /**
      * 选中前端返回的NC代码名，后端传输文件给前端
-     * @param filesNames 需要比较的NC代码文件名
+     * @param fileName 需要比较的NC代码文件名
      * @return NC代码
      */
-    SysDiffFiles compareNcCode(SysDiffFiles filesNames);
+    File compareNcCode(String fileName);
 }

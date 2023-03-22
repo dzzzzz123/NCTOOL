@@ -136,3 +136,7 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+upload:
+  path: "d:/upload/"
+  toDNCPath: "d:/Program/MMPRC_DNC/MN_Programs/"

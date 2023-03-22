@@ -1,6 +1,9 @@
 package com.ruoyi.web.controller.system;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import com.alibaba.fastjson2.JSON;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -13,10 +16,13 @@ import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.common.utils.transform.TransformTo6300;
 import com.ruoyi.common.utils.transform.TransformTo655;
 import com.ruoyi.common.utils.transform.TransformTo7000;
-import com.ruoyi.system.domain.SysDiffFiles;
 import com.ruoyi.system.domain.SysTapList;
 import com.ruoyi.system.service.ISysNcCodeTransformService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +50,13 @@ public class SysNcCodeTransformController extends BaseController {
     @Autowired
     private ISysNcCodeTransformService transformService;
 
+    @Value("${upload.path}")
+    private String path;
+
+    @Value("${upload.toDNCPath}")
+    private String toDncPath;
+
+
     /**
      * @param files 前端传递过来的tap文件
      * @return 返回结果集传递给前端
@@ -59,7 +72,7 @@ public class SysNcCodeTransformController extends BaseController {
             if (fileName != null) {
                 fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
             }
-            File fileDir = new File("d:/upload");
+            File fileDir = new File(path);
             if (!fileDir.exists()) {
                 fileDir.mkdirs();
             }
@@ -91,7 +104,6 @@ public class SysNcCodeTransformController extends BaseController {
         return desc;
     }
 
-
     /**
      * 转换NC代码
      *
@@ -103,10 +115,10 @@ public class SysNcCodeTransformController extends BaseController {
     @GetMapping("/transform/{tapNames}")
     public AjaxResult transformNcCode(@PathVariable String[] tapNames) {
         for (String tapName : tapNames) {
-            File temp = new File("d:/upload/" + tapName);
-            File file = new File("d:/upload/" + tapName.split("\\.")[0] + ".tap_MMC_NH6300");
-            File file2 = new File("d:/upload/" + tapName.split("\\.")[0] + ".tap_MMC_NV7000");
-            File file3 = new File("d:/upload/" + tapName.split("\\.")[0] + ".tap_V655");
+            File temp = new File(path + tapName);
+            File file = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NH6300");
+            File file2 = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NV7000");
+            File file3 = new File(path + tapName.split("\\.")[0] + ".tap_V655");
             try {
                 FileUtil.copyFile(temp, file, REPLACE_EXISTING);
                 TransformTo6300.transform(file, 0);
@@ -143,24 +155,30 @@ public class SysNcCodeTransformController extends BaseController {
         return transformService.selectTapList(tapNames);
     }
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    static
+    class FileToCompare {
+        private String oldFileName;
+    }
+
     /**
      * 将需要比较的文件上传到前端
      *
-     * @param files    自定义用来存储文件差异的类型
+     * @param fileName 前端传输来的需要比较的文件名
      * @param request  request
      * @param response response
      */
     @PreAuthorize("@ss.hasAnyPermi('system:NcCode:compare')")
     @Log(title = "比较NC代码", businessType = BusinessType.COMPARE)
     @PutMapping("/compare")
-    public void compareDownload(@RequestBody SysDiffFiles files, HttpServletRequest request, HttpServletResponse response) {
-        SysDiffFiles sysDiffFiles = transformService.compareNcCode(files);
+    public void compareDownload(@RequestBody FileToCompare fileName, HttpServletRequest request, HttpServletResponse response) {
+        File file = transformService.compareNcCode(fileName.getOldFileName());
         try {
-            String realFileName = sysDiffFiles.getNewFileName();
-            String filePath = sysDiffFiles.getNewFile().getPath();
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            FileUtils.setAttachmentResponseHeader(response, realFileName);
-            FileUtils.writeBytes(filePath, response.getOutputStream());
+            FileUtils.setAttachmentResponseHeader(response,  file.getName());
+            FileUtils.writeBytes(file.getPath(), response.getOutputStream());
         } catch (Exception e) {
             log.error("下载文件失败", e);
         }
@@ -176,6 +194,23 @@ public class SysNcCodeTransformController extends BaseController {
     @Log(title = "上传NC代码到DNC", businessType = BusinessType.UPLOAD)
     @GetMapping("/ToDNC/{tapNames}")
     public AjaxResult uploadToDnc(@PathVariable String[] tapNames) {
+        for (String tapName : tapNames) {
+            File ORIGIN = new File(path + tapName);
+            File NH6300 = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NH6300");
+            File NV7000 = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NV7000");
+            File V655 = new File(path + tapName.split("\\.")[0] + ".tap_V655");
+            File NH6300_DNC = new File(toDncPath + File.separator + "Final_NV7000" + File.separator + tapName.split("\\.")[0]);
+            File NV7000_DNC = new File(toDncPath + File.separator + "Final_NH6300" + File.separator + tapName.split("\\.")[0]);
+            File V655_DNC = new File(toDncPath + File.separator + "Final_V655" + File.separator + tapName.split("\\.")[0]);
+            try {
+                FileUtil.del(ORIGIN);
+                FileUtil.move(NH6300, NH6300_DNC, true);
+                FileUtil.move(NV7000, NV7000_DNC, true);
+                FileUtil.move(V655, V655_DNC, true);
+            } catch (IORuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return new AjaxResult(200, "Success");
     }
 }
