@@ -17,7 +17,7 @@ public class TransformConstants {
     public static final String MAZAK655_M_PROGCAT = "(PROGCAT MAZAK V655 PALLET)";
     public static final String NH6300_FILENAME = "(FILENAME E:\\NH6300\\";
     public static final String NV7000_FILENAME = "(FILENAME E:\\NV7000\\";
-    public static final String MAZAK655_FILENAME = "(FILENAME E:\\MAZAK502\\";
+    public static final String MAZAK655_FILENAME = "(FILENAME E:\\MZK502\\";
 
     public static final String[] NH6300_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
     public static final String[] NV7000_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
@@ -59,10 +59,13 @@ public class TransformConstants {
             "T25", "T9925",
             "T26", "T9926",
             "T27", "T9927",
+            "T28", "T9928",
             "T35", "T9935",
             "T39", "T9939",
-            // "T40", "T9940",
-            "T53", "T9953",
+            "T40", "T9940",
+            "T53", "T9953"
+    );
+    public static final Map<String, String> NV7000_T_TO_CHANGE2 = Map.of(
             "T58", "T9958"
     );
 
@@ -73,6 +76,7 @@ public class TransformConstants {
         NV7000_ALL_TO_CHANGE.putAll(NV7000_H_TO_CHANGE);
         NV7000_ALL_TO_CHANGE.putAll(NV7000_G_TO_CHANGE);
         NV7000_ALL_TO_CHANGE.putAll(NV7000_T_TO_CHANGE);
+        NV7000_ALL_TO_CHANGE.putAll(NV7000_T_TO_CHANGE2);
     }
 
     public static final String[] MAZAK655_M_TO_DELETE = {};
@@ -81,15 +85,25 @@ public class TransformConstants {
             "M99", "M30"
     );
     public static final Map<String, String> MAZAK655_H_TO_CHANGE = Map.of(
+            "H16", "H43",
+            "H49", "H59",
+            "H60", "H56",
             "H67", "H43",
-            "H96", "H44"
+            "H81", "H57",
+            "H96", "H44",
+            "H108", "H33"
     );
     public static final Map<String, String> MAZAK655_G_TO_CHANGE = Map.of(
             "G28", "G30"
     );
     public static final Map<String, String> MAZAK655_T_TO_CHANGE = Map.of(
+            "T16", "T43",
+            "T49","T59",
+            "T60","T56",
+            "T67", "T43",
+            "T81", "T57",
             "T96", "T44",
-            "T67", "T43"
+            "T108", "T33"
     );
     public static final Map<String, String> MAZAK655_ALL_TO_CHANGE = new HashMap<>();
 
@@ -97,7 +111,7 @@ public class TransformConstants {
         MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_M_TO_CHANGE);
         MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_H_TO_CHANGE);
         MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_G_TO_CHANGE);
-        // MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_T_TO_CHANGE);
+        MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_T_TO_CHANGE);
     }
 
     public static final Map<String, String> WEAR_DETECTION = Map.of(
@@ -122,7 +136,7 @@ public class TransformConstants {
                     "G325X2.200Y3.300H01Q0.3T9002\n"
     );
 
-    public static final String[] TOOLS_TO_SET_DETECTION = {"T1", "T8", "T10", "T11", "T25", "T26", "T27", "T35", "T39", "T40", "T53", "T58", "T67", "T84", "T96", "T104"};
+    public static final String[] TOOLS_TO_SET_DETECTION = {"T1", "T3", "T8", "T10", "T11", "T15", "T25", "T26", "T27", "T35", "T39", "T40", "T53", "T58", "T67", "T84", "T96", "T104"};
     public static final String TOOL_SET_DETECTION =
             "#991=-2\n" +
                     "#992=1\n" +

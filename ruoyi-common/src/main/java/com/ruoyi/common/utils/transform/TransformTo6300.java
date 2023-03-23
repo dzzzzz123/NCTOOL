@@ -27,7 +27,8 @@ public class TransformTo6300 extends TransformBaseUtil {
                 newStr.append(content[i]).append("\r\n");
                 i++;
                 newStr.append(content[i]).append("\r\n");
-                if (Arrays.asList(TOOLS_TO_SET_DETECTION).contains(content[i - 2]) && flag2 > 1) {
+                // if (Arrays.asList(TOOLS_TO_SET_DETECTION).contains(content[i - 2]) && flag2 > 1) {
+                if (flag2 > 1) {
                     newStr.append(TOOL_SET_DETECTION);
                     continue;
                 }

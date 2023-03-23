@@ -104,14 +104,14 @@ public class TransformBaseUtil {
                 FILENAME = NV7000_FILENAME + FILENAMEWITHOUTPREFIX + ")";
                 WHICH_PROGCAT = NV7000_M_PROGCAT;
                 ALL_TO_CHANGE = NV7000_ALL_TO_CHANGE;
-                DELETE_FLAG = "(100, T100      PROBE)";
+                DELETE_FLAG = "(TOOL NAME : T100)";
                 break;
             case 2:
                 TO_DELETE = MAZAK655_M_TO_DELETE;
                 FILENAME = MAZAK655_FILENAME + FILENAMEWITHOUTPREFIX + ")";
                 WHICH_PROGCAT = MAZAK655_M_PROGCAT;
                 ALL_TO_CHANGE = MAZAK655_ALL_TO_CHANGE;
-                DELETE_FLAG = "(100, T100      PROBE)";
+                DELETE_FLAG = "(TOOL NAME : T100)";
                 break;
             default:
                 break;
@@ -135,13 +135,25 @@ public class TransformBaseUtil {
                 content[i] = content[i] + "\r\n" + "(Processed by Platform: " + getTime() + ")";
             }
             // 给刀具最开始的(TOOL TABLE SUMMARY)加  ,
-            else if (Objects.equals(content[i], "(TOOL NUMBER   TOOL ID OFFSET NO  TOOL COMMENT)") && (flag == 1 || flag == 2)) {
+            else if (content[i].startsWith("(TOOL NUMBER") && (flag == 1 || flag == 2)) {
                 i++;
                 while (!content[i].startsWith("(TOOL NAME")) {
                     if (content[i].startsWith("(67") && flag == 1) {
                         content[i] = content[i].replace("(67", "(56");
                     } else if (content[i].startsWith("(67") && flag == 2) {
                         content[i] = content[i].replace("(67", "(43");
+                    } else if (content[i].startsWith("(16") && flag == 2) {
+                        content[i] = content[i].replace("(16", "(43");
+                    } else if (content[i].startsWith("(49") && flag == 2) {
+                        content[i] = content[i].replace("(49", "(59");
+                    } else if (content[i].startsWith("(60") && flag == 2) {
+                        content[i] = content[i].replace("(60", "(56");
+                    } else if (content[i].startsWith("(67") && flag == 2) {
+                        content[i] = content[i].replace("(67", "(54");
+                    } else if (content[i].startsWith("(81") && flag == 2) {
+                        content[i] = content[i].replace("(81", "(57");
+                    } else if (content[i].startsWith("(108") && flag == 2) {
+                        content[i] = content[i].replace("(108", "(33");
                     } else if (content[i].startsWith("(96")) {
                         content[i] = content[i].replace("(96", "(44");
                     } else if (content[i].startsWith("(84")) {
@@ -169,7 +181,7 @@ public class TransformBaseUtil {
         ArrayList<Integer> indices = new ArrayList<>();
         for (int i = 0; i < content.length; i++) {
             // 删除掉T72相关代码块
-            if (Objects.equals(content[i], DELETE_FLAG)) {
+            if (content[i].startsWith(DELETE_FLAG)) {
                 indices.add(i);
                 i++;
                 while (true) {
@@ -185,15 +197,16 @@ public class TransformBaseUtil {
                     }
                 }
                 i++;
-            } else if (Objects.equals(content[i], "(72, T072      3\" FACE MILLING TOOL)") || Objects.equals(content[i], "(72   T072      3\" FACE MILLING TOOL)") || Objects.equals(content[i], "(TOOL NAME : T072)")) {
+            } else if (content[i].startsWith("(72, T072") || content[i].startsWith("(72   T072") || Objects.equals(content[i], "(TOOL NAME : T072)")) {
                 indices.add(i);
             } else if (Arrays.asList(TO_DELETE).contains(content[i])) {
+                indices.add(i);
+            } else if (content[i].startsWith("(100  T100") || content[i].startsWith("(100, T100")) {
                 indices.add(i);
             }
         }
         return ArrayUtils.removeAll(content, indices.stream().mapToInt(Integer::intValue).toArray());
     }
-
 
     /**
      * 为所有需要修改的字符串修改
@@ -203,7 +216,8 @@ public class TransformBaseUtil {
     static void processAllReplace(String[] content) {
         for (int i = 0; i < content.length; i++) {
             for (String s : ALL_TO_CHANGE.keySet()) {
-                if (content[i].contains(s) && !content[i].startsWith("(")) {
+                // if (content[i].contains(s) && !content[i].startsWith("(")) {
+                if (content[i].contains(s)) {
                     content[i] = content[i].replace(s, ALL_TO_CHANGE.get(s));
                 }
             }

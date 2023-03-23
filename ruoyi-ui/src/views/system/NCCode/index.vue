@@ -111,7 +111,7 @@ export default {
                 this.isTransFormed = false;
                 let arr = this.filterRepetition(this.fileList);
                 if (arr.length !== this.fileList.length) {
-                    this.$message.warning("上传重复文件，已过滤重复文件");
+                    this.$message.warning("已过滤重复与不是以.tap结尾的文件");
                 }
                 this.fileList = arr;
                 // 上传文件后，自动把文件传给后台，这里做了一个防抖，等待500ms后在传给后台
