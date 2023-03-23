@@ -18,7 +18,12 @@ public class TransformTo7000 extends TransformBaseUtil {
                 newStr.append("G91G30X0.Y0.Z0.\n");
             }
             if (content[i].startsWith("G84")) {
-                newStr.append(TAPPING_TEETH).append(content[i]);
+                newStr.append(TAPPING_TEETH).append(content[i]).append("\r\n");
+                for (int j = 0; j < 4; j++) {
+                    i++;
+                    newStr.append(content[i]).append("\r\n");
+                }
+                newStr.append("G94");
             } else if (content[i].contains("T1") && !content[i].contains("(") && !content[i].contains("T10") && !content[i].contains("T11")) {
                 newStr.append(content[i].replace("T1", "T9901"));
             } else if (content[i].contains("T8") && !content[i].contains("(") && !content[i].contains("T84")) {
@@ -26,7 +31,7 @@ public class TransformTo7000 extends TransformBaseUtil {
             } else if (content[i].contains("96")) {
                 if (content[i].contains(".H")) {
                     newStr.append(content[i].replaceFirst("96", "44"));
-                } else if (content[i].contains("T96")) {
+                } else if (content[i].contains("T96") && !content[i].startsWith("(T44")) {
                     newStr.append(content[i].replace("T96", "T9944"));
                 } else {
                     newStr.append(content[i]);
@@ -39,11 +44,11 @@ public class TransformTo7000 extends TransformBaseUtil {
                 } else {
                     newStr.append(content[i]);
                 }
-            } else if (content[i].contains("40")) {
+            } else if (content[i].contains("84")) {
                 if (content[i].contains(".H")) {
-                    newStr.append(content[i].replaceFirst("40", "84"));
-                } else if (content[i].contains("T40")) {
-                    newStr.append(content[i].replace("T40", "T84"));
+                    newStr.append(content[i].replaceFirst("84", "40"));
+                } else if (content[i].contains("T84")) {
+                    newStr.append(content[i].replace("T84", "T40"));
                 } else {
                     newStr.append(content[i]);
                 }

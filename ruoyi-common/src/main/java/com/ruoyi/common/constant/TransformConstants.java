@@ -15,6 +15,10 @@ public class TransformConstants {
     public static final String NH6300_M_PROGCAT = "(PROGCAT MORI SEIKI NH6300)";
     public static final String NV7000_M_PROGCAT = "(PROGCAT MORI SEIKI NV7000)";
     public static final String MAZAK655_M_PROGCAT = "(PROGCAT MAZAK V655 PALLET)";
+    public static final String NH6300_FILENAME = "(FILENAME E:\\NH6300\\";
+    public static final String NV7000_FILENAME = "(FILENAME E:\\NV7000\\";
+    public static final String MAZAK655_FILENAME = "(FILENAME E:\\MAZAK655\\";
+
 
     public static final String[] NH6300_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
     public static final String[] NV7000_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
@@ -58,7 +62,7 @@ public class TransformConstants {
             "T27", "T9927",
             "T35", "T9935",
             "T39", "T9939",
-            "T40", "T9940",
+            // "T40", "T9940",
             "T53", "T9953",
             "T58", "T9958"
     );
@@ -119,7 +123,7 @@ public class TransformConstants {
                     "G325X2.200Y3.300H01Q0.3T9002\n"
     );
 
-    public static final String[] TOOLS_TO_SET_DETECTION = {"T1", "T8", "T10", "T11","T25", "T26", "T27", "T35","T39", "T40", "T53", "T58","T67", "T84", "T96", "T104"};
+    public static final String[] TOOLS_TO_SET_DETECTION = {"T1", "T8", "T10", "T11", "T25", "T26", "T27", "T35", "T39", "T40", "T53", "T58", "T67", "T84", "T96", "T104"};
     public static final String TOOL_SET_DETECTION =
             "#991=-2\n" +
                     "#992=1\n" +

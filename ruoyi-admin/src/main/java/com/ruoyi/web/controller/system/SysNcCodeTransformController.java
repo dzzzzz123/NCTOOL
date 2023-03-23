@@ -2,8 +2,6 @@ package com.ruoyi.web.controller.system;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
-import com.alibaba.fastjson2.JSON;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -30,7 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -199,8 +198,8 @@ public class SysNcCodeTransformController extends BaseController {
             File NH6300 = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NH6300");
             File NV7000 = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NV7000");
             File V655 = new File(path + tapName.split("\\.")[0] + ".tap_V655");
-            File NH6300_DNC = new File(toDncPath + File.separator + "Final_NV7000" + File.separator + tapName.split("\\.")[0]);
-            File NV7000_DNC = new File(toDncPath + File.separator + "Final_NH6300" + File.separator + tapName.split("\\.")[0]);
+            File NH6300_DNC = new File(toDncPath + File.separator + "Final_NH6300" + File.separator + tapName.split("\\.")[0]);
+            File NV7000_DNC = new File(toDncPath + File.separator + "Final_NV7000" + File.separator + tapName.split("\\.")[0]);
             File V655_DNC = new File(toDncPath + File.separator + "Final_V655" + File.separator + tapName.split("\\.")[0]);
             try {
                 FileUtil.del(ORIGIN);

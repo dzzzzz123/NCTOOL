@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 08/03/2023 09:13:38
+ Date: 22/03/2023 16:18:50
 */
 
 SET NAMES utf8mb4;
@@ -156,7 +156,7 @@ CREATE TABLE `sys_menu`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2031 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2032 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -181,7 +181,7 @@ INSERT INTO `sys_menu` VALUES (1012, '菜单查询', 102, 1, '', '', '', 1, 0, '
 INSERT INTO `sys_menu` VALUES (1013, '菜单新增', 102, 2, '', '', '', 1, 0, 'F', '0', '0', 'system:menu:add', '#', 'admin', '2023-02-09 15:06:46', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (1014, '菜单修改', 102, 3, '', '', '', 1, 0, 'F', '0', '0', 'system:menu:edit', '#', 'admin', '2023-02-09 15:06:46', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (1015, '菜单删除', 102, 4, '', '', '', 1, 0, 'F', '0', '0', 'system:menu:remove', '#', 'admin', '2023-02-09 15:06:46', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2000, 'NC代码', 0, 4, 'NCCode', 'system/NCCode/index', NULL, 1, 0, 'C', '0', '0', '', 'edit', 'admin', '2023-02-13 10:24:02', 'admin', '2023-02-21 09:44:30', '');
+INSERT INTO `sys_menu` VALUES (2000, 'NC代码转换', 0, 4, 'NCCode', 'system/NCCode/index', NULL, 1, 0, 'C', '0', '0', '', 'edit', 'admin', '2023-02-13 10:24:02', 'admin', '2023-03-09 14:04:56', '');
 INSERT INTO `sys_menu` VALUES (2008, '刀具管理', 0, 2, 'tools', 'system/tools/index', NULL, 1, 0, 'C', '0', '0', 'system:tools:list', 'dashboard', 'admin', '2023-02-14 11:29:35', 'admin', '2023-02-17 15:13:31', '刀具管理菜单');
 INSERT INTO `sys_menu` VALUES (2009, '刀具管理查询', 2008, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'system:tools:query', '#', 'admin', '2023-02-14 11:29:35', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2010, '刀具管理新增', 2008, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'system:tools:add', '#', 'admin', '2023-02-14 11:29:35', '', NULL, '');
@@ -198,6 +198,8 @@ INSERT INTO `sys_menu` VALUES (2027, 'NC代码转换', 2000, 1, '', NULL, NULL, 
 INSERT INTO `sys_menu` VALUES (2028, '上传NC代码', 2000, 2, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:NcCode:upload', '#', 'admin', '2023-02-28 10:11:44', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2029, '显示已转换NC代码列表', 2000, 3, 'system:NcCode:newTapList', NULL, NULL, 1, 0, 'F', '0', '0', 'system:NcCode:newTapList', '#', 'admin', '2023-03-01 15:35:20', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2030, 'NC代码比较', 2000, 4, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system.NcCode.compare', '#', 'admin', '2023-03-01 15:35:56', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2031, 'NC代码比较', 0, 5, 'NCCompare', 'system/NCCompare/index', NULL, 1, 0, 'C', '0', '0', NULL, 'log', 'admin', '2023-03-08 17:07:39', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2032, '上传到dnc', 2000, 5, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:NcCode:ToDNC', '#', 'admin', '2023-03-22 09:50:53', '', NULL, '');
 
 -- ----------------------------
 -- Table structure for sys_program_number
@@ -211,7 +213,7 @@ CREATE TABLE `sys_program_number`  (
 -- ----------------------------
 -- Records of sys_program_number
 -- ----------------------------
-INSERT INTO `sys_program_number` VALUES (306, 2);
+INSERT INTO `sys_program_number` VALUES (306, 176);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -272,23 +274,20 @@ INSERT INTO `sys_role_menu` VALUES (2, 2030);
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_tool_pocket`;
 CREATE TABLE `sys_tool_pocket`  (
-  `tool_pocket_id` bigint(0) NOT NULL COMMENT '刀具加工参数id',
   `toolId` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '刀具ID',
-  `feat_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '特征名称',
   `parameter` json NOT NULL COMMENT '参数',
-  PRIMARY KEY (`tool_pocket_id`) USING BTREE
+  PRIMARY KEY (`toolId`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_tool_pocket
 -- ----------------------------
-INSERT INTO `sys_tool_pocket` VALUES (6924, 'T004FR', 'DRILL_5MM_TH', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"330\", \"PeckDepth\": \"1\", \"SpindelSpeed\": \"34240\"}');
-INSERT INTO `sys_tool_pocket` VALUES (6965, 'T013FR', 'RGH_SPRUE_RN_RND_PL', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"1000\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"6000\"}');
-INSERT INTO `sys_tool_pocket` VALUES (6966, 'T022FR', 'FIN_6MM_SPRUE_RN_RND_PL', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"132\", \"PeckDepth\": \"0\", \"SpindelSpeed\": \"3850\"}');
-INSERT INTO `sys_tool_pocket` VALUES (7024, 'T042FR', 'DRILL_VALUE_RUN_S2', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"149\", \"PeckDepth\": \"1.5\", \"SpindelSpeed\": \"1494\"}');
-INSERT INTO `sys_tool_pocket` VALUES (7044, 'T042FR', 'DRILL_VALUE_RUN_S1', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"149\", \"PeckDepth\": \"1.5\", \"SpindelSpeed\": \"1494\"}');
-INSERT INTO `sys_tool_pocket` VALUES (7063, 'T021FR', 'RGH_SPRUE_RN_RND_PL_S2', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"1000\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"6000\"}');
-INSERT INTO `sys_tool_pocket` VALUES (7103, 'T011FR', 'RGH_CB_S', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"2750\", \"PeckDepth\": \"0.3\", \"SpindelSpeed\": \"2000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T004FR', '{\"Coolant\": \"FLOOD2222\", \"FeedRate\": \"330\", \"PeckDepth\": \"1\", \"SpindelSpeed\": \"34242\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T011FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"2750\", \"PeckDepth\": \"0.3\", \"SpindelSpeed\": \"2000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T013FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"1000\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"6000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T021FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"1000\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"6000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T022FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"132\", \"PeckDepth\": \"0\", \"SpindelSpeed\": \"3850\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T154FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"330\", \"PeckDepth\": \"1\", \"SpindelSpeed\": \"3424\"}');
 
 -- ----------------------------
 -- Table structure for sys_tools
@@ -297,30 +296,147 @@ DROP TABLE IF EXISTS `sys_tools`;
 CREATE TABLE `sys_tools`  (
   `tool_id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT '刀具id',
   `tool_description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '刀具描述',
-  `pocket_6800` bigint(0) NOT NULL COMMENT '刀具在机床6800的位置',
-  `pocket_650` bigint(0) NOT NULL COMMENT '刀具在机床650的位置',
-  `pocket_7000` bigint(0) NOT NULL COMMENT '刀具在机床7000的位置',
-  `pocket_haas` bigint(0) NOT NULL COMMENT '刀具在机床haas的位置',
-  `tool_sap` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '刀具参数',
+  `NH6300` bigint(0) NOT NULL COMMENT '刀具在机床6800的位置',
+  `NV7000` bigint(0) NOT NULL COMMENT '刀具在机床650的位置',
+  `MAZAK655` bigint(0) NOT NULL COMMENT '刀具在机床7000的位置',
   `del_flag` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '删除标准，1删除，0正常',
   PRIMARY KEY (`tool_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_tools
 -- ----------------------------
-INSERT INTO `sys_tools` VALUES (1, '25.4mm INdexmill,3 Ins.x 30 Reach (Iscar)', 1, 1, 1, 27, '.008.346', '0');
-INSERT INTO `sys_tools` VALUES (2, '# 5 HSS Long Center Drill', 2, 2, 2, 38, '.002.661', '0');
-INSERT INTO `sys_tools` VALUES (3, '# 2 HSS Long Center Drill', 3, 3, 3, 7, '.002.256', '0');
-INSERT INTO `sys_tools` VALUES (4, '13.5mm Sumo-Chamdrill Body x 8D', 4, 4, 4, 38, '008.361', '0');
-INSERT INTO `sys_tools` VALUES (5, '6mm Carbide Ballmill Hlx Flutes 39mm Reach', 5, 16, 16, 37, '3787', '0');
-INSERT INTO `sys_tools` VALUES (6, '6mm Carbide Ballmill 2Fls x 8 F/L (Iscar)', 6, 41, 41, 36, '.003.336', '0');
-INSERT INTO `sys_tools` VALUES (7, '10.5mm Sumo-Drill x 5D', 7, 7, 7, 38, '.008.398', '0');
-INSERT INTO `sys_tools` VALUES (8, '9.00mm Sumo-Drill x 5D', 8, 8, 8, 38, '008.396', '0');
-INSERT INTO `sys_tools` VALUES (9, '8.70mm Sumo-Drill x 5D', 9, 9, 9, 25, '008.395', '0');
-INSERT INTO `sys_tools` VALUES (10, '6.9 Carbide Drill x 50 F/L (OSG)', 10, 10, 10, 8, '.002.656', '0');
-INSERT INTO `sys_tools` VALUES (11, '6.0 Carbide Drill x 33 F/L (OS)', 11, 11, 11, 3, '002.359', '0');
-INSERT INTO `sys_tools` VALUES (12, '5.8mm Carbide Drill x 28 F/L (Mitsubishi)', 12, 12, 12, 32, '002.641', '0');
+INSERT INTO `sys_tools` VALUES (1, '25.4mm Indexmill, 3 Ins. x 40 Reach (Iscar)\r\n25.4mm Indexmill, 3 Ins. x 40 Reach (Iscar)\r\n', 1, 1, 1, '0');
+INSERT INTO `sys_tools` VALUES (2, '# 5 HSS Long Center Drill', 2, 2, 2, '0');
+INSERT INTO `sys_tools` VALUES (3, '# 2 HSS Long Center Drill', 3, 3, 3, '0');
+INSERT INTO `sys_tools` VALUES (4, '13.5mm Sumo-Chamdrill Body x 8D', 4, 4, 4, '0');
+INSERT INTO `sys_tools` VALUES (5, '6mm Carbide Ballmill Hlx ', 5, 14, 6, '0');
+INSERT INTO `sys_tools` VALUES (6, '6mm Carbide Ballmill, 2Fls x 8 F/L (Iscar)', 6, 14, 6, '0');
+INSERT INTO `sys_tools` VALUES (7, '10.5mm Sumo-Drill x 5D', 7, 7, 7, '0');
+INSERT INTO `sys_tools` VALUES (8, '9.00mm Sumo-Drill x 5D', 8, 8, 8, '0');
+INSERT INTO `sys_tools` VALUES (9, '8.70mm Sumo-Drill x 5D', 9, 9, 9, '0');
+INSERT INTO `sys_tools` VALUES (10, '6.9 Carbide Drill x 50 F/L (OSG)', 10, 10, 10, '0');
+INSERT INTO `sys_tools` VALUES (11, '6.0 Carbide Drill x 44 F/L (OS)', 11, 11, 11, '0');
+INSERT INTO `sys_tools` VALUES (12, '5.8mm Carbide Drill x 28 F/L (Mitsubishi)', 12, 300, 300, '0');
+INSERT INTO `sys_tools` VALUES (13, '5.1 Carbide Drill x 28 F/L (Dormer)', 13, 13, 13, '0');
+INSERT INTO `sys_tools` VALUES (14, '4.8mm Carbide Drill x 39 F/L (OSG)', 14, 301, 301, '0');
+INSERT INTO `sys_tools` VALUES (15, '4.3 Carbide Drill x 24 F/L (Guhring)', 15, 15, 15, '0');
+INSERT INTO `sys_tools` VALUES (16, '3.0mm Carbide Drill x 33 F/L', 16, 16, 16, '0');
+INSERT INTO `sys_tools` VALUES (17, '2.0mm Drill HSS TiN', 17, 17, 17, '0');
+INSERT INTO `sys_tools` VALUES (18, '1.6mm Drill HSS TiN', 18, 18, 18, '0');
+INSERT INTO `sys_tools` VALUES (19, '7.5mm Carbide Drill x 41 F/L (Guhring)', 19, 302, 302, '0');
+INSERT INTO `sys_tools` VALUES (20, 'Empty', 20, 20, 14, '0');
+INSERT INTO `sys_tools` VALUES (21, '4.15mm FEEDMILL', 21, 21, 21, '0');
+INSERT INTO `sys_tools` VALUES (22, '1.6mm short drill', 22, 22, 18, '0');
+INSERT INTO `sys_tools` VALUES (23, '22.0mm DR Drill x 3D', 23, 23, 23, '0');
+INSERT INTO `sys_tools` VALUES (24, '10.46mm x 45º Indexable Chamfer', 24, 24, 24, '0');
+INSERT INTO `sys_tools` VALUES (25, '12.7mm x 90º MM Chamfer Tool (Iscar)', 25, 25, 25, '0');
+INSERT INTO `sys_tools` VALUES (26, '1/2\" Indexable Endmill (Seco)', 26, 26, 26, '0');
+INSERT INTO `sys_tools` VALUES (27, '20.0mm MM Carbide CSink Tool', 27, 27, 27, '0');
+INSERT INTO `sys_tools` VALUES (28, '25.4 Hi Helix Endmill', 28, 28, 28, '0');
+INSERT INTO `sys_tools` VALUES (29, 'Empty', 29, 29, 56, '0');
+INSERT INTO `sys_tools` VALUES (30, '5/8\" Indexable Endmill (Seco)', 30, 30, 30, '0');
+INSERT INTO `sys_tools` VALUES (31, '12.7mm Endmill, 4Fls x 50mm F/L', 31, 31, 31, '0');
+INSERT INTO `sys_tools` VALUES (32, '14.0mm Carbide Slotdrill x 75 F/L', 32, 32, 32, '0');
+INSERT INTO `sys_tools` VALUES (33, 'Empty', 33, 20, 56, '0');
+INSERT INTO `sys_tools` VALUES (34, '9.53mm Carbide Endmill x 19 F/L', 34, 34, 34, '0');
+INSERT INTO `sys_tools` VALUES (35, '18.0mm Locator Form Tool', 35, 35, 35, '0');
+INSERT INTO `sys_tools` VALUES (36, '6.0 Carbide Endmill, 4Fs x 13 F/L (Hanita)', 36, 36, 36, '0');
+INSERT INTO `sys_tools` VALUES (37, 'Empty', 37, 29, 56, '0');
+INSERT INTO `sys_tools` VALUES (38, '5.2mm Carbide Ballmill ', 38, 38, 38, '0');
+INSERT INTO `sys_tools` VALUES (39, '4.0mm Carbide EndMill, 3Fs x 6 F/L (Guhring)', 39, 39, 39, '0');
+INSERT INTO `sys_tools` VALUES (40, '6.0mm Carbide Drill x 43 F/L (OSG)', 40, 57, 40, '0');
+INSERT INTO `sys_tools` VALUES (41, 'Empty', 41, 33, 5, '0');
+INSERT INTO `sys_tools` VALUES (42, '6.0mm R1.5 Feedmill  (short)', 42, 303, 303, '0');
+INSERT INTO `sys_tools` VALUES (43, '12.2mm ENDMILL ', 43, 43, 56, '0');
+INSERT INTO `sys_tools` VALUES (44, '10mm Carbide Ballmill ', 44, 304, 44, '0');
+INSERT INTO `sys_tools` VALUES (45, '7.5MM FEEDMILL ', 45, 45, 45, '0');
+INSERT INTO `sys_tools` VALUES (46, '7.7MM BallMILL ', 46, 46, 46, '0');
+INSERT INTO `sys_tools` VALUES (47, '12.7mm Step Chamfer Tool (Body#008_090)', 47, 47, 47, '0');
+INSERT INTO `sys_tools` VALUES (48, '5.2mm FEEDMILL ', 48, 48, 48, '0');
+INSERT INTO `sys_tools` VALUES (49, '3.2mm Carbide Ballmill ', 49, 49, 49, '0');
+INSERT INTO `sys_tools` VALUES (50, 'Empty', 50, 50, 56, '0');
+INSERT INTO `sys_tools` VALUES (51, '4.0mm Carbide Drill x 33 F/L (OSG)', 51, 305, 305, '0');
+INSERT INTO `sys_tools` VALUES (52, 'M10x1.5 Spiral M/C Tap (Prototyp)', 52, 52, 52, '0');
+INSERT INTO `sys_tools` VALUES (53, 'M8x1.25 Spiral M/C Tap (Prototyp)', 53, 53, 53, '0');
+INSERT INTO `sys_tools` VALUES (54, 'M6x1.0 Spiral M/C Tap (Prototyp)', 54, 54, 54, '0');
+INSERT INTO `sys_tools` VALUES (55, 'M5x0.8 Spiral M/C Tap (Prototyp)', 55, 55, 55, '0');
+INSERT INTO `sys_tools` VALUES (56, 'Empty', 56, 59, 56, '0');
+INSERT INTO `sys_tools` VALUES (57, '4mm FeedMill x 13 Reach (Epic)', 57, 306, 306, '0');
+INSERT INTO `sys_tools` VALUES (58, '4.3mm FEEDMILL for FLAT HE', 58, 58, 58, '0');
+INSERT INTO `sys_tools` VALUES (59, '4.0mm Carbide Ballmill, 2fl x 14 F/L (Epic)', 59, 307, 307, '0');
+INSERT INTO `sys_tools` VALUES (60, '9mmx90º chamfer tool', 60, 60, 60, '0');
+INSERT INTO `sys_tools` VALUES (61, 'EMpty', 61, 61, 61, '0');
+INSERT INTO `sys_tools` VALUES (62, '7.0mm Carbide Ballmill x 12 F/L', 62, 62, 62, '0');
+INSERT INTO `sys_tools` VALUES (63, '8.0mm Carbide Drill x 41 F/L (Guhring)', 63, 63, 63, '0');
+INSERT INTO `sys_tools` VALUES (64, '8.0mm BALLMILL', 64, 64, 64, '0');
+INSERT INTO `sys_tools` VALUES (65, '9.5mm Sumo-Drill x 5D', 65, 19, 19, '0');
+INSERT INTO `sys_tools` VALUES (66, '4.2mm Carbide ballmill roughing Ramping', 66, 41, 59, '0');
+INSERT INTO `sys_tools` VALUES (67, '1.0mm Carbide Ballmill(ENGRAVING)', 67, 56, 12, '0');
+INSERT INTO `sys_tools` VALUES (68, '17.0mm DR Drill x 4D', 68, 68, 68, '0');
+INSERT INTO `sys_tools` VALUES (69, '6mm Mitsubishi Carbide Ballmill (ST-T92)', 69, 69, 69, '0');
+INSERT INTO `sys_tools` VALUES (70, '4mm Epic Feedmill (ST-T57)', 70, 70, 70, '0');
+INSERT INTO `sys_tools` VALUES (71, 'Empty', 71, 71, 71, '0');
+INSERT INTO `sys_tools` VALUES (72, '3\" Mitsubishi Face Cutter', 72, 72, 72, '0');
+INSERT INTO `sys_tools` VALUES (73, '6.0mm R1.5 Feedmill  (Long)', 73, 73, 73, '0');
+INSERT INTO `sys_tools` VALUES (74, 'Empty', 74, 74, 74, '0');
+INSERT INTO `sys_tools` VALUES (75, '9.5mm Carbide Drill x 47 F/L (Guhring)', 75, 75, 75, '0');
+INSERT INTO `sys_tools` VALUES (76, '6.9mm Carbide Drill (ST-T10)', 76, 76, 76, '0');
+INSERT INTO `sys_tools` VALUES (77, '19.05mm Carbide Endmill x 38 F/L', 77, 37, 37, '0');
+INSERT INTO `sys_tools` VALUES (78, 'Empty', 78, 78, 78, '0');
+INSERT INTO `sys_tools` VALUES (79, '4mm Carbide Ballmill Hlx Flutes 25.0mm Reach', 79, 79, 79, '0');
+INSERT INTO `sys_tools` VALUES (80, '4.2m Epic Carbide Ballmill (ST-T58)', 80, 80, 80, '0');
+INSERT INTO `sys_tools` VALUES (81, '#1 HSS Center Drill', 81, 12, 29, '0');
+INSERT INTO `sys_tools` VALUES (82, '20.0mm MM 60 DEG Carbide CSink Tool', 82, 82, 82, '0');
+INSERT INTO `sys_tools` VALUES (83, 'M12 x 1.75 Spiral M/C Tap (Prototyp)', 83, 51, 51, '0');
+INSERT INTO `sys_tools` VALUES (84, '19.05mm Indexmill, 3 Ins. X 24 Reach (Iscar)', 84, 40, 33, '0');
+INSERT INTO `sys_tools` VALUES (85, '25.4mm Carbide Endmill x 76 F/L', 85, 85, 85, '0');
+INSERT INTO `sys_tools` VALUES (86, '11.5mm Sumo-Drill x 5D', 86, 5, 86, '0');
+INSERT INTO `sys_tools` VALUES (87, '8.0mm Carbide Ballmill, 2Fs x 20 F/L', 87, 87, 87, '0');
+INSERT INTO `sys_tools` VALUES (88, '11.0mm Carbide Drill 55 F/L', 88, 6, 50, '0');
+INSERT INTO `sys_tools` VALUES (89, '10.mm Carbide Drill ', 89, 89, 89, '0');
+INSERT INTO `sys_tools` VALUES (90, '6.75mm Carbide Ballmill x 13 F/L (For 7mm HE)', 90, 90, 90, '0');
+INSERT INTO `sys_tools` VALUES (91, '3.2MM DRILL', 91, 91, 91, '0');
+INSERT INTO `sys_tools` VALUES (92, '6.0mm Mitsubishi Carbide Ballmill', 92, 92, 92, '0');
+INSERT INTO `sys_tools` VALUES (93, 'Coolant Jet 2mm Gate', 93, 93, 93, '0');
+INSERT INTO `sys_tools` VALUES (94, '4.0mm Carbide Endmill x 11mm F/L', 94, 39, 39, '0');
+INSERT INTO `sys_tools` VALUES (95, '6.5mm Carbide Drill x 41 F/L (Guhring)', 95, 95, 95, '0');
+INSERT INTO `sys_tools` VALUES (96, '5.0mm Carbide Drill x 28 F/L (Guhring)', 96, 44, 22, '0');
+INSERT INTO `sys_tools` VALUES (97, '5.5mm Carbide Ballmill , 2Fs x 22 F/L( Roughing)', 97, 97, 97, '0');
+INSERT INTO `sys_tools` VALUES (98, '5.5 Carbide Ballmill, 2Fs x 22 F/L (Finishing)', 98, 98, 98, '0');
+INSERT INTO `sys_tools` VALUES (99, '5.0mm x 12\" OAL Gundrill (Botek)', 99, 99, 99, '0');
+INSERT INTO `sys_tools` VALUES (100, 'PROBE', 100, 100, 100, '0');
+INSERT INTO `sys_tools` VALUES (101, 'PROBE', 101, 101, 101, '0');
+INSERT INTO `sys_tools` VALUES (102, '25.4 Mitsubishi Feedmill R1.5 x 69 Reach', 102, 102, 102, '0');
+INSERT INTO `sys_tools` VALUES (103, '25.4 Mitsubishi Feedmill (ST-T102)', 103, 103, 103, '0');
+INSERT INTO `sys_tools` VALUES (104, '19.05 Mitsubishi Feedmill R1.5 x 60 Reach', 104, 104, 104, '0');
+INSERT INTO `sys_tools` VALUES (105, '19.05 Mitsubishi Feedmill (ST-T104)', 105, 105, 105, '0');
+INSERT INTO `sys_tools` VALUES (106, '15.875 Carbide Finishred x 31 F/L', 106, 106, 106, '0');
+INSERT INTO `sys_tools` VALUES (107, '15.875 Carbide Finishred (ST-T106)', 107, 107, 107, '0');
+INSERT INTO `sys_tools` VALUES (108, '90º x 6.35mm Shank Chamfer Tool', 108, 60, 60, '0');
+INSERT INTO `sys_tools` VALUES (109, '9.5mm x 15\" OAL GunDrill (Botek)', 109, 109, 109, '0');
+INSERT INTO `sys_tools` VALUES (110, '19.05mm Indexmill (ST-T84)', 110, 110, 110, '0');
+INSERT INTO `sys_tools` VALUES (111, '4.0 Carbide ballmill (ST-T59)', 111, 111, 111, '0');
+INSERT INTO `sys_tools` VALUES (112, '15.88mm DR Drill x 4D', 112, 112, 112, '0');
+INSERT INTO `sys_tools` VALUES (113, '19.05 ISCAR Indexable endmill (ST-T84)', 113, 113, 113, '0');
+INSERT INTO `sys_tools` VALUES (114, '5.0mm Carbide EndMill (ST-T118)', 114, 114, 114, '0');
+INSERT INTO `sys_tools` VALUES (115, '5.2mm Carbide Ballmill (ST-T119)', 115, 115, 115, '0');
+INSERT INTO `sys_tools` VALUES (116, '11/64 Carbide Ballmill Ramping (ST-T66)', 116, 116, 116, '0');
+INSERT INTO `sys_tools` VALUES (117, '4.0mm Carbide End Mill (ST-T39)', 117, 117, 117, '0');
+INSERT INTO `sys_tools` VALUES (118, '5.0mm Carbide EndMill, 3fltx 10 F/L', 118, 118, 118, '0');
+INSERT INTO `sys_tools` VALUES (119, '5.2mm Carbide Ballmill, 2Fs x 13 F/L (Guhring)', 119, 119, 119, '0');
+INSERT INTO `sys_tools` VALUES (120, '20.00mm Carbide Finishred x 42 F/L', 120, 120, 120, '0');
+INSERT INTO `sys_tools` VALUES (121, '7.5MM FEEDMILL ', 45, 45, 45, '0');
+INSERT INTO `sys_tools` VALUES (122, '7.7MM BALLMILL ', 46, 46, 46, '0');
+INSERT INTO `sys_tools` VALUES (123, '8.2MM BALLMILL ', 42, 42, 42, '0');
+INSERT INTO `sys_tools` VALUES (124, 'Empty', 124, 124, 124, '0');
+INSERT INTO `sys_tools` VALUES (125, 'Empty', 125, 125, 125, '0');
+INSERT INTO `sys_tools` VALUES (126, 'Empty', 126, 126, 126, '0');
+INSERT INTO `sys_tools` VALUES (127, 'Empty', 127, 127, 127, '0');
+INSERT INTO `sys_tools` VALUES (128, 'Empty', 128, 128, 128, '0');
+INSERT INTO `sys_tools` VALUES (129, 'Empty', 129, 129, 129, '0');
+INSERT INTO `sys_tools` VALUES (130, 'Empty', 130, 130, 130, '0');
+INSERT INTO `sys_tools` VALUES (131, '1.0MM CARBIDE BALLMILL(MMC)', 131, 56, 12, '0');
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -351,7 +467,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '马斯特', '00', 'master@163.com', '15888888888', '1', '/profile/avatar/2023/02/17/blob_20230217171420A001.png', '$2a$10$3gzBd0qcsq4t8E5IdOg4p.RT6cUGWwMZZxiU5xVPuTPsnFcQrKTTu', '0', '0', '127.0.0.1', '2023-03-07 10:41:56', 'admin', '2023-02-09 15:06:46', '', '2023-03-07 10:41:56', '管理员');
+INSERT INTO `sys_user` VALUES (1, 'admin', '马斯特', '00', 'master@163.com', '15888888888', '1', '/profile/avatar/2023/02/17/blob_20230217171420A001.png', '$2a$10$Tf8Er56RukTQTbfXfbSE8eaelVwHOwLb2RJh8U4/54V1onyW8Azsi', '0', '0', '127.0.0.1', '2023-03-16 20:10:41', 'admin', '2023-02-09 15:06:46', '', '2023-03-16 20:10:41', '管理员');
 INSERT INTO `sys_user` VALUES (2, 'dz', '马斯特', '00', 'master@163.com', '15666666666', '1', '', '$2a$10$43zeusYlA2mLiGEWq9dla.P1JYfQRmWMegYq6hEfrGSv815o8qdYe', '0', '0', '127.0.0.1', '2023-03-03 09:58:57', 'admin', '2023-02-09 15:06:46', 'admin', '2023-03-03 09:58:57', '测试员');
 INSERT INTO `sys_user` VALUES (100, 'test', 'test', '00', '', '', '0', '', '$2a$10$e1IF.ZBrDz/XUfYkt9U98.3rFulUe.c6W9JgvVU.ctomk0yQ1x8HO', '0', '2', '127.0.0.1', '2023-02-16 09:27:19', 'admin', '2023-02-13 13:44:12', '', '2023-02-16 09:27:18', NULL);
 

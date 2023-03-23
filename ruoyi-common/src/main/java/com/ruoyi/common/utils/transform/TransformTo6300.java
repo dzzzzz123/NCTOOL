@@ -35,7 +35,12 @@ public class TransformTo6300 extends TransformBaseUtil {
             } else if (content[i].startsWith("G43Z35.H")) {
                 newStr.append("G43Z35.H1");
             } else if (content[i].startsWith("G84")) {
-                newStr.append(TAPPING_TEETH).append(content[i]);
+                newStr.append(TAPPING_TEETH).append(content[i]).append("\r\n");
+                for (int j = 0; j < 4; j++) {
+                    i++;
+                    newStr.append(content[i]).append("\r\n");
+                }
+                newStr.append("G94");
             } else if (Objects.equals(content[i], "M01") && !Objects.equals(flag, "")) {
                 newStr.append(WEAR_DETECTION.get(flag)).append("M01");
                 flag = "";

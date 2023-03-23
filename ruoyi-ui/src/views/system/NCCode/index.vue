@@ -107,7 +107,7 @@ export default {
         inputFile(newFile, oldFile) {
             if (newFile && !oldFile) {
                 // add
-                console.log('add', newFile)
+                // console.log('add', newFile)
                 this.isTransFormed = false;
                 let arr = this.filterRepetition(this.fileList);
                 if (arr.length !== this.fileList.length) {
@@ -157,7 +157,7 @@ export default {
             this.isTransFormed = false;
             let arr = this.filterRepetition(fileList);
             if (arr.length !== fileList.length) {
-                this.$message.warning("上传重复文件，已过滤重复文件");
+                this.$message.warning("已过滤重复与不是以.tap结尾的文件");
             }
             this.fileList = arr;
             // 上传文件后，自动把文件传给后台，这里做了一个防抖，等待500ms后在传给后台
@@ -169,7 +169,7 @@ export default {
             let arr1 = []; //存id
             let newArr = []; //存新数组
             for (let i in arr) {
-                if (arr1.indexOf(arr[i].file.name) == -1) {
+                if (arr1.indexOf(arr[i].file.name) == -1 && arr[i].name.endsWith(".tap")) {
                     arr1.push(arr[i].file.name);
                     newArr.push(arr[i]);
                 }

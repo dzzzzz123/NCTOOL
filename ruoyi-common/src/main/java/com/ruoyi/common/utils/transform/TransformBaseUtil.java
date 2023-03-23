@@ -1,7 +1,7 @@
 package com.ruoyi.common.utils.transform;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,10 +23,11 @@ public class TransformBaseUtil {
 
     private static String DELETE_FLAG;
     private static String[] TO_DELETE;
-
+    private static String FILENAMEWITHOUTPREFIX;
+    private static String FILENAME;
     private static String WHICH_PROGCAT;
-
     private static Map<String, String> ALL_TO_CHANGE;
+
 
     /**
      * 转换NC代码基类
@@ -39,6 +40,7 @@ public class TransformBaseUtil {
         FileInputStream in = null;
         PrintWriter out = null;
         try {
+            FILENAMEWITHOUTPREFIX = file.getName().split("\\.")[0];
             in = new FileInputStream(file);
             in.read(fileContext);
             String str = new String(fileContext, StandardCharsets.UTF_8);
@@ -92,18 +94,21 @@ public class TransformBaseUtil {
         switch (flag) {
             case 0:
                 TO_DELETE = NH6300_M_TO_DELETE;
+                FILENAME = NH6300_FILENAME + FILENAMEWITHOUTPREFIX + ")";
                 WHICH_PROGCAT = NH6300_M_PROGCAT;
                 ALL_TO_CHANGE = NH6300_ALL_TO_CHANGE;
                 DELETE_FLAG = "T72";
                 break;
             case 1:
                 TO_DELETE = NV7000_M_TO_DELETE;
+                FILENAME = NV7000_FILENAME + FILENAMEWITHOUTPREFIX + ")";
                 WHICH_PROGCAT = NV7000_M_PROGCAT;
                 ALL_TO_CHANGE = NV7000_ALL_TO_CHANGE;
                 DELETE_FLAG = "(100, T100      PROBE)";
                 break;
             case 2:
                 TO_DELETE = MAZAK655_M_TO_DELETE;
+                FILENAME = MAZAK655_FILENAME + FILENAMEWITHOUTPREFIX + ")";
                 WHICH_PROGCAT = MAZAK655_M_PROGCAT;
                 ALL_TO_CHANGE = MAZAK655_ALL_TO_CHANGE;
                 DELETE_FLAG = "(100, T100      PROBE)";
@@ -121,6 +126,9 @@ public class TransformBaseUtil {
      */
     static void editFileHeader(String[] content, int flag) {
         for (int i = 0; i < 75; i++) {
+            if (i == 2) {
+                content[i] = FILENAME;
+            }
             if (i == 3) {
                 content[i] = WHICH_PROGCAT;
             } else if (i == 7) {
@@ -164,12 +172,20 @@ public class TransformBaseUtil {
             if (Objects.equals(content[i], DELETE_FLAG)) {
                 indices.add(i);
                 i++;
-                while (!Objects.equals(content[i], "N50")) {
+                while (true) {
+                    if (Objects.equals(content[i], "N50")) {
+                        break;
+                    }
                     indices.add(i);
                     i++;
+                    if (Objects.equals(content[i], "N60")) {
+                        indices.add(i);
+                        i++;
+                        break;
+                    }
                 }
                 i++;
-            } else if (Objects.equals(content[i], "(72, T072      3\" FACE MILLING TOOL)") || Objects.equals(content[i], "(TOOL NAME : T072)")) {
+            } else if (Objects.equals(content[i], "(72, T072      3\" FACE MILLING TOOL)") || Objects.equals(content[i], "(72   T072      3\" FACE MILLING TOOL)") || Objects.equals(content[i], "(TOOL NAME : T072)")) {
                 indices.add(i);
             } else if (Arrays.asList(TO_DELETE).contains(content[i])) {
                 indices.add(i);
