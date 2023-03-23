@@ -17,8 +17,7 @@ public class TransformConstants {
     public static final String MAZAK655_M_PROGCAT = "(PROGCAT MAZAK V655 PALLET)";
     public static final String NH6300_FILENAME = "(FILENAME E:\\NH6300\\";
     public static final String NV7000_FILENAME = "(FILENAME E:\\NV7000\\";
-    public static final String MAZAK655_FILENAME = "(FILENAME E:\\MAZAK655\\";
-
+    public static final String MAZAK655_FILENAME = "(FILENAME E:\\MAZAK502\\";
 
     public static final String[] NH6300_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
     public static final String[] NV7000_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
