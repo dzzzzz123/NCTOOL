@@ -1,7 +1,6 @@
 package com.ruoyi.common.utils.transform;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -104,14 +103,14 @@ public class TransformBaseUtil {
                 FILENAME = NV7000_FILENAME + FILENAMEWITHOUTPREFIX + ")";
                 WHICH_PROGCAT = NV7000_M_PROGCAT;
                 ALL_TO_CHANGE = NV7000_ALL_TO_CHANGE;
-                DELETE_FLAG = "(TOOL NAME : T100)";
+                DELETE_FLAG = "(TOOL, NAME : T100)";
                 break;
             case 2:
                 TO_DELETE = MAZAK655_M_TO_DELETE;
                 FILENAME = MAZAK655_FILENAME + FILENAMEWITHOUTPREFIX + ")";
                 WHICH_PROGCAT = MAZAK655_M_PROGCAT;
                 ALL_TO_CHANGE = MAZAK655_ALL_TO_CHANGE;
-                DELETE_FLAG = "(TOOL NAME : T100)";
+                DELETE_FLAG = "(TOOL, NAME : T100)";
                 break;
             default:
                 break;
@@ -125,50 +124,54 @@ public class TransformBaseUtil {
      * @param flag    机型标识
      */
     static void editFileHeader(String[] content, int flag) {
-        for (int i = 0; i < 75; i++) {
-            if (i == 2) {
-                content[i] = FILENAME;
-            }
-            if (i == 3) {
-                content[i] = WHICH_PROGCAT;
-            } else if (i == 7) {
-                content[i] = content[i] + "\r\n" + "(Processed by Platform: " + getTime() + ")";
-            }
-            // 给刀具最开始的(TOOL TABLE SUMMARY)加  ,
-            else if (content[i].startsWith("(TOOL NUMBER") && (flag == 1 || flag == 2)) {
-                i++;
-                while (!content[i].startsWith("(TOOL NAME")) {
-                    if (content[i].startsWith("(67") && flag == 1) {
-                        content[i] = content[i].replace("(67", "(56");
-                    } else if (content[i].startsWith("(67") && flag == 2) {
-                        content[i] = content[i].replace("(67", "(43");
-                    } else if (content[i].startsWith("(16") && flag == 2) {
-                        content[i] = content[i].replace("(16", "(43");
-                    } else if (content[i].startsWith("(49") && flag == 2) {
-                        content[i] = content[i].replace("(49", "(59");
-                    } else if (content[i].startsWith("(60") && flag == 2) {
-                        content[i] = content[i].replace("(60", "(56");
-                    } else if (content[i].startsWith("(67") && flag == 2) {
-                        content[i] = content[i].replace("(67", "(54");
-                    } else if (content[i].startsWith("(81") && flag == 2) {
-                        content[i] = content[i].replace("(81", "(57");
-                    } else if (content[i].startsWith("(108") && flag == 2) {
-                        content[i] = content[i].replace("(108", "(33");
-                    } else if (content[i].startsWith("(96")) {
-                        content[i] = content[i].replace("(96", "(44");
-                    } else if (content[i].startsWith("(84")) {
-                        content[i] = content[i].replace("(84", "(40");
-                    } else if (content[i].startsWith(" ")) {
-                        i++;
-                        continue;
+        for (int i = 0; i < content.length; i++) {
+            switch (i) {
+                case 2:
+                    content[i] = FILENAME;
+                    break;
+                case 3:
+                    content[i] = WHICH_PROGCAT;
+                    break;
+                case 7:
+                    content[i] = content[i] + "\r\n" + "(Processed by Platform: " + getTime() + ")";
+                    break;
+                default:
+                    if (content[i].startsWith("(TOOL NUMBER") && (flag == 1 || flag == 2)) {
+                        while (true) {
+                            i++;
+                            content[i] = modifyToolNumber(content[i], flag);
+                            if (content[i].startsWith("(TOOL, NAME")) {
+                                break;
+                            }
+                        }
                     }
-                    String[] str = content[i].split("\\s+", 2);
-                    content[i] = str[0] + ", " + str[1];
-                    i++;
-                }
-                i++;
+                    break;
             }
         }
+    }
+
+    /**
+     * @param line 给定的行内容
+     * @param flag 分辨机型标识的唯一标识
+     * @return 已修改的行
+     */
+    static String modifyToolNumber(String line, int flag) {
+        line = line
+                .replace("(5", "(16")
+                .replace("(16", "(43")
+                .replace("(40", "(52")
+                .replace("(44", "(51")
+                .replace("(49", "(59")
+                .replace("(60", flag == 1 ? "(54" : "(56")
+                .replace("(67", flag == 1 ? "(56" : "(54")
+                .replace("(77", "(44")
+                .replace("(81", "(57")
+                .replace("(84", "(40")
+                .replace("(96", "(44")
+                .replace("(108", "(33");
+        String[] str = line.split("\\s+", 2);
+        line = str[0] + ", " + str[1];
+        return line;
     }
 
     /**
@@ -216,8 +219,8 @@ public class TransformBaseUtil {
     static void processAllReplace(String[] content) {
         for (int i = 0; i < content.length; i++) {
             for (String s : ALL_TO_CHANGE.keySet()) {
-                // if (content[i].contains(s) && !content[i].startsWith("(")) {
-                if (content[i].contains(s)) {
+                if (content[i].contains(s) && !content[i].startsWith("(")) {
+                    // if (content[i].contains(s)) {
                     content[i] = content[i].replace(s, ALL_TO_CHANGE.get(s));
                 }
             }

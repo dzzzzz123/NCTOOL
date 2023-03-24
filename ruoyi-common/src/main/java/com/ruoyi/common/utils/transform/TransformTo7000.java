@@ -1,5 +1,7 @@
 package com.ruoyi.common.utils.transform;
 
+import java.util.Objects;
+
 import static com.ruoyi.common.constant.TransformConstants.TAPPING_TEETH;
 
 /**
@@ -24,35 +26,15 @@ public class TransformTo7000 extends TransformBaseUtil {
                     newStr.append(content[i]).append("\r\n");
                 }
                 newStr.append("G94");
-            } else if (content[i].contains("T1") && !content[i].contains("(") && !content[i].contains("T10") && !content[i].contains("T11")) {
+            } else if (Objects.equals(content[i], "T1") || Objects.equals(content[i], "G90T1") ) {
                 newStr.append(content[i].replace("T1", "T9901"));
-            } else if (content[i].contains("T8") && !content[i].contains("(") && !content[i].contains("T84")) {
+            } else if (Objects.equals(content[i], "T3") || Objects.equals(content[i], "G90T3")) {
+                newStr.append(content[i].replace("T3", "T9903"));
+            } else if (Objects.equals(content[i], "T5") || Objects.equals(content[i], "G90T5")) {
+                newStr.append(content[i].replace("T5", "T9916"));
+            } else if (Objects.equals(content[i], "T8") || Objects.equals(content[i], "G90T8") ) {
                 newStr.append(content[i].replace("T8", "T9908"));
-            } else if (content[i].contains("96")) {
-                if (content[i].contains(".H")) {
-                    newStr.append(content[i].replaceFirst("96", "44"));
-                } else if (content[i].contains("T96") && !content[i].startsWith("(T44")) {
-                    newStr.append(content[i].replace("T96", "T9944"));
-                } else {
-                    newStr.append(content[i]);
-                }
-            } else if (content[i].contains("67")) {
-                if (content[i].contains(".H")) {
-                    newStr.append(content[i].replaceFirst("67", "56"));
-                } else if (content[i].contains("T67")) {
-                    newStr.append(content[i].replace("T67", "T9956"));
-                } else {
-                    newStr.append(content[i]);
-                }
-            } else if (content[i].contains("84")) {
-                if (content[i].contains(".H")) {
-                    newStr.append(content[i].replaceFirst("84", "40"));
-                } else if (content[i].contains("T84")) {
-                    newStr.append(content[i].replace("T84", "T40"));
-                } else {
-                    newStr.append(content[i]);
-                }
-            } else {
+            }  else {
                 newStr.append(content[i]);
             }
             newStr.append("\r\n");

@@ -21,11 +21,10 @@ public class TransformConstants {
 
     public static final String[] NH6300_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
     public static final String[] NV7000_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
-
     public static final Map<String, String> NH6300_M_TO_CHANGE = Map.of(
             "M50", "M51",
             "M09", "M89",
-            "M51", "M88");
+            "M51", "M08");
 
     public static final Map<String, String> NH6300_M_G_TO_CHANGE = Map.of(
             "G65P8771", "M98P8771(Z AXIS HEIGHT MEASUREMENT)",
@@ -38,37 +37,61 @@ public class TransformConstants {
         NH6300_ALL_TO_CHANGE.putAll(NH6300_M_G_TO_CHANGE);
     }
 
-    public static final Map<String, String> NV7000_M_TO_CHANGE = Map.of(
-            "M50", "M51",
-            "M99", "M30",
-            "M89", "M09",
-            "M88", "M08",
-            "M51", "M08"
-    );
-    public static final Map<String, String> NV7000_H_TO_CHANGE = Map.of(
-            "H67", "H56",
-            "H84", "H40",
-            "H96", "H44"
-    );
-    public static final Map<String, String> NV7000_G_TO_CHANGE = Map.of(
-            "G28", "G30"
-    );
-    public static final Map<String, String> NV7000_T_TO_CHANGE = Map.of(
-            "T10", "T9910",
-            "T11", "T9911",
-            "T25", "T9925",
-            "T26", "T9926",
-            "T27", "T9927",
-            "T28", "T9928",
-            "T35", "T9935",
-            "T39", "T9939",
-            "T40", "T9940",
-            "T53", "T9953"
-    );
-    public static final Map<String, String> NV7000_T_TO_CHANGE2 = Map.of(
-            "T58", "T9958"
+    public static final Map<String, String> NV7000_M_TO_CHANGE = Map.ofEntries(
+            Map.entry("M50", "M51"),
+            Map.entry("M99", "M30"),
+            Map.entry("M89", "M09"),
+            Map.entry("M88", "M08"),
+            Map.entry("M51", "M08")
     );
 
+    public static final Map<String, String> NV7000_H_TO_CHANGE = Map.ofEntries(
+            Map.entry("H16", "H43"),
+            Map.entry("H49", "H59"),
+            Map.entry("H60", "H54"),
+            Map.entry("H67", "H56"),
+            Map.entry("H77", "H44"),
+            Map.entry("H81", "H57"),
+            Map.entry("H84", "H40"),
+            Map.entry("H96", "H44"),
+            Map.entry("H108", "H33")
+    );
+
+    public static final Map<String, String> NV7000_G_TO_CHANGE = Map.ofEntries(
+            Map.entry("G28", "G30")
+    );
+    public static final Map<String, String> NV7000_T_TO_CHANGE = Map.ofEntries(
+            Map.entry("T10", "T9910"),
+            Map.entry("T11", "T9911"),
+            Map.entry("T15", "T9915"),
+            Map.entry("T16", "T9943"),
+            Map.entry("T18", "T9918"),
+            Map.entry("T22", "T9922"),
+            Map.entry("T25", "T9925"),
+            Map.entry("T26", "T9926"),
+            Map.entry("T27", "T9927"),
+            Map.entry("T28", "T9928"),
+            Map.entry("T34", "T9934"),
+            Map.entry("T35", "T9935"),
+            Map.entry("T36", "T9936"),
+            Map.entry("T39", "T9939"),
+            Map.entry("T40", "T9940"),
+            Map.entry("T47", "T9947"),
+            Map.entry("T49", "T9959"),
+            Map.entry("T53", "T9953"),
+            Map.entry("T54", "T9954"),
+            Map.entry("T55", "T9955"),
+            Map.entry("T57", "T9957"),
+            Map.entry("T58", "T9958"),
+            Map.entry("T60", "T54"),
+            Map.entry("T67", "T9956"),
+            Map.entry("T77", "T44"),
+            Map.entry("T81", "T57"),
+            Map.entry("T84", "T40"),
+            Map.entry("T96", "T9944"),
+            Map.entry("T100", "T99100"),
+            Map.entry("T108", "T9933")
+    );
     public static final Map<String, String> NV7000_ALL_TO_CHANGE = new HashMap<>();
 
     static {
@@ -76,34 +99,35 @@ public class TransformConstants {
         NV7000_ALL_TO_CHANGE.putAll(NV7000_H_TO_CHANGE);
         NV7000_ALL_TO_CHANGE.putAll(NV7000_G_TO_CHANGE);
         NV7000_ALL_TO_CHANGE.putAll(NV7000_T_TO_CHANGE);
-        NV7000_ALL_TO_CHANGE.putAll(NV7000_T_TO_CHANGE2);
     }
 
     public static final String[] MAZAK655_M_TO_DELETE = {};
+    public static final Map<String, String> MAZAK655_M_TO_CHANGE = Map.ofEntries(
+            Map.entry("M99", "M30")
+    );
+    public static final Map<String, String> MAZAK655_H_TO_CHANGE = Map.ofEntries(
+            Map.entry("H16", "H43"),
+            Map.entry("H49", "H59"),
+            Map.entry("H60", "H56"),
+            Map.entry("H67", "H54"),
+            Map.entry("H81", "H57"),
+            Map.entry("H84", "H40"),
+            Map.entry("H96", "H44"),
+            Map.entry("H108", "H33")
+    );
 
-    public static final Map<String, String> MAZAK655_M_TO_CHANGE = Map.of(
-            "M99", "M30"
+    public static final Map<String, String> MAZAK655_G_TO_CHANGE = Map.ofEntries(
+            Map.entry("G28", "G30")
     );
-    public static final Map<String, String> MAZAK655_H_TO_CHANGE = Map.of(
-            "H16", "H43",
-            "H49", "H59",
-            "H60", "H56",
-            "H67", "H43",
-            "H81", "H57",
-            "H96", "H44",
-            "H108", "H33"
-    );
-    public static final Map<String, String> MAZAK655_G_TO_CHANGE = Map.of(
-            "G28", "G30"
-    );
-    public static final Map<String, String> MAZAK655_T_TO_CHANGE = Map.of(
-            "T16", "T43",
-            "T49","T59",
-            "T60","T56",
-            "T67", "T43",
-            "T81", "T57",
-            "T96", "T44",
-            "T108", "T33"
+    public static final Map<String, String> MAZAK655_T_TO_CHANGE = Map.ofEntries(
+            Map.entry("T16", "T43"),
+            Map.entry("T49", "T59"),
+            Map.entry("T60", "T56"),
+            Map.entry("T67", "T54"),
+            Map.entry("T81", "T57"),
+            Map.entry("T84", "T40"),
+            Map.entry("T96", "T44"),
+            Map.entry("T108", "T33")
     );
     public static final Map<String, String> MAZAK655_ALL_TO_CHANGE = new HashMap<>();
 
