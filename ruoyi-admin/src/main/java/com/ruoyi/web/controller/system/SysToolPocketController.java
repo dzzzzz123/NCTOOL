@@ -1,8 +1,11 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.system.domain.SysToolPocketToSql;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -93,6 +96,10 @@ public class SysToolPocketController extends BaseController {
 
     /**
      * Creo软件外部接口获取刀具加工参数
+     * Coolant          COOLANT_OPTION
+     * FeedRate         CUT_FEED
+     * PeckDepth        PECK_DEPTH
+     * SpindelSpeed     SPINDLE_SPEED
      * @param toolId 刀具id
      * @return 加工参数
      */
@@ -102,7 +109,12 @@ public class SysToolPocketController extends BaseController {
         AjaxResult ajax = new AjaxResult();
         SysToolPocket sysToolPocket = sysToolPocketService.getParameter(toolId);
         SysToolPocket.SysParameter parameter = sysToolPocket.getParameter();
-        ajax.put("Parameter", parameter);
+        Map<String, String> modifiedParameter = new HashMap<>(4);
+        modifiedParameter.put("COOLANT_OPTION", parameter.getCoolant());
+        modifiedParameter.put("CUT_FEED", parameter.getFeedRate());
+        modifiedParameter.put("PECK_DEPTH", parameter.getPeckDepth());
+        modifiedParameter.put("SPINDLE_SPEED", parameter.getSpindelSpeed());
+        ajax.put("Parameter", modifiedParameter);
         return ajax;
     }
 }

@@ -60,16 +60,16 @@ public class SysToolPocket extends BaseEntity {
 
     @Data
     public static class SysParameter {
-        @Excel(name = "")
+        @Excel(name = "Coolant")
         @JsonProperty(value = "Coolant")
         private String coolant;
-        @Excel(name = "")
+        @Excel(name = "FeedRate")
         @JsonProperty(value = "FeedRate")
         private String feedRate;
-        @Excel(name = "")
+        @Excel(name = "PeckDepth")
         @JsonProperty(value = "PeckDepth")
         private String peckDepth;
-        @Excel(name = "")
+        @Excel(name = "SpindelSpeed")
         @JsonProperty(value = "SpindelSpeed")
         private String spindelSpeed;
     }

@@ -24,15 +24,17 @@ public class TransformConstants {
             "M50", "M51",
             "M09", "M89",
             "M51", "M08");
-
+    public static final Map<String, String> NH6300_H_TO_CHANGE = Map.ofEntries(
+            Map.entry("H84", "H1")
+    );
     public static final Map<String, String> NH6300_M_G_TO_CHANGE = Map.of(
             "G65P8771", "M98P8771(Z AXIS HEIGHT MEASUREMENT)",
             "G65P8881", "M98P8881(Z AXIS HEIGHT MEASUREMENT)"
     );
     public static final Map<String, String> NH6300_ALL_TO_CHANGE = new HashMap<>();
-
     static {
         NH6300_ALL_TO_CHANGE.putAll(NH6300_M_TO_CHANGE);
+        NH6300_ALL_TO_CHANGE.putAll(NH6300_H_TO_CHANGE);
         NH6300_ALL_TO_CHANGE.putAll(NH6300_M_G_TO_CHANGE);
     }
 
@@ -175,7 +177,6 @@ public class TransformConstants {
      * 匹配以 S三位数字M两位数字 结尾的正则表达式
      */
     public static final String M_PATTERN = ".*S\\d{3}M\\d{2}$";
-
     public static final String TAPTEETH = "G95\n" +
             "M29";
 }
