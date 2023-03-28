@@ -1,8 +1,11 @@
 package com.ruoyi.common.utils.transform;
 
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static com.ruoyi.common.constant.TransformConstants.TAPPING_TEETH;
+import static com.ruoyi.common.constant.TransformConstants.M_PATTERN;
+import static com.ruoyi.common.constant.TransformConstants.TAPTEETH;
 
 /**
  * 将NC代码转换为7000机床使用的G代码
@@ -20,12 +23,23 @@ public class TransformTo7000 extends TransformBaseUtil {
                 newStr.append("G91G30X0.Y0.Z0.\n");
             }
             if (content[i].startsWith("G84")) {
-                newStr.append(TAPPING_TEETH).append(content[i]).append("\r\n");
-                for (int j = 0; j < 4; j++) {
-                    i++;
-                    newStr.append(content[i]).append("\r\n");
+                int j = 1;
+                Pattern pattern = Pattern.compile(M_PATTERN);
+                while (i - j >= 0 && j <= 10) {
+                    Matcher matcher = pattern.matcher(content[i - j]);
+                    if (matcher.matches()) {
+                        String msCode = matcher.group().substring(matcher.group().indexOf("S"),matcher.group().indexOf("S") + 4);
+                        newStr.append(TAPTEETH).append(msCode).append("\r\n").append(content[i]).append("\r\n");
+                        break;
+                    }
+                    j++;
                 }
-                newStr.append("G94");
+                i++;
+                while (i < content.length && !content[i].startsWith("G80")) {
+                    newStr.append(content[i]).append("\r\n");
+                    i++;
+                }
+                newStr.append("G80").append("\r\n").append("G94");
             } else if (Objects.equals(content[i], "T1") || Objects.equals(content[i], "G90T1") ) {
                 newStr.append(content[i].replace("T1", "T9901"));
             } else if (Objects.equals(content[i], "T3") || Objects.equals(content[i], "G90T3")) {

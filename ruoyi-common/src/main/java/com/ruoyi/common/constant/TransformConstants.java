@@ -18,7 +18,6 @@ public class TransformConstants {
     public static final String NH6300_FILENAME = "(FILENAME E:\\NH6300\\";
     public static final String NV7000_FILENAME = "(FILENAME E:\\NV7000\\";
     public static final String MAZAK655_FILENAME = "(FILENAME E:\\MZK502\\";
-
     public static final String[] NH6300_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
     public static final String[] NV7000_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
     public static final Map<String, String> NH6300_M_TO_CHANGE = Map.of(
@@ -172,8 +171,11 @@ public class TransformConstants {
                     "M102\n" +
                     "IF[#1004NE1]GOTO9000\n";
 
-    public static final String TAPPING_TEETH =
-            "G95\n" +
-                    "M29S243\n";
+    /**
+     * 匹配以 S三位数字M两位数字 结尾的正则表达式
+     */
+    public static final String M_PATTERN = ".*S\\d{3}M\\d{2}$";
 
+    public static final String TAPTEETH = "G95\n" +
+            "M29";
 }

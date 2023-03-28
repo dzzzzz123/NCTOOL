@@ -1,6 +1,8 @@
 package com.ruoyi.common.utils.transform;
 
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.ruoyi.common.constant.TransformConstants.*;
 
@@ -35,12 +37,23 @@ public class TransformTo6300 extends TransformBaseUtil {
             } else if (content[i].startsWith("G43Z35.H")) {
                 newStr.append("G43Z35.H1");
             } else if (content[i].startsWith("G84")) {
-                newStr.append(TAPPING_TEETH).append(content[i]).append("\r\n");
-                for (int j = 0; j < 4; j++) {
-                    i++;
-                    newStr.append(content[i]).append("\r\n");
+                int j = 1;
+                Pattern pattern = Pattern.compile(M_PATTERN);
+                while (i - j >= 0 && j <= 10) {
+                    Matcher matcher = pattern.matcher(content[i - j]);
+                    if (matcher.matches()) {
+                        String msCode = matcher.group().substring(matcher.group().indexOf("S"),matcher.group().indexOf("S") + 4);
+                        newStr.append(TAPTEETH).append(msCode).append("\r\n").append(content[i]).append("\r\n");
+                        break;
+                    }
+                    j++;
                 }
-                newStr.append("G94");
+                i++;
+                while (i < content.length && !content[i].startsWith("G80")) {
+                    newStr.append(content[i]).append("\r\n");
+                    i++;
+                }
+                newStr.append("G80").append("\r\n").append("G94");
             } else if (Objects.equals(content[i], "M01") && !Objects.equals(flag, "")) {
                 newStr.append(WEAR_DETECTION.get(flag)).append("M01");
                 flag = "";

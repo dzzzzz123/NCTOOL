@@ -257,7 +257,7 @@ export default {
                 this.$message.error("没有可以转换的tap文件，请上传需要转换的tap文件！");
                 return;
             }
-            this.$message.warning("转换NC代码!");
+            this.$message.warning("转换NC代码中......");
             transFormNcCode(this.toTransForm.tapNames).then(response => {
                 if (response.code === 200) {
                     this.$message.success("转换NC代码成功！");
@@ -287,7 +287,7 @@ export default {
             if (code == 200) {
                 uploadToDNC(this.toTransForm.tapNames).then(response => {
                     if (response.code == 200) {
-                        this.$message.success("上传到DNC!");
+                        this.$message.success("上传到DNC成功!");
                     }
                 })
             } else {

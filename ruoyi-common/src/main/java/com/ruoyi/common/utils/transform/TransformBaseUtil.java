@@ -157,18 +157,18 @@ public class TransformBaseUtil {
      */
     static String modifyToolNumber(String line, int flag) {
         line = line
-                .replace("(5", "(16")
-                .replace("(16", "(43")
-                .replace("(40", "(52")
-                .replace("(44", "(51")
-                .replace("(49", "(59")
-                .replace("(60", flag == 1 ? "(54" : "(56")
-                .replace("(67", flag == 1 ? "(56" : "(54")
-                .replace("(77", "(44")
-                .replace("(81", "(57")
-                .replace("(84", "(40")
-                .replace("(96", "(44")
-                .replace("(108", "(33");
+                .replaceFirst("\\b5\\b", "16")
+                .replaceFirst("\\b16\\b", "43")
+                .replaceFirst("\\b40\\b", "52")
+                .replaceFirst("\\b44\\b", "51")
+                .replaceFirst("\\b49\\b", "59")
+                .replaceFirst("\\b60\\b", flag == 1 ? "54" : "56")
+                .replaceFirst("\\b67\\b", flag == 1 ? "56" : "54")
+                .replaceFirst("\\b77\\b", "44")
+                .replaceFirst("\\b81\\b", "57")
+                .replaceFirst("\\b84\\b", "40")
+                .replaceFirst("\\b96\\b", "44")
+                .replaceFirst("\\b108\\b", "33");
         String[] str = line.split("\\s+", 2);
         line = str[0] + ", " + str[1];
         return line;
