@@ -28,6 +28,14 @@ public interface SysToolsMapper
     public List<SysTools> selectSysToolsList(SysTools sysTools);
 
     /**
+     * 查询刀具管理列表2
+     *
+     * @param sysTools 刀具管理
+     * @return 刀具管理集合
+     */
+    public List<SysTools> selectSysToolsList2();
+
+    /**
      * 新增刀具管理
      * 
      * @param sysTools 刀具管理

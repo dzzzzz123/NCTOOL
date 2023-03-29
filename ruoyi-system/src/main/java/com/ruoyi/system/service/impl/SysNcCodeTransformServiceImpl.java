@@ -1,12 +1,16 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.system.domain.SysTapList;
+import com.ruoyi.system.domain.SysTools;
+import com.ruoyi.system.mapper.SysToolsMapper;
 import com.ruoyi.system.service.ISysNcCodeTransformService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -15,6 +19,9 @@ import java.util.Objects;
  */
 @Service
 public class SysNcCodeTransformServiceImpl implements ISysNcCodeTransformService {
+
+    @Autowired
+    private SysToolsMapper sysToolsMapper;
     private static ArrayList<File> SCAN_FILES_NAMES;
 
     @Value("${upload.path}")
@@ -94,5 +101,15 @@ public class SysNcCodeTransformServiceImpl implements ISysNcCodeTransformService
                 }
             }
         }
+    }
+
+    /**
+     * 查询出刀具列表
+     *
+     * @return 在数据库中查询出的刀具列表
+     */
+    @Override
+    public List<SysTools> selectToolList() {
+        return sysToolsMapper.selectSysToolsList2();
     }
 }

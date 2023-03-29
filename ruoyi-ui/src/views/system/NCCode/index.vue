@@ -4,8 +4,17 @@
             <file-upload class="btn btn-primary" v-model="fileList" :multiple="true" :directory="true" :drop="true"
                 :drop-directory="true" extensions="tap" @input-filter="inputFilter" @input-file="inputFile" ref="upload">
             </file-upload>
-            <el-button size="small" type="primary" @click="onAddFolader"
-                style="margin-top: 13px; margin-left: 20px;">点击上传</el-button>
+            <el-button size="small" type="primary" @click="onAddFolader" style="margin-top: 13px; margin-left: 20px;">
+                <el-dropdown>
+                    <span class="el-dropdown-link">
+                        点击上传<i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item icon="el-icon-plus" @click.native="onAddFolader">上传文件夹</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-circle-plus" @click.native="onAddFiles">上传文件</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </el-button>
             <el-button @click="transform" size="small" type="primary" style="margin-left: 20px;">转换NC代码</el-button>
             <el-table v-loading="toTransForm.loading" :data="toTransForm.tapList" :show-header="false"
                 @row-click="toTransFormrowClick" :row-class-name="toTransFormrowClassName" :row-style="toTransFormrowStyle"
@@ -152,6 +161,18 @@ export default {
         onAddFolader() {
             let input = this.$refs.upload.$el.querySelector('input');
             input.click();
+        },
+        onAddFiles() {
+            let input = this.$refs.upload.$el.querySelector('input');
+            input.directory = false;
+            input.webkitdirectory = false;
+
+            input.onclick = null;
+            input.click();
+            input.onclick = (e) => {
+                input.directory = true;
+                input.webkitdirectory = true;
+            }
         },
         handleChange(file, fileList) {
             this.isTransFormed = false;
@@ -300,5 +321,19 @@ export default {
 <style lang="scss">
 .el-upload__tip {
     line-height: 1.2;
+}
+
+.el-dropdown {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.el-dropdown-link {
+    cursor: pointer;
+    color: #FFFFFF;
+}
+
+.el-icon-arrow-down {
+    font-size: 12px;
 }
 </style>

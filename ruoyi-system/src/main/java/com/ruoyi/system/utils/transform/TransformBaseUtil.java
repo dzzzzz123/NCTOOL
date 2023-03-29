@@ -1,4 +1,4 @@
-package com.ruoyi.common.utils.transform;
+package com.ruoyi.system.utils.transform;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.ruoyi.common.constant.TransformConstants.*;
+import static com.ruoyi.system.constant.TransformConstants.*;
 
 /**
  * 转换NC代码基类

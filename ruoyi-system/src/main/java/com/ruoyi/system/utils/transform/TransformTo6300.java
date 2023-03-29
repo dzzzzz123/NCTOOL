@@ -1,10 +1,10 @@
-package com.ruoyi.common.utils.transform;
+package com.ruoyi.system.utils.transform;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.ruoyi.common.constant.TransformConstants.*;
+import static com.ruoyi.system.constant.TransformConstants.*;
 
 /**
  * 将NC代码转换为6300机床使用的G代码

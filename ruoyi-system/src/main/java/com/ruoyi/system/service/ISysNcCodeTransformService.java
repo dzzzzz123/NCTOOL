@@ -1,10 +1,12 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.system.domain.SysTapList;
+import com.ruoyi.system.domain.SysTools;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author dz
@@ -26,4 +28,10 @@ public interface ISysNcCodeTransformService {
      * @return NC代码
      */
     File compareNcCode(String fileName);
+
+    /**
+     * 查询出刀具列表
+     * @return 在数据库中查询出的刀具列表
+     */
+    List<SysTools> selectToolList();
 }

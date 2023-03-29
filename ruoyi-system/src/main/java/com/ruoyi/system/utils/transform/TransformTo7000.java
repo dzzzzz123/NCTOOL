@@ -1,11 +1,11 @@
-package com.ruoyi.common.utils.transform;
+package com.ruoyi.system.utils.transform;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.ruoyi.common.constant.TransformConstants.M_PATTERN;
-import static com.ruoyi.common.constant.TransformConstants.TAPTEETH;
+import static com.ruoyi.system.constant.TransformConstants.M_PATTERN;
+import static com.ruoyi.system.constant.TransformConstants.TAPTEETH;
 
 /**
  * 将NC代码转换为7000机床使用的G代码

@@ -26,11 +26,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="toolDescription != null  and toolDescription != ''"> and tool_description like concat('%', #{toolDescription}, '%')</if>
         </where>
     </select>
-    
+
+    <select id="selectSysToolsList2"  resultMap="SysToolsResult">
+        <include refid="selectSysToolsVo"/>
+    </select>
+
     <select id="selectSysToolsByToolId" parameterType="Long" resultMap="SysToolsResult">
         <include refid="selectSysToolsVo"/>
         where tool_id = #{toolId}
     </select>
+
     <select id="checkToolsDescriptionUnique" parameterType="string"  resultMap="SysToolsResult">
         <include refid="selectSysToolsVo"/>
         where t.tool_description=#{toolDescription} and t.del_flag = '0' limit 1

@@ -1,17 +1,19 @@
-package com.ruoyi.common.constant;
+package com.ruoyi.system.constant;
+
+import com.ruoyi.system.domain.SysTools;
+import com.ruoyi.system.service.ISysNcCodeTransformService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * NC代码转换产量池
- *
+ * 转换NC代码的常量类
  * @author dz
- * @date 2023-03-08
  */
-public class TransformConstants {
 
-    public static final String ORIGIN_M_PROGCAT = "(PROGCAT MAZAK HORIZONTAL)";
+public class TransformConstants {
     public static final String NH6300_M_PROGCAT = "(PROGCAT MORI SEIKI NH6300)";
     public static final String NV7000_M_PROGCAT = "(PROGCAT MORI SEIKI NV7000)";
     public static final String MAZAK655_M_PROGCAT = "(PROGCAT MAZAK V655 PALLET)";
@@ -116,7 +118,6 @@ public class TransformConstants {
             Map.entry("H96", "H44"),
             Map.entry("H108", "H33")
     );
-
     public static final Map<String, String> MAZAK655_G_TO_CHANGE = Map.ofEntries(
             Map.entry("G28", "G30")
     );
@@ -161,7 +162,6 @@ public class TransformConstants {
                     "G325X2.200Y3.300H01Q0.3T9002\n"
     );
 
-    public static final String[] TOOLS_TO_SET_DETECTION = {"T1", "T3", "T8", "T10", "T11", "T15", "T25", "T26", "T27", "T35", "T39", "T40", "T53", "T58", "T67", "T84", "T96", "T104"};
     public static final String TOOL_SET_DETECTION =
             "#991=-2\n" +
                     "#992=1\n" +
@@ -179,4 +179,13 @@ public class TransformConstants {
     public static final String M_PATTERN = ".*S\\d{3}M\\d{2}$";
     public static final String TAPTEETH = "G95\n" +
             "M29";
+    // @Autowired
+    // private static ISysNcCodeTransformService transformService;
+    // static {
+    //     List<SysTools> sysTools = transformService.selectToolList();
+    //     for (SysTools sysTool : sysTools) {
+    //         System.out.println(sysTool);
+    //     }
+    // }
+
 }
