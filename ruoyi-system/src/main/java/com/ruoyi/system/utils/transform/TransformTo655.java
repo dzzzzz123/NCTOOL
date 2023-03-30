@@ -1,5 +1,6 @@
 package com.ruoyi.system.utils.transform;
 
+
 /**
  * 将NC代码转换为655机床使用的G代码
  *

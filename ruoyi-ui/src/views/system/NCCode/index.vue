@@ -38,7 +38,7 @@
         </el-dialog>
     </div>
 </template>
- 
+
 <script>
 import CodeDiff from 'vue-code-diff'
 import FileUpload from 'vue-upload-component'

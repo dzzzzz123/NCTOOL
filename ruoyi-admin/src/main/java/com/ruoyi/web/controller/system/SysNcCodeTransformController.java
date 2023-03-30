@@ -19,6 +19,7 @@ import com.ruoyi.system.service.ISysNcCodeTransformService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -26,10 +27,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -67,40 +70,27 @@ public class SysNcCodeTransformController extends BaseController {
     @PostMapping("/upload")
     public AjaxResult uploadFile(@RequestParam("file") MultipartFile[] files) throws IOException, InvalidExtensionException {
         for (MultipartFile file : files) {
-            String fileName = file.getOriginalFilename();
-            if (fileName != null) {
-                fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
-            }
-            File fileDir = new File(path);
-            if (!fileDir.exists()) {
-                fileDir.mkdirs();
-            }
-            int fileNameLength = Objects.requireNonNull(file.getOriginalFilename()).length();
-            if (fileNameLength > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH) {
+            String originalFileName = file.getOriginalFilename();
+            String fileName = FilenameUtils.getName(originalFileName);
+
+            // File newFile = new File(fileName);
+            // String absolutePath = newFile.getAbsolutePath();
+            // System.out.println("absolutePath = " + absolutePath);
+
+            if (Objects.requireNonNull(fileName).length() > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH) {
                 throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
             }
             FileUploadUtils.assertAllowed(file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
-            File desc = createAbsoluteFile(fileName);
-            file.transferTo(desc);
+
+            Path fileDir = Paths.get(path);
+            if (!Files.exists(fileDir)) {
+                Files.createDirectories(fileDir);
+            }
+
+            Path targetPath = fileDir.resolve(fileName);
+            Files.write(targetPath, file.getBytes());
         }
         return new AjaxResult(200, "Success");
-    }
-
-    /**
-     * @param fileName 文件名
-     * @return 返回文件在本地电脑中的真实路径
-     * @throws IOException 异常
-     */
-    private static File createAbsoluteFile(String fileName) throws IOException {
-        File desc = new File("d:/upload" + File.separator + fileName);
-
-        // if (!desc.getParentFile().exists()) {
-        //     desc.getParentFile().mkdirs();
-        // }
-        if (!desc.exists()) {
-            desc.createNewFile();
-        }
-        return desc;
     }
 
     /**
@@ -140,7 +130,6 @@ public class SysNcCodeTransformController extends BaseController {
         return new AjaxResult(200, "Success");
     }
 
-
     /**
      * 用上传文件的文件名，获取到文件列表
      *
@@ -167,13 +156,12 @@ public class SysNcCodeTransformController extends BaseController {
      * 将需要比较的文件上传到前端
      *
      * @param fileName 前端传输来的需要比较的文件名
-     * @param request  request
      * @param response response
      */
     @PreAuthorize("@ss.hasAnyPermi('system:NcCode:compare')")
     @Log(title = "比较NC代码", businessType = BusinessType.COMPARE)
     @PutMapping("/compare")
-    public void compareDownload(@RequestBody FileToCompare fileName, HttpServletRequest request, HttpServletResponse response) {
+    public void compareDownload(@RequestBody FileToCompare fileName, HttpServletResponse response) {
         File file = transformService.compareNcCode(fileName.getOldFileName());
         try {
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);

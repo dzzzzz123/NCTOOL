@@ -217,13 +217,22 @@ public class TransformBaseUtil {
      * @param content 用来处理的字符串
      */
     static void processAllReplace(String[] content) {
-        for (int i = 0; i < content.length; i++) {
+        Arrays.parallelSetAll(content, i -> {
             for (String s : ALL_TO_CHANGE.keySet()) {
-                if (content[i].contains(s) && !content[i].startsWith("(")) {
-                    // if (content[i].contains(s)) {
-                    content[i] = content[i].replace(s, ALL_TO_CHANGE.get(s));
+                if (content[i].startsWith("(")) {
+                    break;
+                }
+                if (s.startsWith("T")) {
+                    if (Objects.equals(content[i], s) || Objects.equals(content[i], "G90" + s)) {
+                        return content[i].replace(s, ALL_TO_CHANGE.get(s));
+                    }
+                } else {
+                    if (content[i].contains(s)) {
+                        return content[i].replace(s, ALL_TO_CHANGE.get(s));
+                    }
                 }
             }
-        }
+            return content[i];
+        });
     }
 }
