@@ -9,6 +9,8 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.ruoyi.system.constant.TransformConstants.*;
 
@@ -26,7 +28,7 @@ public class TransformBaseUtil {
     private static String FILENAME;
     private static String WHICH_PROGCAT;
     private static Map<String, String> ALL_TO_CHANGE;
-
+    private static Map<String, String> BRACKETS_TO_CHANGE;
 
     /**
      * 转换NC代码基类
@@ -47,7 +49,7 @@ public class TransformBaseUtil {
             initProcess(flag);
             editFileHeader(content, flag);
             content = processAllDelete(content);
-            processAllReplace(content);
+            processAllReplace(content, flag);
             StringBuilder newStr = new StringBuilder();
             // 对NC原始代码进行操作
             switch (flag) {
@@ -103,6 +105,7 @@ public class TransformBaseUtil {
                 FILENAME = NV7000_FILENAME + FILENAMEWITHOUTPREFIX + ")";
                 WHICH_PROGCAT = NV7000_M_PROGCAT;
                 ALL_TO_CHANGE = NV7000_ALL_TO_CHANGE;
+                BRACKETS_TO_CHANGE = NV7000_BRACKETS_T_TO_CHANGE;
                 DELETE_FLAG = "(TOOL, NAME : T100)";
                 break;
             case 2:
@@ -110,6 +113,7 @@ public class TransformBaseUtil {
                 FILENAME = MAZAK655_FILENAME + FILENAMEWITHOUTPREFIX + ")";
                 WHICH_PROGCAT = MAZAK655_M_PROGCAT;
                 ALL_TO_CHANGE = MAZAK655_ALL_TO_CHANGE;
+                BRACKETS_TO_CHANGE = MAZAK655_BRACKETS_T_TO_CHANGE;
                 DELETE_FLAG = "(TOOL, NAME : T100)";
                 break;
             default:
@@ -216,19 +220,35 @@ public class TransformBaseUtil {
      *
      * @param content 用来处理的字符串
      */
-    static void processAllReplace(String[] content) {
+    static void processAllReplace(String[] content, int flag) {
         Arrays.parallelSetAll(content, i -> {
-            for (String s : ALL_TO_CHANGE.keySet()) {
-                if (content[i].startsWith("(")) {
-                    break;
-                }
-                if (s.startsWith("T")) {
-                    if (Objects.equals(content[i], s) || Objects.equals(content[i], "G90" + s)) {
-                        return content[i].replace(s, ALL_TO_CHANGE.get(s));
-                    }
-                } else {
+            if (!content[i].startsWith("(")) {
+                for (String s : ALL_TO_CHANGE.keySet()) {
                     if (content[i].contains(s)) {
-                        return content[i].replace(s, ALL_TO_CHANGE.get(s));
+                        if (s.startsWith("T")) {
+                            if (Objects.equals(content[i], s) || Objects.equals(content[i], "G90" + s)) {
+                                return content[i].replaceFirst(s, ALL_TO_CHANGE.get(s));
+                            }
+                        } else if (s.startsWith("H")) {
+                            String regex = "^.*?H(\\d+)$";
+                            Pattern pattern = Pattern.compile(regex);
+                            Matcher matcher = pattern.matcher(content[i]);
+                            if (matcher.find()) {
+                                String hValue = matcher.group(1);
+                                return content[i].replaceFirst("H"+hValue, ALL_TO_CHANGE.get(s));
+                            }
+                        } else {
+                            return content[i].replaceFirst(s, ALL_TO_CHANGE.get(s));
+                        }
+                    }
+                }
+            } else {
+                if (flag == 1 || flag == 2) {
+                    for (String s : BRACKETS_TO_CHANGE.keySet()) {
+                        String pattern = "^\\(\\d*,?\\s*T\\d+.*\\)$";
+                        if (content[i].matches(pattern)) {
+                            return content[i].replaceFirst(s, BRACKETS_TO_CHANGE.get(s));
+                        }
                     }
                 }
             }

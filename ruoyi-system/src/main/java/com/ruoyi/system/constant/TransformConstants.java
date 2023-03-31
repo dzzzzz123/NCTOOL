@@ -7,7 +7,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,21 +30,12 @@ public class TransformConstants implements ApplicationRunner {
             "M50", "M51",
             "M09", "M89",
             "M51", "M08");
-    public static final Map<String, String> NH6300_H_TO_CHANGE = Map.ofEntries(
-            Map.entry("H84", "H1")
-    );
+    public static final Map<String, String> NH6300_H_TO_CHANGE = new HashMap<>(120);
     public static final Map<String, String> NH6300_M_G_TO_CHANGE = Map.of(
             "G65P8771", "M98P8771(Z AXIS HEIGHT MEASUREMENT)",
             "G65P8881", "M98P8881(Z AXIS HEIGHT MEASUREMENT)"
     );
     public static final Map<String, String> NH6300_ALL_TO_CHANGE = new HashMap<>();
-
-    static {
-        NH6300_ALL_TO_CHANGE.putAll(NH6300_M_TO_CHANGE);
-        NH6300_ALL_TO_CHANGE.putAll(NH6300_H_TO_CHANGE);
-        NH6300_ALL_TO_CHANGE.putAll(NH6300_M_G_TO_CHANGE);
-    }
-
     public static final Map<String, String> NV7000_M_TO_CHANGE = Map.ofEntries(
             Map.entry("M50", "M51"),
             Map.entry("M99", "M30"),
@@ -58,6 +48,7 @@ public class TransformConstants implements ApplicationRunner {
             Map.entry("G28", "G30")
     );
     public static final Map<String, String> NV7000_T_TO_CHANGE = new HashMap<>(120);
+    public static final Map<String, String> NV7000_BRACKETS_T_TO_CHANGE = new HashMap<>(20);
     public static final Map<String, String> NV7000_ALL_TO_CHANGE = new HashMap<>();
     public static final String[] MAZAK655_M_TO_DELETE = {};
     public static final Map<String, String> MAZAK655_M_TO_CHANGE = Map.ofEntries(
@@ -68,15 +59,8 @@ public class TransformConstants implements ApplicationRunner {
             Map.entry("G28", "G30")
     );
     public static final Map<String, String> MAZAK655_T_TO_CHANGE = new HashMap<>();
+    public static final Map<String, String> MAZAK655_BRACKETS_T_TO_CHANGE = new HashMap<>(20);
     public static final Map<String, String> MAZAK655_ALL_TO_CHANGE = new HashMap<>();
-
-    static {
-        MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_M_TO_CHANGE);
-        MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_H_TO_CHANGE);
-        MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_G_TO_CHANGE);
-        MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_T_TO_CHANGE);
-    }
-
     public static final Map<String, String> WEAR_DETECTION = Map.of(
             "T1",
             "G325X-11.900Y1.400H01Q0.3T9002\n" +
@@ -127,50 +111,49 @@ public class TransformConstants implements ApplicationRunner {
         return transformService.selectToolList();
     }
 
-    private void init(){
+    private void init() {
+        NH6300_ALL_TO_CHANGE.putAll(NH6300_M_TO_CHANGE);
+        NH6300_ALL_TO_CHANGE.putAll(NH6300_H_TO_CHANGE);
+        NH6300_ALL_TO_CHANGE.putAll(NH6300_M_G_TO_CHANGE);
         NV7000_ALL_TO_CHANGE.putAll(NV7000_M_TO_CHANGE);
         NV7000_ALL_TO_CHANGE.putAll(NV7000_H_TO_CHANGE);
         NV7000_ALL_TO_CHANGE.putAll(NV7000_G_TO_CHANGE);
         NV7000_ALL_TO_CHANGE.putAll(NV7000_T_TO_CHANGE);
+        MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_M_TO_CHANGE);
+        MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_H_TO_CHANGE);
+        MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_G_TO_CHANGE);
+        MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_T_TO_CHANGE);
     }
 
     /**
      * 在springboot初始化后首先执行的方法
+     *
      * @param args springboot初始化时传入的参数
      */
     @Override
     public void run(ApplicationArguments args) {
-        List<SysTools> sysTools = getSysTools();
-        for (SysTools sysTool : sysTools) {
-            String t1;
-            String t2;
-            String t3;
-            String h1;
-            String h2;
-            String h3;
-            if (!sysTool.getNv7000().equals(sysTool.getNh6300())) {
-                h1 = "H" + sysTool.getNh6300();
-                h2 = "H" + sysTool.getNv7000();
+        getSysTools().forEach(sysTool -> {
+            String nh6300 = sysTool.getNh6300().toString();
+            String nv7000 = sysTool.getNv7000().toString();
+            String mazak655 = sysTool.getMazak655().toString();
+            String h1 = "H" + nh6300;
+            String h2 = "H" + nv7000;
+            String h3 = "H" + mazak655;
+            String t1 = "T" + nh6300;
+            String t2 = nv7000.compareTo("10") < 0 ? "T990" + nv7000 : "T99" + nv7000;
+            String t3 = "T" + mazak655;
+            if (!nh6300.equals(nv7000)) {
                 NV7000_H_TO_CHANGE.put(h1, h2);
+                NV7000_BRACKETS_T_TO_CHANGE.put(nh6300, nv7000);
             }
-            if (!sysTool.getNv7000().equals(sysTool.getMazak655())) {
-                h1 = "H" + sysTool.getNh6300();
-                h3 = "H" + sysTool.getMazak655();
+            if (!nh6300.equals(mazak655)) {
                 MAZAK655_H_TO_CHANGE.put(h1, h3);
-            }
-            if (sysTool.getNv7000().toString().compareTo("10") < 0) {
-                t2 = "T990" + sysTool.getNv7000();
-            } else {
-                t2 = "T99" + sysTool.getNv7000();
-            }
-            if (sysTool.getNh6300().toString().compareTo(sysTool.getMazak655().toString()) < 0) {
-                t1 = "T" + sysTool.getNh6300();
-                t3 = "T" + sysTool.getMazak655();
                 MAZAK655_T_TO_CHANGE.put(t1, t3);
+                MAZAK655_BRACKETS_T_TO_CHANGE.put(nh6300, mazak655);
             }
-            t1 = "T" + sysTool.getNh6300();
+            NH6300_H_TO_CHANGE.put(h1, "H1");
             NV7000_T_TO_CHANGE.put(t1, t2);
-        }
+        });
         init();
     }
 }
