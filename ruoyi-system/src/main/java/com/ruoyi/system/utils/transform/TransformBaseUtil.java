@@ -34,9 +34,8 @@ public class TransformBaseUtil {
      * 转换NC代码基类
      *
      * @param file 输入进文件流处理的NC原始代码
-     * @throws IOException IO异常
      */
-    public static void transform(File file, int flag) throws IOException {
+    public static void transform(File file, int flag) {
         byte[] fileContext = new byte[(int) file.length()];
         FileInputStream in = null;
         PrintWriter out = null;
@@ -87,7 +86,7 @@ public class TransformBaseUtil {
     }
 
     /**
-     * 用来初始化增删改数组或map的函数
+     * 用来再次初始化增删改常量池
      *
      * @param flag 标识
      */
@@ -128,7 +127,7 @@ public class TransformBaseUtil {
      * @param flag    机型标识
      */
     static void editFileHeader(String[] content, int flag) {
-        for (int i = 0; i < content.length; i++) {
+        for (int i = 0; i < content.length / 2; i++) {
             switch (i) {
                 case 2:
                     content[i] = FILENAME;
@@ -137,14 +136,14 @@ public class TransformBaseUtil {
                     content[i] = WHICH_PROGCAT;
                     break;
                 case 7:
-                    content[i] = content[i] + "\r\n" + "(Processed by Platform: " + getTime() + ")";
+                    StringBuilder sb = new StringBuilder(content[i]).append("\r\n").append("(Processed by Platform: ").append(getTime()).append(")");
+                    content[i] = sb.toString();
                     break;
                 default:
                     if (content[i].startsWith("(TOOL NUMBER") && (flag == 1 || flag == 2)) {
-                        while (true) {
-                            i++;
-                            content[i] = modifyToolNumber(content[i], flag);
-                            if (content[i].startsWith("(TOOL, NAME")) {
+                        for (int j = i + 1; j < content.length; j++) {
+                            content[j] = modifyToolNumber(content[j]);
+                            if (content[j].startsWith("(TOOL, NAME")) {
                                 break;
                             }
                         }
@@ -155,31 +154,23 @@ public class TransformBaseUtil {
     }
 
     /**
+     * 对TOOl NUMBER后面所有的括号内的内容进行刀具的刀号进行替换
      * @param line 给定的行内容
-     * @param flag 分辨机型标识的唯一标识
      * @return 已修改的行
      */
-    static String modifyToolNumber(String line, int flag) {
-        line = line
-                .replaceFirst("\\b5\\b", "16")
-                .replaceFirst("\\b16\\b", "43")
-                .replaceFirst("\\b40\\b", "52")
-                .replaceFirst("\\b44\\b", "51")
-                .replaceFirst("\\b49\\b", "59")
-                .replaceFirst("\\b60\\b", flag == 1 ? "54" : "56")
-                .replaceFirst("\\b67\\b", flag == 1 ? "56" : "54")
-                .replaceFirst("\\b77\\b", "44")
-                .replaceFirst("\\b81\\b", "57")
-                .replaceFirst("\\b84\\b", "40")
-                .replaceFirst("\\b96\\b", "44")
-                .replaceFirst("\\b108\\b", "33");
+    static String modifyToolNumber(String line) {
+        for (String s : BRACKETS_TO_CHANGE.keySet()) {
+            if (line.startsWith("(" + s)) {
+                line = line.replaceFirst("\\b" + s + "\\b", BRACKETS_TO_CHANGE.get(s));
+            }
+        }
         String[] str = line.split("\\s+", 2);
         line = str[0] + ", " + str[1];
         return line;
     }
 
     /**
-     * 转换NC代码时，删除掉代码中所有需要删除的部分
+     * 转换NC代码时，删除掉代码中所有需要删除的部分,主要是飞面与各种M值
      *
      * @param content 老字符串
      * @return 新字符串
@@ -217,12 +208,27 @@ public class TransformBaseUtil {
 
     /**
      * 为所有需要修改的字符串修改
-     *
+     * 如果匹配到的字符串开头有 ( 那么利用正则表达式匹配需要修改的字符串
+     * 正则：一个以左括号开始，包含数字和逗号以及空格的字符串，然后紧接着是大写字母T和数字组成的字符串，后面还可能包含其他字符。
+     * 如："(数字, T数字其他字符)"这样的字符串
+     * (T16, 6.0MM CARBIDE BALLMILL HELICAL FLUTES)
+     * 如果不是以 ( 开头的字符串，那么就分为需要修改的H，T或是其他
+     * T需要修改的就是刀具Txx或者G90Txx
+     * H需要修改的为G43Z35.H58如同这种，修改其中的H值
      * @param content 用来处理的字符串
      */
     static void processAllReplace(String[] content, int flag) {
         Arrays.parallelSetAll(content, i -> {
-            if (!content[i].startsWith("(")) {
+            if (content[i].startsWith("(")) {
+                if (flag == 1 || flag == 2) {
+                    for (String s : BRACKETS_TO_CHANGE.keySet()) {
+                        String pattern = "^\\(\\d*,?\\s*T\\d+.*\\)$";
+                        if (content[i].matches(pattern)) {
+                            return content[i].replaceFirst(s, BRACKETS_TO_CHANGE.get(s));
+                        }
+                    }
+                }
+            } else {
                 for (String s : ALL_TO_CHANGE.keySet()) {
                     if (content[i].contains(s)) {
                         if (s.startsWith("T")) {
@@ -233,21 +239,13 @@ public class TransformBaseUtil {
                             String regex = "^.*?H(\\d+)$";
                             Pattern pattern = Pattern.compile(regex);
                             Matcher matcher = pattern.matcher(content[i]);
-                            if (matcher.find()) {
-                                String hValue = matcher.group(1);
-                                return content[i].replaceFirst("H"+hValue, ALL_TO_CHANGE.get(s));
+                            boolean flag2 = matcher.find();
+                            String hValue = matcher.group(1);
+                            if (flag2 && Objects.equals(s, "H" + hValue)) {
+                                return content[i].replaceFirst("H" + hValue, ALL_TO_CHANGE.get(s));
                             }
                         } else {
                             return content[i].replaceFirst(s, ALL_TO_CHANGE.get(s));
-                        }
-                    }
-                }
-            } else {
-                if (flag == 1 || flag == 2) {
-                    for (String s : BRACKETS_TO_CHANGE.keySet()) {
-                        String pattern = "^\\(\\d*,?\\s*T\\d+.*\\)$";
-                        if (content[i].matches(pattern)) {
-                            return content[i].replaceFirst(s, BRACKETS_TO_CHANGE.get(s));
                         }
                     }
                 }

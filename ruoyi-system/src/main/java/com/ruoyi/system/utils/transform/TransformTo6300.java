@@ -8,6 +8,7 @@ import static com.ruoyi.system.constant.TransformConstants.*;
 
 /**
  * 将NC代码转换为6300机床使用的G代码
+ * 内容已经很混乱，没办法修改了，将就用吧，需要什么就直接if
  *
  * @author dz
  * @date 2023-03-08

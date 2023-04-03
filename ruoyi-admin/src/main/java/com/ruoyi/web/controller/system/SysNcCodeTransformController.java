@@ -111,20 +111,20 @@ public class SysNcCodeTransformController extends BaseController {
             try {
                 FileUtil.copyFile(temp, file, REPLACE_EXISTING);
                 TransformTo6300.transform(file, 0);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             try {
                 FileUtil.copyFile(temp, file2, REPLACE_EXISTING);
                 TransformTo7000.transform(file2, 1);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             try {
                 FileUtil.copyFile(temp, file3, REPLACE_EXISTING);
                 TransformTo655.transform(file3, 2);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return new AjaxResult(200, "Success");
@@ -165,7 +165,7 @@ public class SysNcCodeTransformController extends BaseController {
         File file = transformService.compareNcCode(fileName.getOldFileName());
         try {
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            FileUtils.setAttachmentResponseHeader(response,  file.getName());
+            FileUtils.setAttachmentResponseHeader(response, file.getName());
             FileUtils.writeBytes(file.getPath(), response.getOutputStream());
         } catch (Exception e) {
             log.error("下载文件失败", e);

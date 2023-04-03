@@ -127,6 +127,7 @@ public class TransformConstants implements ApplicationRunner {
 
     /**
      * 在springboot初始化后首先执行的方法
+     * 主要是为了动态初始化常量池
      *
      * @param args springboot初始化时传入的参数
      */
