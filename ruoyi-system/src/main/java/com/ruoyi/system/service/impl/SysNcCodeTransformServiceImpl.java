@@ -2,6 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import com.ruoyi.system.domain.SysTapList;
 import com.ruoyi.system.domain.SysTools;
+import com.ruoyi.system.mapper.SysTapNameMapper;
 import com.ruoyi.system.mapper.SysToolsMapper;
 import com.ruoyi.system.service.ISysNcCodeTransformService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,10 @@ public class SysNcCodeTransformServiceImpl implements ISysNcCodeTransformService
 
     @Autowired
     private SysToolsMapper sysToolsMapper;
-    private static ArrayList<File> SCAN_FILES_NAMES;
 
-    @Value("${upload.path}")
-    private String path;
+    @Autowired
+    private SysTapNameMapper sysTapNameMapper;
+    private static ArrayList<File> SCAN_FILES_NAMES;
 
     @Value("${upload.toDNCPath}")
     private String toDncPath;
@@ -112,4 +113,26 @@ public class SysNcCodeTransformServiceImpl implements ISysNcCodeTransformService
     public List<SysTools> selectToolList() {
         return sysToolsMapper.selectSysToolsList2();
     }
+
+    /**
+     * 校验tap文件是否转换上传成功
+     *
+     * @param tapName 需要校验的tap文件名
+     * @return 校验tap文件名是否存在
+     */
+    @Override
+    public boolean checkTapNames(String tapName) {
+        return sysTapNameMapper.getTapName(tapName) != 0;
+    }
+
+    /**
+     * 给数据库写入数据
+     *
+     * @param tapNames 需要插入的tap文件名
+     */
+    @Override
+    public void insertTapNames(ArrayList<String> tapNames) {
+        sysTapNameMapper.insertTapNames(tapNames);
+    }
+
 }

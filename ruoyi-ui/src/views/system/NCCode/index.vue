@@ -24,6 +24,9 @@
         </div>
         <div style="width: 49%;  min-height: 1000px; float: right; padding-top: 13px; background-color: beige;">
             <el-button @click="compare" size="small" type="warning" style="margin-left: 20px;">比较NC代码</el-button>
+            <el-button type="warning" size="small" @click="checkTapNames" style="margin-left: 10px;">查询tap文件</el-button>
+            <el-input v-model="tapNameToCheck" placeholder="请输入tap文件名" size="small" @keyup.enter.native="checkTapNames" clearable
+                style="width: 35%; margin-left: 10px;"></el-input>
             <el-table v-loading="Transformed.loading" :data="Transformed.tapList" :show-header="false"
                 @row-click="TransformedrowClick" :row-class-name="TransformedrowClassName" :row-style="TransformedrowStyle"
                 :stripe="false" style=" background: beige !important; margin-top: 20px; border:none;">
@@ -42,7 +45,7 @@
 <script>
 import CodeDiff from 'vue-code-diff'
 import FileUpload from 'vue-upload-component'
-import { uploadNcCode, transFormNcCode, newTapList, compareDownload, uploadToDNC } from "@/api/system/nccode.js"
+import { uploadNcCode, transFormNcCode, newTapList, compareDownload, uploadToDNC, getTapNames, insertTapNames } from "@/api/system/nccode.js"
 export default {
     name: 'NCCode',
     components: { CodeDiff, FileUpload },
@@ -54,6 +57,7 @@ export default {
             diffLeftFile: null,
             diffRightFile: null,
             isTransFormed: false,
+            tapNameToCheck: null,
             toTransForm: {
                 tapList: [],
                 loading: false,
@@ -309,12 +313,22 @@ export default {
                 uploadToDNC(this.toTransForm.tapNames).then(response => {
                     if (response.code == 200) {
                         this.$message.success("上传到DNC成功!");
+                        insertTapNames(this.toTransForm.tapNames);
                     }
                 })
             } else {
                 this.$message.error("转换NC代码失败，无法上传到DNC！");
             }
         },
+        checkTapNames() {
+            getTapNames(this.tapNameToCheck).then(response => {
+                if (response === true) {
+                    this.$message.success("此tap文件已转换，且存在DNC中！");
+                } else {
+                    this.$message.warning("此tap文件不存在DNC中！");
+                }
+            })
+        }
     }
 }
 </script>

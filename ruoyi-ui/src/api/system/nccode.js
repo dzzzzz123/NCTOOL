@@ -41,3 +41,17 @@ export function uploadToDNC(tapNames) {
     method: 'get'
   })
 }
+
+export function getTapNames(tapName){
+  return request({
+    url: '/system/nccode/getTapName/'+tapName,
+    method: 'get'
+  })
+}
+
+export function insertTapNames(tapNames){
+  return request({
+    url: '/system/nccode/insertTapNames/'+tapNames,
+    method: 'get'
+  })
+}

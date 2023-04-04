@@ -34,6 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static com.ruoyi.framework.datasource.DynamicDataSourceContextHolder.log;
@@ -200,5 +201,36 @@ public class SysNcCodeTransformController extends BaseController {
             }
         }
         return new AjaxResult(200, "Success");
+    }
+
+    /**
+     * 客户需要当NC代码转换上传到DNC后，所有操作完成之后，可以得到反馈
+     * 而不是需要去DNC文件夹中去查看是否转换上传成功，需要对结果进行校验
+     * 所有在前端获取tap文件的文件名，与数据库中的数据进行比较，完成校验
+     * @param tapName 前端传输过来的tap文件名
+     * @return 返回结果集
+     */
+    @PreAuthorize("@ss.hasAnyPermi('system:NcCode:checkTap')")
+    @Log(title = "查询tap文件是否存在", businessType = BusinessType.SELECT)
+    @GetMapping("/getTapName/{tapName}")
+    public boolean checkTapName(@PathVariable String tapName) {
+        return transformService.checkTapNames(tapName.split("\\.")[0]);
+    }
+
+    /**
+     * 完成DNC上传之后，前端返回上传成功后执行此方法
+     * 将前端传输的tap文件名数组写入到数据库方便后面查询
+     * @param tapNames 前端传输过来的tap文件名
+     */
+    @PreAuthorize("@ss.hasAnyPermi('system:NcCode:insertTap')")
+    @Log(title = "掺入tap文件名到数据库", businessType = BusinessType.INSERT)
+    @GetMapping("/insertTapNames/{tapNames}")
+    public void insertTapNames(@PathVariable String[] tapNames) {
+        System.out.println(Arrays.toString(tapNames));
+        ArrayList<String> tapNameToInsert  = new ArrayList<>();
+        for (String tapName : tapNames) {
+            tapNameToInsert.add(tapName.split("\\.")[0]);
+        }
+        transformService.insertTapNames(tapNameToInsert);
     }
 }
