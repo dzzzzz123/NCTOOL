@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 22/03/2023 16:18:50
+ Date: 04/04/2023 14:10:48
 */
 
 SET NAMES utf8mb4;
@@ -156,7 +156,7 @@ CREATE TABLE `sys_menu`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2032 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2033 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -200,6 +200,8 @@ INSERT INTO `sys_menu` VALUES (2029, '显示已转换NC代码列表', 2000, 3, '
 INSERT INTO `sys_menu` VALUES (2030, 'NC代码比较', 2000, 4, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system.NcCode.compare', '#', 'admin', '2023-03-01 15:35:56', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2031, 'NC代码比较', 0, 5, 'NCCompare', 'system/NCCompare/index', NULL, 1, 0, 'C', '0', '0', NULL, 'log', 'admin', '2023-03-08 17:07:39', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2032, '上传到dnc', 2000, 5, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:NcCode:ToDNC', '#', 'admin', '2023-03-22 09:50:53', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2033, '查询Tap文件', 2000, 6, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:NcCode:checkTap', '#', 'admin', '2023-04-04 10:31:26', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2034, '插入tap文件', 2000, 7, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:NcCode:insertTap', '#', 'admin', '2023-04-04 13:49:57', '', NULL, '');
 
 -- ----------------------------
 -- Table structure for sys_program_number
@@ -213,7 +215,7 @@ CREATE TABLE `sys_program_number`  (
 -- ----------------------------
 -- Records of sys_program_number
 -- ----------------------------
-INSERT INTO `sys_program_number` VALUES (306, 176);
+INSERT INTO `sys_program_number` VALUES (306, 182);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -235,7 +237,7 @@ CREATE TABLE `sys_role`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`role_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 101 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role
@@ -270,6 +272,32 @@ INSERT INTO `sys_role_menu` VALUES (2, 2029);
 INSERT INTO `sys_role_menu` VALUES (2, 2030);
 
 -- ----------------------------
+-- Table structure for sys_tap_name
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_tap_name`;
+CREATE TABLE `sys_tap_name`  (
+  `tapName` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'tap文件文件名'
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_tap_name
+-- ----------------------------
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041742');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3041744');
+INSERT INTO `sys_tap_name` VALUES ('3041810');
+INSERT INTO `sys_tap_name` VALUES ('3041811');
+INSERT INTO `sys_tap_name` VALUES ('3041812');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041742');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3041744');
+INSERT INTO `sys_tap_name` VALUES ('3041810');
+INSERT INTO `sys_tap_name` VALUES ('3041811');
+INSERT INTO `sys_tap_name` VALUES ('3041812');
+
+-- ----------------------------
 -- Table structure for sys_tool_pocket
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_tool_pocket`;
@@ -282,7 +310,7 @@ CREATE TABLE `sys_tool_pocket`  (
 -- ----------------------------
 -- Records of sys_tool_pocket
 -- ----------------------------
-INSERT INTO `sys_tool_pocket` VALUES ('T004FR', '{\"Coolant\": \"FLOOD2222\", \"FeedRate\": \"330\", \"PeckDepth\": \"1\", \"SpindelSpeed\": \"34242\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T004FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"330\", \"PeckDepth\": \"1\", \"SpindelSpeed\": \"34242\"}');
 INSERT INTO `sys_tool_pocket` VALUES ('T011FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"2750\", \"PeckDepth\": \"0.3\", \"SpindelSpeed\": \"2000\"}');
 INSERT INTO `sys_tool_pocket` VALUES ('T013FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"1000\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"6000\"}');
 INSERT INTO `sys_tool_pocket` VALUES ('T021FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"1000\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"6000\"}');
@@ -301,7 +329,7 @@ CREATE TABLE `sys_tools`  (
   `MAZAK655` bigint(0) NOT NULL COMMENT '刀具在机床7000的位置',
   `del_flag` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '删除标准，1删除，0正常',
   PRIMARY KEY (`tool_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 133 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_tools
@@ -467,7 +495,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '马斯特', '00', 'master@163.com', '15888888888', '1', '/profile/avatar/2023/02/17/blob_20230217171420A001.png', '$2a$10$Tf8Er56RukTQTbfXfbSE8eaelVwHOwLb2RJh8U4/54V1onyW8Azsi', '0', '0', '127.0.0.1', '2023-03-16 20:10:41', 'admin', '2023-02-09 15:06:46', '', '2023-03-16 20:10:41', '管理员');
+INSERT INTO `sys_user` VALUES (1, 'admin', '马斯特', '00', 'master@163.com', '15888888888', '1', '/profile/avatar/2023/02/17/blob_20230217171420A001.png', '$2a$10$Tf8Er56RukTQTbfXfbSE8eaelVwHOwLb2RJh8U4/54V1onyW8Azsi', '0', '0', '127.0.0.1', '2023-03-30 14:04:48', 'admin', '2023-02-09 15:06:46', '', '2023-03-30 14:04:48', '管理员');
 INSERT INTO `sys_user` VALUES (2, 'dz', '马斯特', '00', 'master@163.com', '15666666666', '1', '', '$2a$10$43zeusYlA2mLiGEWq9dla.P1JYfQRmWMegYq6hEfrGSv815o8qdYe', '0', '0', '127.0.0.1', '2023-03-03 09:58:57', 'admin', '2023-02-09 15:06:46', 'admin', '2023-03-03 09:58:57', '测试员');
 INSERT INTO `sys_user` VALUES (100, 'test', 'test', '00', '', '', '0', '', '$2a$10$e1IF.ZBrDz/XUfYkt9U98.3rFulUe.c6W9JgvVU.ctomk0yQ1x8HO', '0', '2', '127.0.0.1', '2023-02-16 09:27:19', 'admin', '2023-02-13 13:44:12', '', '2023-02-16 09:27:18', NULL);
 
