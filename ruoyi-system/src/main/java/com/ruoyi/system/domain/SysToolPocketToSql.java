@@ -14,22 +14,14 @@ import lombok.Data;
 @Data
 public class SysToolPocketToSql extends BaseEntity {
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 刀具加工参数id
-     */
-    private Long toolPocketId;
-
     /**
      * 刀具ID
      */
     private String toolId;
-
     /**
-     * 特征名称
+     * 刀具描述
      */
-    private String featName;
-
+    private String description;
     /**
      * 参数
      */
@@ -37,6 +29,7 @@ public class SysToolPocketToSql extends BaseEntity {
 
     public SysToolPocketToSql(SysToolPocket sysToolPocket) {
         this.toolId = sysToolPocket.getToolId();
+        this.description = sysToolPocket.getDescription();
         if (sysToolPocket.getParameter() == null) {
             this.parameter = "1";
         } else {

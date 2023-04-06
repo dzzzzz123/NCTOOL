@@ -47,7 +47,7 @@ public class SysToolPocketController extends BaseController {
      * 导出刀具加工参数列表
      */
     @PreAuthorize("@ss.hasPermi('system:pocket:export')")
-    @Log(title = "刀具加工参数", businessType = BusinessType.EXPORT)
+    @Log(title = "导出刀具加工参数", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysToolPocket sysToolPocket) {
         List<SysToolPocket> list = sysToolPocketService.selectSysToolPocketList(sysToolPocket);
@@ -68,7 +68,7 @@ public class SysToolPocketController extends BaseController {
      * 新增刀具加工参数
      */
     @PreAuthorize("@ss.hasPermi('system:pocket:add')")
-    @Log(title = "刀具加工参数", businessType = BusinessType.INSERT)
+    @Log(title = "新增刀具加工参数", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysToolPocket sysToolPocket) {
         return toAjax(sysToolPocketService.insertSysToolPocket(new SysToolPocketToSql(sysToolPocket)));
@@ -110,7 +110,6 @@ public class SysToolPocketController extends BaseController {
         SysToolPocket sysToolPocket = sysToolPocketService.getParameter(toolId);
         SysToolPocket.SysParameter parameter = sysToolPocket.getParameter();
         Map<String, String> modifiedParameter = new HashMap<>(4);
-        modifiedParameter.put("COOLANT_OPTION", parameter.getCoolant());
         modifiedParameter.put("CUT_FEED", parameter.getFeedRate());
         modifiedParameter.put("PECK_DEPTH", parameter.getPeckDepth());
         modifiedParameter.put("SPINDLE_SPEED", parameter.getSpindelSpeed());

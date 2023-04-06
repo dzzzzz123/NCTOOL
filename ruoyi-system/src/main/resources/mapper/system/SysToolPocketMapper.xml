@@ -6,6 +6,7 @@
 
     <resultMap type="SysToolPocket" id="SysToolPocketResult">
         <result property="toolId" column="toolId"/>
+        <result property="description" column="description"/>
         <!--        <result property="parameter" column="parameter" javaType="java.util.List"-->
         <!--                typeHandler="com.ruoyi.system.domain.SysToolPocket$ParameterTypeHandler"/>-->
         <result property="parameter" column="parameter" jdbcType="JAVA_OBJECT"
@@ -14,15 +15,18 @@
     </resultMap>
 
     <sql id="selectSysToolPocketVo">
-        select toolId,parameter
+        select toolId, description, parameter
         from sys_tool_pocket
     </sql>
 
     <select id="selectSysToolPocketList" parameterType="SysToolPocket" resultMap="SysToolPocketResult">
         <include refid="selectSysToolPocketVo"/>
         <where>
-            <if test="toolId != null  and toolId != ''">and toolId = #{toolId}</if>
-            <if test="parameter != null  and parameter != ''">and parameter like concat('%', #{parameter}, '%')</if>
+            <if test="toolId != null  and toolId != ''">and toolId like concat('%', #{toolId}, '%')</if>
+            <if test="description != null  and description != ''">and description like concat('%', #{description},
+                '%')
+            </if>
+            <if test="parameter != null  and parameter != ''">and parameter = #{parameter}</if>
         </where>
     </select>
 
@@ -40,18 +44,21 @@
         insert into sys_tool_pocket
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="toolId != null and toolId != ''">toolId,</if>
+            <if test="description != null and description != ''">description,</if>
             <if test="parameter != null and parameter != ''">parameter,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="toolId != null and toolId != ''">#{toolId},</if>
-            <if test="parameter != null and parameter != ''">'{\"Coolant\": \"FLOOD\", \"FeedRate\": \"330\", \"PeckDepth\": \"1\", \"SpindelSpeed\": \"3424\"}',</if>
+            <if test="toolId != null">#{toolId},</if>
+            <if test="description != null and description != ''">#{description},</if>
+            <if test="parameter != null and parameter != ''">'{\"FeedRate\": \"330\", \"PeckDepth\": \"1\", \"SpindelSpeed\": \"3424\"}',
+            </if>
         </trim>
     </insert>
 
     <update id="updateSysToolPocket" parameterType="sysToolPocketToSql">
         update sys_tool_pocket
         <trim prefix="SET" suffixOverrides=",">
-            <if test="toolId != null and toolId != ''">toolId = #{toolId},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
             <if test="parameter != null and parameter != ''">parameter = #{parameter},</if>
         </trim>
         where toolId = #{toolId}

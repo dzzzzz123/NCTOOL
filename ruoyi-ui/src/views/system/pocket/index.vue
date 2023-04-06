@@ -4,6 +4,9 @@
       <el-form-item label="刀具ID" prop="toolId">
         <el-input v-model="queryParams.toolId" placeholder="请输入刀具ID" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
+      <el-form-item label="刀具描述" prop="description">
+        <el-input v-model="queryParams.description" placeholder="请输入刀具描述" clearable @keyup.enter.native="handleQuery" />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -32,12 +35,13 @@
 
     <el-table v-loading="loading" :data="pocketList" @selection-change="handleSelectionChange"
       @cell-click="handleCellClick">
-      <el-table-column type="selection"  align="center" />
-      <el-table-column label="刀具ID"  align="center" prop="toolId" />
+      <el-table-column type="selection" align="center" />
+      <el-table-column label="刀具ID" align="center" prop="toolId" />
+      <el-table-column label="刀具描述" align="center" prop="description" />
       <el-table-column label="参数" align="center" prop="parameter">
         <el-button size="medium" type="primary">点击查看参数</el-button>
       </el-table-column>
-      <el-table-column label="操作"  align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="medium" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['system:pocket:edit']">修改</el-button>
@@ -55,6 +59,9 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="刀具ID" prop="toolId">
           <el-input v-model="form.toolId" placeholder="请输入刀具ID" />
+        </el-form-item>
+        <el-form-item label="刀具描述" prop="description">
+          <el-input v-model="form.description" placeholder="请输入刀具描述" />
         </el-form-item>
         <el-form-item v-if="title != '添加刀具加工参数'" label="参数" prop="parameter">
           <vue-json-pretty v-model:data="form.parameter" :editable=true />
@@ -108,6 +115,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         toolId: null,
+        description: null,
         parameter: null
       },
       // 表单参数
@@ -116,6 +124,9 @@ export default {
       rules: {
         toolId: [
           { required: true, message: "刀具ID不能为空", trigger: "blur" }
+        ],
+        description: [
+          { required: true, message: "刀具描述不能为空", trigger: "blur" }
         ],
       },
       parameter: {
@@ -151,6 +162,7 @@ export default {
     reset() {
       this.form = {
         toolId: null,
+        description: null,
         parameter: null
       };
       this.resetForm("form");
@@ -183,7 +195,7 @@ export default {
       const toolId = row.toolId || this.ids
       getPocket(toolId).then(response => {
         this.form = response.data;
-        this.form.parameter = _.pick(row.parameter, ['Coolant', 'FeedRate', 'PeckDepth', 'SpindelSpeed']);
+        this.form.parameter = _.pick(row.parameter, ['FeedRate', 'PeckDepth', 'SpindelSpeed']);
         this.open = true;
         this.title = "修改刀具加工参数";
       });
@@ -212,8 +224,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const toolIds = row.toolId || this.ids;
-      const toolId = row.toolId || this.toolId;
-      this.$modal.confirm('是否确认删除刀具加工参数编号为"' + toolId + '"的数据项？').then(function () {
+      this.$modal.confirm('是否确认删除刀具ID为"' + toolIds + '"的数据项？').then(function () {
         return delPocket(toolIds);
       }).then(() => {
         this.getList();
@@ -228,7 +239,7 @@ export default {
     },
     handleCellClick(row, column, cell, event) {
       if (column.label === "参数") {
-        this.openJsonView(_.pick(row.parameter, ['Coolant', 'FeedRate', 'PeckDepth', 'SpindelSpeed']));
+        this.openJsonView(_.pick(row.parameter, ['FeedRate', 'PeckDepth', 'SpindelSpeed']));
       }
     },
     openJsonView(parameters) {

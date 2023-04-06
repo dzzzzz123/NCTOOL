@@ -24,12 +24,13 @@ public class TransformConstants implements ApplicationRunner {
     public static final String NH6300_FILENAME = "(FILENAME E:\\NH6300\\";
     public static final String NV7000_FILENAME = "(FILENAME E:\\NV7000\\";
     public static final String MAZAK655_FILENAME = "(FILENAME E:\\MZK502\\";
-    public static final String[] NH6300_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
-    public static final String[] NV7000_M_TO_DELETE = {"M58", "M37", "M38", "M39", "M100"};
+    public static final String[] NH6300_M_TO_DELETE = {"M37", "M38", "M39", "M58", "M100"};
+    public static final String[] NV7000_M_TO_DELETE = {"M37", "M38", "M39", "M58", "M100"};
+    public static final String[] MAZAK655_M_TO_DELETE = {"M37", "M38", "M39", "M58", "M100"};
     public static final Map<String, String> NH6300_M_TO_CHANGE = Map.of(
             "M50", "M51",
             "M09", "M89",
-            "M51", "M08");
+            "M51", "M58");
     public static final Map<String, String> NH6300_H_TO_CHANGE = new HashMap<>(120);
     public static final Map<String, String> NH6300_M_G_TO_CHANGE = Map.of(
             "G65P8771", "M98P8771(Z AXIS HEIGHT MEASUREMENT)",
@@ -50,7 +51,6 @@ public class TransformConstants implements ApplicationRunner {
     public static final Map<String, String> NV7000_T_TO_CHANGE = new HashMap<>(120);
     public static final Map<String, String> NV7000_BRACKETS_T_TO_CHANGE = new HashMap<>(20);
     public static final Map<String, String> NV7000_ALL_TO_CHANGE = new HashMap<>();
-    public static final String[] MAZAK655_M_TO_DELETE = {};
     public static final Map<String, String> MAZAK655_M_TO_CHANGE = Map.ofEntries(
             Map.entry("M99", "M30")
     );
@@ -61,6 +61,15 @@ public class TransformConstants implements ApplicationRunner {
     public static final Map<String, String> MAZAK655_T_TO_CHANGE = new HashMap<>();
     public static final Map<String, String> MAZAK655_BRACKETS_T_TO_CHANGE = new HashMap<>(20);
     public static final Map<String, String> MAZAK655_ALL_TO_CHANGE = new HashMap<>();
+    public static final Map<String, String> CIRCULATING_DRILLING_T_VALUE = Map.of(
+            "T9904", "Q2.0",
+            "T9907", "Q2.0",
+            "T9908", "Q2.0",
+            "T9909", "Q2.0",
+            "T9965", "Q2.0",
+            "T9986", "Q2.0",
+            "T9988", "Q2.0"
+    );
     public static final Map<String, String> WEAR_DETECTION = Map.of(
             "T1",
             "G325X-11.900Y1.400H01Q0.3T9002\n" +
@@ -141,7 +150,7 @@ public class TransformConstants implements ApplicationRunner {
             String h2 = "H" + nv7000;
             String h3 = "H" + mazak655;
             String t1 = "T" + nh6300;
-            String t2 = nv7000.compareTo("10") < 0 ? "T990" + nv7000 : "T99" + nv7000;
+            String t2 = Integer.parseInt(nv7000) < Integer.parseInt("10") ? "T990" + nv7000 : "T99" + nv7000;
             String t3 = "T" + mazak655;
             if (!nh6300.equals(nv7000)) {
                 NV7000_H_TO_CHANGE.put(h1, h2);

@@ -26,7 +26,11 @@ public class SysToolPocket extends BaseEntity {
      */
     @Excel(name = "刀具ID")
     private String toolId;
-
+    /**
+     * 刀具描述
+     */
+    @Excel(name = "刀具描述")
+    private String description;
     /**
      * 参数
      */
@@ -42,6 +46,14 @@ public class SysToolPocket extends BaseEntity {
         return toolId;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public SysParameter getParameter() {
         return parameter;
     }
@@ -54,15 +66,13 @@ public class SysToolPocket extends BaseEntity {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("toolId", getToolId())
+                .append("description", getDescription())
                 .append("parameter", getParameter())
                 .toString();
     }
 
     @Data
     public static class SysParameter {
-        @Excel(name = "Coolant")
-        @JsonProperty(value = "Coolant")
-        private String coolant;
         @Excel(name = "FeedRate")
         @JsonProperty(value = "FeedRate")
         private String feedRate;

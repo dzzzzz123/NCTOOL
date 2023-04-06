@@ -53,7 +53,8 @@ public class TransformBaseUtil {
             // 对NC原始代码进行操作
             switch (flag) {
                 case 0:
-                    newStr = TransformTo6300.processNcCode(content);
+                    StringBuilder tempStr = TransformTo6300.processNcCode(content);
+                    newStr = deleteLastDetection(tempStr);
                     break;
                 case 1:
                     newStr = TransformTo7000.processNcCode(content);
@@ -155,6 +156,7 @@ public class TransformBaseUtil {
 
     /**
      * 对TOOl NUMBER后面所有的括号内的内容进行刀具的刀号进行替换
+     *
      * @param line 给定的行内容
      * @return 已修改的行
      */
@@ -215,6 +217,7 @@ public class TransformBaseUtil {
      * 如果不是以 ( 开头的字符串，那么就分为需要修改的H，T或是其他
      * T需要修改的就是刀具Txx或者G90Txx
      * H需要修改的为G43Z35.H58如同这种，修改其中的H值
+     *
      * @param content 用来处理的字符串
      */
     static void processAllReplace(String[] content, int flag) {
@@ -252,5 +255,34 @@ public class TransformBaseUtil {
             }
             return content[i];
         });
+    }
+
+    /**
+     * 删除最后一个对刀检测代码
+     *
+     * @param sb 已处理完的NH6300机床的G代码
+     * @return newStr
+     */
+    static StringBuilder deleteLastDetection(StringBuilder tempSb) {
+        String[] content = tempSb.toString().split("\n");
+        ArrayList<Integer> indices = new ArrayList<>();
+        for (int i = content.length - 1; i >= 0; i--) {
+            if (content[i].startsWith("IF[#1004NE1]GOTO9000")) {
+                indices.add(i);
+                i--;
+                while (!content[i].startsWith("#991=-2")) {
+                    indices.add(i);
+                    i--;
+                }
+                indices.add(i);
+                break;
+            }
+        }
+        content = ArrayUtils.removeAll(content, indices.stream().mapToInt(Integer::intValue).toArray());
+        StringBuilder sb = new StringBuilder();
+        for (String s : content) {
+            sb.append(s).append("\n");
+        }
+        return sb;
     }
 }

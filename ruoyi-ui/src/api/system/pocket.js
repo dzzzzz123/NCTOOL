@@ -10,9 +10,9 @@ export function listPocket(query) {
 }
 
 // 查询刀具加工参数详细
-export function getPocket(toolPocketId) {
+export function getPocket(toolId) {
   return request({
-    url: '/system/pocket/' + toolPocketId,
+    url: '/system/pocket/' + toolId,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updatePocket(data) {
 }
 
 // 删除刀具加工参数
-export function delPocket(toolPocketId) {
+export function delPocket(toolId) {
   return request({
-    url: '/system/pocket/' + toolPocketId,
+    url: '/system/pocket/' + toolId,
     method: 'delete'
   })
 }

@@ -188,9 +188,9 @@ public class SysNcCodeTransformController extends BaseController {
             File NH6300 = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NH6300");
             File NV7000 = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NV7000");
             File V655 = new File(path + tapName.split("\\.")[0] + ".tap_V655");
-            File NH6300_DNC = new File(toDncPath + File.separator + "Final_NH6300" + File.separator + tapName.split("\\.")[0]);
-            File NV7000_DNC = new File(toDncPath + File.separator + "Final_NV7000" + File.separator + tapName.split("\\.")[0]);
-            File V655_DNC = new File(toDncPath + File.separator + "Final_V655" + File.separator + tapName.split("\\.")[0]);
+            File NH6300_DNC = new File(toDncPath + File.separator + "Mori_Seiki_NH6300" + File.separator + tapName.split("\\.")[0]);
+            File NV7000_DNC = new File(toDncPath + File.separator + "Mori_Seiki_NV7000" + File.separator + tapName.split("\\.")[0]);
+            File V655_DNC = new File(toDncPath + File.separator + "mzk655" + File.separator + tapName.split("\\.")[0]);
             try {
                 FileUtil.del(ORIGIN);
                 FileUtil.move(NH6300, NH6300_DNC, true);
@@ -223,10 +223,9 @@ public class SysNcCodeTransformController extends BaseController {
      * @param tapNames 前端传输过来的tap文件名
      */
     @PreAuthorize("@ss.hasAnyPermi('system:NcCode:insertTap')")
-    @Log(title = "掺入tap文件名到数据库", businessType = BusinessType.INSERT)
+    @Log(title = "插入tap文件名到数据库", businessType = BusinessType.INSERT)
     @GetMapping("/insertTapNames/{tapNames}")
     public void insertTapNames(@PathVariable String[] tapNames) {
-        System.out.println(Arrays.toString(tapNames));
         ArrayList<String> tapNameToInsert  = new ArrayList<>();
         for (String tapName : tapNames) {
             tapNameToInsert.add(tapName.split("\\.")[0]);
