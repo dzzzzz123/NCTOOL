@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 04/04/2023 14:10:48
+ Date: 07/04/2023 09:03:27
 */
 
 SET NAMES utf8mb4;
@@ -156,7 +156,7 @@ CREATE TABLE `sys_menu`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2033 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2035 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -237,7 +237,7 @@ CREATE TABLE `sys_role`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`role_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 101 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role
@@ -282,20 +282,6 @@ CREATE TABLE `sys_tap_name`  (
 -- ----------------------------
 -- Records of sys_tap_name
 -- ----------------------------
-INSERT INTO `sys_tap_name` VALUES ('2996430');
-INSERT INTO `sys_tap_name` VALUES ('3041742');
-INSERT INTO `sys_tap_name` VALUES ('3041743');
-INSERT INTO `sys_tap_name` VALUES ('3041744');
-INSERT INTO `sys_tap_name` VALUES ('3041810');
-INSERT INTO `sys_tap_name` VALUES ('3041811');
-INSERT INTO `sys_tap_name` VALUES ('3041812');
-INSERT INTO `sys_tap_name` VALUES ('2996430');
-INSERT INTO `sys_tap_name` VALUES ('3041742');
-INSERT INTO `sys_tap_name` VALUES ('3041743');
-INSERT INTO `sys_tap_name` VALUES ('3041744');
-INSERT INTO `sys_tap_name` VALUES ('3041810');
-INSERT INTO `sys_tap_name` VALUES ('3041811');
-INSERT INTO `sys_tap_name` VALUES ('3041812');
 
 -- ----------------------------
 -- Table structure for sys_tool_pocket
@@ -303,6 +289,7 @@ INSERT INTO `sys_tap_name` VALUES ('3041812');
 DROP TABLE IF EXISTS `sys_tool_pocket`;
 CREATE TABLE `sys_tool_pocket`  (
   `toolId` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '刀具ID',
+  `description` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '刀具描述',
   `parameter` json NOT NULL COMMENT '参数',
   PRIMARY KEY (`toolId`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
@@ -310,12 +297,33 @@ CREATE TABLE `sys_tool_pocket`  (
 -- ----------------------------
 -- Records of sys_tool_pocket
 -- ----------------------------
-INSERT INTO `sys_tool_pocket` VALUES ('T004FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"330\", \"PeckDepth\": \"1\", \"SpindelSpeed\": \"34242\"}');
-INSERT INTO `sys_tool_pocket` VALUES ('T011FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"2750\", \"PeckDepth\": \"0.3\", \"SpindelSpeed\": \"2000\"}');
-INSERT INTO `sys_tool_pocket` VALUES ('T013FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"1000\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"6000\"}');
-INSERT INTO `sys_tool_pocket` VALUES ('T021FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"1000\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"6000\"}');
-INSERT INTO `sys_tool_pocket` VALUES ('T022FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"132\", \"PeckDepth\": \"0\", \"SpindelSpeed\": \"3850\"}');
-INSERT INTO `sys_tool_pocket` VALUES ('T154FR', '{\"Coolant\": \"FLOOD\", \"FeedRate\": \"330\", \"PeckDepth\": \"1\", \"SpindelSpeed\": \"3424\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T002FR', '3.2mm Carbide Drill', '{\"FeedRate\": \"100\", \"PeckDepth\": \"0.5\", \"SpindelSpeed\": \"3500\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T003FR', '4.3mm Carbide Drill', '{\"FeedRate\": \"50\", \"PeckDepth\": \"0.4\", \"SpindelSpeed\": \"3200\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T004FR', '4.8MM CARBIDE DRILL', '{\"FeedRate\": \"300\", \"PeckDepth\": \"1\", \"SpindelSpeed\": \"3113\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T005FR', '5.0mm Carbide Drill', '{\"FeedRate\": \"100\", \"PeckDepth\": \"0.8\", \"SpindelSpeed\": \"3000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T006FR', '5.1mm Carbide Drill', '{\"FeedRate\": \"100\", \"PeckDepth\": \"0.8\", \"SpindelSpeed\": \"3000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T007FR', '6.0mm Carbide Drill', '{\"FeedRate\": \"80\", \"PeckDepth\": \"0.8\", \"SpindelSpeed\": \"2500\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T008FR', '3.0mm Carbide Drill', '{\"FeedRate\": \"100\", \"PeckDepth\": \"0.5\", \"SpindelSpeed\": \"3500\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T011FR', '10.0mm Carbide Feedmill R2', '{\"FeedRate\": \"700\", \"PeckDepth\": \"0.3\", \"SpindelSpeed\": \"2500\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T012FR', '5.0mm Carbide Feedmill R0.6', '{\"FeedRate\": \"350\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"6000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T013FR', '4.0mm Carbide Ballmill Rough HM', '{\"FeedRate\": \"300\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"6000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T014FR', '4.0mm Carbide Ballmill Straight Flutes', '{\"FeedRate\": \"50\", \"PeckDepth\": \"0.4\", \"SpindelSpeed\": \"2500\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T018FR', '6.0mm Carbide Feedmill R1.5', '{\"FeedRate\": \"700\", \"PeckDepth\": \"0.25\", \"SpindelSpeed\": \"6000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T020FR', '6.0mm Carbide Endmill Finish', '{\"FeedRate\": \"150\", \"PeckDepth\": \"0\", \"SpindelSpeed\": \"4500\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T021FR', '6.0mm Carbide Ballmill Rough HM', '{\"FeedRate\": \"350\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"6000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T022FR', '6.0mm Carbide Ballmill Straight Flutes', '{\"FeedRate\": \"60\", \"PeckDepth\": \"0\", \"SpindelSpeed\": \"2500\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T026FR', '6.77mm Carbide Ballmil Straight Flutes', '{\"FeedRate\": \"140\", \"PeckDepth\": \"0\", \"SpindelSpeed\": \"3000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T028FR', '5.0mm Carbide Ballmill Straight Flutes', '{\"FeedRate\": \"100\", \"PeckDepth\": \"0.8\", \"SpindelSpeed\": \"3000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T029FR', '7.0mm Carbide Ballmill Straight Flutes', '{\"FeedRate\": \"70\", \"PeckDepth\": \"0\", \"SpindelSpeed\": \"2500\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T030FR', '8.0mm Carbide Ballmill Straight Flutes', '{\"FeedRate\": \"70\", \"PeckDepth\": \"0\", \"SpindelSpeed\": \"1800\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T033FR', '10.0mm Carbide Ballmill Rgh HM', '{\"FeedRate\": \"500\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"4200\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T036FR', '4.77 Carbide Ballmill Straight Flutes', '{\"FeedRate\": \"70\", \"PeckDepth\": \"0.8\", \"SpindelSpeed\": \"3000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T039FR', '6.0MM CARBIDE STEP DRILL', '{\"FeedRate\": \"120\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"6000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T041FR', '5.77 Carbide Ballmill Straight Flutes', '{\"FeedRate\": \"50\", \"PeckDepth\": \"0.7\", \"SpindelSpeed\": \"3000\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T042FR', '11.0MM CARBIDE STEP DRILL', '{\"FeedRate\": \"100\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"5500\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T043FR', '13.5mm Sumo-Drill', '{\"FeedRate\": \"80\", \"PeckDepth\": \"1\", \"SpindelSpeed\": \"1100\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T054FR', '9.5MM CARBIDE STEP DRILL', '{\"FeedRate\": \"100\", \"PeckDepth\": \"0.2\", \"SpindelSpeed\": \"5500\"}');
+INSERT INTO `sys_tool_pocket` VALUES ('T08F', '3MM CARBIDE DRILL', '{\"FeedRate\": \"100\", \"PeckDepth\": \"0.5\", \"SpindelSpeed\": \"3500\"}');
 
 -- ----------------------------
 -- Table structure for sys_tools
@@ -495,7 +503,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '马斯特', '00', 'master@163.com', '15888888888', '1', '/profile/avatar/2023/02/17/blob_20230217171420A001.png', '$2a$10$Tf8Er56RukTQTbfXfbSE8eaelVwHOwLb2RJh8U4/54V1onyW8Azsi', '0', '0', '127.0.0.1', '2023-03-30 14:04:48', 'admin', '2023-02-09 15:06:46', '', '2023-03-30 14:04:48', '管理员');
+INSERT INTO `sys_user` VALUES (1, 'admin', '马斯特', '00', 'master@163.com', '15888888888', '1', '/profile/avatar/2023/02/17/blob_20230217171420A001.png', '$2a$10$Tf8Er56RukTQTbfXfbSE8eaelVwHOwLb2RJh8U4/54V1onyW8Azsi', '0', '0', '127.0.0.1', '2023-04-06 16:50:45', 'admin', '2023-02-09 15:06:46', '', '2023-04-06 16:50:45', '管理员');
 INSERT INTO `sys_user` VALUES (2, 'dz', '马斯特', '00', 'master@163.com', '15666666666', '1', '', '$2a$10$43zeusYlA2mLiGEWq9dla.P1JYfQRmWMegYq6hEfrGSv815o8qdYe', '0', '0', '127.0.0.1', '2023-03-03 09:58:57', 'admin', '2023-02-09 15:06:46', 'admin', '2023-03-03 09:58:57', '测试员');
 INSERT INTO `sys_user` VALUES (100, 'test', 'test', '00', '', '', '0', '', '$2a$10$e1IF.ZBrDz/XUfYkt9U98.3rFulUe.c6W9JgvVU.ctomk0yQ1x8HO', '0', '2', '127.0.0.1', '2023-02-16 09:27:19', 'admin', '2023-02-13 13:44:12', '', '2023-02-16 09:27:18', NULL);
 
