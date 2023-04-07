@@ -9,6 +9,14 @@ export function uploadNcCode(data) {
   })
 }
 
+export function uploadPdf(data) {
+  return request({
+    url: '/system/nccode/upload',
+    method: 'post',
+    data: data
+  })
+}
+
 export function transFormNcCode(tapNames) {
   return request({
     url: '/system/nccode/transform/' + tapNames,

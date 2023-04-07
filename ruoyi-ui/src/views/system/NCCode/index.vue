@@ -2,7 +2,8 @@
     <div style="margin: 20px;">
         <div style="width: 49%; min-height: 1000px; float: left; background-color: aliceblue;">
             <file-upload class="btn btn-primary" v-model="fileList" :multiple="true" :directory="true" :drop="true"
-                :drop-directory="true" extensions="tap" @input-filter="inputFilter" @input-file="inputFile" ref="upload">
+                :drop-directory="true" extensions="tap,pdf" @input-filter="inputFilter" @input-file="inputFile"
+                ref="upload">
             </file-upload>
             <el-button size="small" type="primary" @click="onAddFolader" style="margin-top: 13px; margin-left: 20px;">
                 <el-dropdown>
@@ -15,7 +16,8 @@
                     </el-dropdown-menu>
                 </el-dropdown>
             </el-button>
-            <el-button @click="transform" size="small" type="primary" style="margin-left: 20px;">转换NC代码</el-button>
+            <el-button @click="transform" size="small" type="primary" style="margin-left: 15px;">转换NC代码</el-button>
+            <el-button @click="uploadPdf" size="small" type="primary" style="margin-left: 15px;">上传pdf文档</el-button>
             <el-table v-loading="toTransForm.loading" :data="toTransForm.tapList" :show-header="false"
                 @row-click="toTransFormrowClick" :row-class-name="toTransFormrowClassName" :row-style="toTransFormrowStyle"
                 :stripe="false" style=" background: aliceblue !important; margin-top: 20px; border:none;">
@@ -23,10 +25,10 @@
             </el-table>
         </div>
         <div style="width: 49%;  min-height: 1000px; float: right; padding-top: 13px; background-color: beige;">
-            <el-button @click="compare" size="small" type="warning" style="margin-left: 20px;">比较NC代码</el-button>
-            <el-button type="warning" size="small" @click="checkTapNames" style="margin-left: 10px;">查询tap文件</el-button>
-            <el-input v-model="tapNameToCheck" placeholder="请输入tap文件名" size="small" @keyup.enter.native="checkTapNames" clearable
-                style="width: 35%; margin-left: 10px;"></el-input>
+            <el-button @click="compare" size="small" type="warning" style="margin-left: 25px;">比较NC代码</el-button>
+            <el-button type="warning" size="small" @click="checkTapNames" style="margin-left: 15px;">查询tap文件</el-button>
+            <el-input v-model="tapNameToCheck" placeholder="请输入tap文件名" size="small" @keyup.enter.native="checkTapNames"
+                clearable style="width: 35%; margin-left: 15px;"></el-input>
             <el-table v-loading="Transformed.loading" :data="Transformed.tapList" :show-header="false"
                 @row-click="TransformedrowClick" :row-class-name="TransformedrowClassName" :row-style="TransformedrowStyle"
                 :stripe="false" style=" background: beige !important; margin-top: 20px; border:none;">
@@ -45,7 +47,7 @@
 <script>
 import CodeDiff from 'vue-code-diff'
 import FileUpload from 'vue-upload-component'
-import { uploadNcCode, transFormNcCode, newTapList, compareDownload, uploadToDNC, getTapNames, insertTapNames } from "@/api/system/nccode.js"
+import { uploadNcCode, uploadPdf, transFormNcCode, newTapList, compareDownload, uploadToDNC, getTapNames, insertTapNames } from "@/api/system/nccode.js"
 export default {
     name: 'NCCode',
     components: { CodeDiff, FileUpload },
@@ -53,6 +55,7 @@ export default {
     data() {
         return {
             fileList: [],
+            pdfFileList: [],
             timer: null,
             diffLeftFile: null,
             diffRightFile: null,
@@ -159,10 +162,9 @@ export default {
             newTapList(this.toTransForm.tapNames).then(response => {
                 this.Transformed.tapList = response;
                 this.Transformed.loading = false;
-            }
-            );
+            });
         },
-        onAddFolader() {
+        async onAddFolader() {
             let input = this.$refs.upload.$el.querySelector('input');
             input.click();
         },
@@ -178,25 +180,18 @@ export default {
                 input.webkitdirectory = true;
             }
         },
-        handleChange(file, fileList) {
-            this.isTransFormed = false;
-            let arr = this.filterRepetition(fileList);
-            if (arr.length !== fileList.length) {
-                this.$message.warning("已过滤重复与不是以.tap结尾的文件");
-            }
-            this.fileList = arr;
-            // 上传文件后，自动把文件传给后台，这里做了一个防抖，等待500ms后在传给后台
-            this.debounce(this.uploadTap, 500);
-            this.getNcList();
-        },
         // 过滤重复
         filterRepetition(arr) {
             let arr1 = []; //存id
             let newArr = []; //存新数组
             for (let i in arr) {
-                if (arr1.indexOf(arr[i].file.name) == -1 && arr[i].name.endsWith(".tap")) {
-                    arr1.push(arr[i].file.name);
-                    newArr.push(arr[i]);
+                if (arr1.indexOf(arr[i].file.name) == -1) {
+                    if (arr[i].name.endsWith(".tap")) {
+                        arr1.push(arr[i].file.name);
+                        newArr.push(arr[i]);
+                    } else {
+                        this.pdfFileList.push(arr[i]);
+                    }
                 }
             }
             return newArr;
@@ -289,6 +284,21 @@ export default {
                     this.getTapList(this.fileList);
                     this.$message.info("正在将NC代码上传到DNC！");
                     this.uploadDNC(response.code);
+                }
+            });
+        },
+        uploadPdf() {
+            console.info(this.pdfFileList);
+            this.debounce(this.uploadPdf, 500);
+        },
+        async uploadPdf() {
+            let formData = new FormData();
+            this.pdfFileList.forEach(file => {
+                formData.append('file', file.file);
+            });
+            uploadPdf(formData).then(response => {
+                if (response.code === 200) {
+                    this.$message.success("上传PDF文档成功！");
                 }
             });
         },

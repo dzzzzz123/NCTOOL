@@ -59,9 +59,13 @@ public class SysNcCodeTransformController extends BaseController {
     @Value("${upload.toDNCPath}")
     private String toDncPath;
 
+    @Value("${upload.pdf}")
+    private String toPdfPath;
 
     /**
-     * @param files 前端传递过来的tap文件
+     * 判断文件是pdf文件还是tap文件，然后进行上传
+     *
+     * @param files 前端传递过来的tap文件和pdf文档
      * @return 返回结果集传递给前端
      * @throws IOException               异常
      * @throws InvalidExtensionException 异常
@@ -69,10 +73,11 @@ public class SysNcCodeTransformController extends BaseController {
     @PreAuthorize("@ss.hasAnyPermi('system:NcCode:upload')")
     @Log(title = "上传NC代码到后端", businessType = BusinessType.UPLOAD)
     @PostMapping("/upload")
-    public AjaxResult uploadFile(@RequestParam("file") MultipartFile[] files) throws IOException, InvalidExtensionException {
+    public AjaxResult uploadTapFile(@RequestParam("file") MultipartFile[] files) throws IOException, InvalidExtensionException {
         for (MultipartFile file : files) {
             String originalFileName = file.getOriginalFilename();
             String fileName = FilenameUtils.getName(originalFileName);
+            String extension = FilenameUtils.getExtension(originalFileName);
 
             // File newFile = new File(fileName);
             // String absolutePath = newFile.getAbsolutePath();
@@ -82,8 +87,13 @@ public class SysNcCodeTransformController extends BaseController {
                 throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
             }
             FileUploadUtils.assertAllowed(file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
-
-            Path fileDir = Paths.get(path);
+            System.out.println(extension);
+            Path fileDir;
+            if (extension.equals("tap")) {
+                fileDir = Paths.get(path);
+            } else {
+                fileDir = Paths.get(toPdfPath);
+            }
             if (!Files.exists(fileDir)) {
                 Files.createDirectories(fileDir);
             }
@@ -207,6 +217,7 @@ public class SysNcCodeTransformController extends BaseController {
      * 客户需要当NC代码转换上传到DNC后，所有操作完成之后，可以得到反馈
      * 而不是需要去DNC文件夹中去查看是否转换上传成功，需要对结果进行校验
      * 所有在前端获取tap文件的文件名，与数据库中的数据进行比较，完成校验
+     *
      * @param tapName 前端传输过来的tap文件名
      * @return 返回结果集
      */
@@ -220,13 +231,14 @@ public class SysNcCodeTransformController extends BaseController {
     /**
      * 完成DNC上传之后，前端返回上传成功后执行此方法
      * 将前端传输的tap文件名数组写入到数据库方便后面查询
+     *
      * @param tapNames 前端传输过来的tap文件名
      */
     @PreAuthorize("@ss.hasAnyPermi('system:NcCode:insertTap')")
     @Log(title = "插入tap文件名到数据库", businessType = BusinessType.INSERT)
     @GetMapping("/insertTapNames/{tapNames}")
     public void insertTapNames(@PathVariable String[] tapNames) {
-        ArrayList<String> tapNameToInsert  = new ArrayList<>();
+        ArrayList<String> tapNameToInsert = new ArrayList<>();
         for (String tapName : tapNames) {
             tapNameToInsert.add(tapName.split("\\.")[0]);
         }

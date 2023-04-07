@@ -140,3 +140,4 @@ xss:
 upload:
   path: "d:/upload/"
   toDNCPath: "d:/Program/MMPRC_DNC/MN_Programs/"
+  pdf: "d:/images/Transfers/CAM"
