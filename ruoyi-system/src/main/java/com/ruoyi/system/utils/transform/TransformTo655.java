@@ -1,6 +1,9 @@
 package com.ruoyi.system.utils.transform;
 
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static com.ruoyi.system.constant.TransformConstants.CIRCULATING_DRILLING_T_VALUE;
 
 /**
@@ -25,6 +28,23 @@ public class TransformTo655 extends TransformBaseUtil {
                     j++;
                 }
                 if (!flag3) {
+                    newStr.append(content[i]);
+                }
+            } else if (content[i].contains("D#51999")) {
+                int j = 1;
+                boolean isMatch = false;
+                while (i - j >= 0 && j <= 10) {
+                    String mPattern = "(?<=\\.H)\\d+";
+                    Pattern pattern = Pattern.compile(mPattern);
+                    Matcher matcher = pattern.matcher(content[i - j]);
+                    if (matcher.find()) {
+                        isMatch = true;
+                        String hCode = matcher.group();
+                        newStr.append(content[i].replace("#51999", hCode));
+                    }
+                    j++;
+                }
+                if (!isMatch) {
                     newStr.append(content[i]);
                 }
             } else {

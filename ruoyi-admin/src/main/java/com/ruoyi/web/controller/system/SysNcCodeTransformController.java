@@ -79,15 +79,10 @@ public class SysNcCodeTransformController extends BaseController {
             String fileName = FilenameUtils.getName(originalFileName);
             String extension = FilenameUtils.getExtension(originalFileName);
 
-            // File newFile = new File(fileName);
-            // String absolutePath = newFile.getAbsolutePath();
-            // System.out.println("absolutePath = " + absolutePath);
-
             if (Objects.requireNonNull(fileName).length() > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH) {
                 throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
             }
             FileUploadUtils.assertAllowed(file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
-            System.out.println(extension);
             Path fileDir;
             if (extension.equals("tap")) {
                 fileDir = Paths.get(path);

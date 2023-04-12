@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 07/04/2023 09:03:27
+ Date: 12/04/2023 09:04:05
 */
 
 SET NAMES utf8mb4;
@@ -503,7 +503,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '马斯特', '00', 'master@163.com', '15888888888', '1', '/profile/avatar/2023/02/17/blob_20230217171420A001.png', '$2a$10$Tf8Er56RukTQTbfXfbSE8eaelVwHOwLb2RJh8U4/54V1onyW8Azsi', '0', '0', '127.0.0.1', '2023-04-06 16:50:45', 'admin', '2023-02-09 15:06:46', '', '2023-04-06 16:50:45', '管理员');
+INSERT INTO `sys_user` VALUES (1, 'admin', '马斯特', '00', 'master@163.com', '15888888888', '1', '/profile/avatar/2023/02/17/blob_20230217171420A001.png', '$2a$10$Tf8Er56RukTQTbfXfbSE8eaelVwHOwLb2RJh8U4/54V1onyW8Azsi', '0', '0', '127.0.0.1', '2023-04-11 16:00:34', 'admin', '2023-02-09 15:06:46', '', '2023-04-11 16:00:33', '管理员');
 INSERT INTO `sys_user` VALUES (2, 'dz', '马斯特', '00', 'master@163.com', '15666666666', '1', '', '$2a$10$43zeusYlA2mLiGEWq9dla.P1JYfQRmWMegYq6hEfrGSv815o8qdYe', '0', '0', '127.0.0.1', '2023-03-03 09:58:57', 'admin', '2023-02-09 15:06:46', 'admin', '2023-03-03 09:58:57', '测试员');
 INSERT INTO `sys_user` VALUES (100, 'test', 'test', '00', '', '', '0', '', '$2a$10$e1IF.ZBrDz/XUfYkt9U98.3rFulUe.c6W9JgvVU.ctomk0yQ1x8HO', '0', '2', '127.0.0.1', '2023-02-16 09:27:19', 'admin', '2023-02-13 13:44:12', '', '2023-02-16 09:27:18', NULL);
 

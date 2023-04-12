@@ -103,10 +103,6 @@ public class TransformConstants implements ApplicationRunner {
                     "M102\n" +
                     "IF[#1004NE1]GOTO9000\n";
 
-    /**
-     * 匹配以 S三位数字M两位数字 结尾的正则表达式
-     */
-    public static final String M_PATTERN = ".*S\\d{3}M\\d{2}$";
     public static final String TAPTEETH = "G95\n" +
             "M29";
     private static ISysNcCodeTransformService transformService;

@@ -38,15 +38,20 @@ public class TransformTo6300 extends TransformBaseUtil {
                     continue;
                 }
                 flag2++;
-            }  else if (content[i].startsWith("G84")) {
+            } else if (content[i].startsWith("G84")) {
                 int j = 1;
-                Pattern pattern = Pattern.compile(M_PATTERN);
-                while (i - j >= 0 && j <= 10) {
+                String mPattern = ".*S\\d{3}M\\d{2}$";
+                Pattern pattern = Pattern.compile(mPattern);
+                while (i - j >= 0 && j <= 50) {
                     Matcher matcher = pattern.matcher(content[i - j]);
                     if (matcher.matches()) {
                         String msCode = matcher.group().substring(matcher.group().indexOf("S"), matcher.group().indexOf("S") + 4);
                         newStr.append(TAPTEETH).append(msCode).append("\n").append(content[i]).append("\n");
                         break;
+                    }
+                    if (j == 49) {
+                        String msCode = "S243";
+                        newStr.append(TAPTEETH).append(msCode).append("\n").append(content[i]).append("\n");
                     }
                     j++;
                 }

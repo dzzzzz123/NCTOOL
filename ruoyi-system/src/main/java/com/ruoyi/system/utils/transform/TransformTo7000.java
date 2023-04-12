@@ -9,7 +9,6 @@ import static com.ruoyi.system.constant.TransformConstants.*;
 /**
  * 将NC代码转换为7000机床使用的G代码,内容以及非常混乱了，但是没有很好的办法
  *
- *
  * @author dz
  * @date 2023-03-08
  */
@@ -24,13 +23,18 @@ public class TransformTo7000 extends TransformBaseUtil {
             }
             if (content[i].startsWith("G84")) {
                 int j = 1;
-                Pattern pattern = Pattern.compile(M_PATTERN);
-                while (i - j >= 0 && j <= 10) {
+                String mPattern = ".*S\\d{3}M\\d{2}$";
+                Pattern pattern = Pattern.compile(mPattern);
+                while (i - j >= 0 && j <= 50) {
                     Matcher matcher = pattern.matcher(content[i - j]);
                     if (matcher.matches()) {
                         String msCode = matcher.group().substring(matcher.group().indexOf("S"), matcher.group().indexOf("S") + 4);
                         newStr.append(TAPTEETH).append(msCode).append("\n").append(content[i]).append("\n");
                         break;
+                    }
+                    if (j == 49) {
+                        String msCode = "S243";
+                        newStr.append(TAPTEETH).append(msCode).append("\n").append(content[i]).append("\n");
                     }
                     j++;
                 }
@@ -51,6 +55,23 @@ public class TransformTo7000 extends TransformBaseUtil {
                     j++;
                 }
                 if (!flag) {
+                    newStr.append(content[i]);
+                }
+            } else if (content[i].contains("D#51999")) {
+                int j = 1;
+                boolean isMatch = false;
+                while (i - j >= 0 && j <= 10) {
+                    String mPattern = "(?<=\\.H)\\d+";
+                    Pattern pattern = Pattern.compile(mPattern);
+                    Matcher matcher = pattern.matcher(content[i - j]);
+                    if (matcher.find()) {
+                        isMatch = true;
+                        String hCode = matcher.group();
+                        newStr.append(content[i].replace("#51999", hCode));
+                    }
+                    j++;
+                }
+                if (!isMatch) {
                     newStr.append(content[i]);
                 }
             } else if (Objects.equals(content[i], "T1") || Objects.equals(content[i], "G90T1")) {
