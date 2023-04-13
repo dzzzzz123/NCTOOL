@@ -92,6 +92,29 @@ public class TransformConstants implements ApplicationRunner {
                     "G325X2.200Y3.300H01Q0.3T9002\n"
     );
 
+    public static final Map<String, String> TOOL_BREAK_DETECTION = Map.of(
+            "T9903",
+            "G325H3\n" +
+                    "G30G91Z0.\n" +
+                    "G0Y0.",
+            "T9910",
+            "G325H10\n" +
+                    "G30G91Z0.\n" +
+                    "G0Y0.",
+            "T9915",
+            "G325H15\n" +
+                    "G30G91Z0.\n" +
+                    "G0Y0.",
+            "T9917",
+            "G325H17\n" +
+                    "G30G91Z0.\n" +
+                    "G0Y0.",
+            "T9918",
+            "G325H18\n" +
+                    "G30G91Z0.\n" +
+                    "G0Y0."
+    );
+
     public static final String TOOL_SET_DETECTION =
             "#991=-2\n" +
                     "#992=1\n" +

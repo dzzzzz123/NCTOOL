@@ -74,6 +74,23 @@ public class TransformTo7000 extends TransformBaseUtil {
                 if (!isMatch) {
                     newStr.append(content[i]);
                 }
+            } else if (content[i].startsWith("G30G91") && content[i + 1].startsWith("M01")) {
+                int j = 1;
+                boolean isMatch = false;
+                while (i - j >= 0 && j <= 50) {
+                    if (content[i - j].startsWith("T")) {
+                        for (String s : TOOL_BREAK_DETECTION.keySet()) {
+                            if (Objects.equals(content[i - j], s)) {
+                                isMatch = true;
+                                newStr.append(content[i]).append(TOOL_BREAK_DETECTION.get(s));
+                            }
+                        }
+                    }
+                    j++;
+                }
+                if (!isMatch) {
+                    newStr.append(content[i]);
+                }
             } else if (Objects.equals(content[i], "T1") || Objects.equals(content[i], "G90T1")) {
                 newStr.append(content[i].replace("T1", "T9901"));
             } else if (Objects.equals(content[i], "T3") || Objects.equals(content[i], "G90T3")) {
