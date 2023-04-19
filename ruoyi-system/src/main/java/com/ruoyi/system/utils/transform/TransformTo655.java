@@ -1,9 +1,9 @@
 package com.ruoyi.system.utils.transform;
 
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.ruoyi.system.constant.TransformConstants.CIRCULATING_DRILLING_MAZAK655_T_VALUE;
 import static com.ruoyi.system.constant.TransformConstants.CIRCULATING_DRILLING_T_VALUE;
 
 /**
@@ -21,7 +21,7 @@ public class TransformTo655 extends TransformBaseUtil {
                 int j = 1;
                 boolean flag3 = false;
                 while (i - j >= 0 && j <= 30) {
-                    if (CIRCULATING_DRILLING_T_VALUE.containsKey(content[i - j])) {
+                    if (CIRCULATING_DRILLING_MAZAK655_T_VALUE.containsKey(content[i - j])) {
                         flag3 = true;
                         newStr.append(content[i].replace("G81", "G83")).append(CIRCULATING_DRILLING_T_VALUE.get(content[i - j]));
                     }
@@ -33,7 +33,7 @@ public class TransformTo655 extends TransformBaseUtil {
             } else if (content[i].contains("D#51999")) {
                 int j = 1;
                 boolean isMatch = false;
-                while (i - j >= 0 && j <= 10) {
+                while (i - j >= 0 && j <= 50) {
                     String mPattern = "(?<=\\.H)\\d+";
                     Pattern pattern = Pattern.compile(mPattern);
                     Matcher matcher = pattern.matcher(content[i - j]);

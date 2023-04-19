@@ -28,13 +28,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 import static com.ruoyi.framework.datasource.DynamicDataSourceContextHolder.log;
@@ -189,23 +190,47 @@ public class SysNcCodeTransformController extends BaseController {
     @GetMapping("/ToDNC/{tapNames}")
     public AjaxResult uploadToDnc(@PathVariable String[] tapNames) {
         for (String tapName : tapNames) {
-            File ORIGIN = new File(path + tapName);
-            File NH6300 = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NH6300");
-            File NV7000 = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NV7000");
-            File V655 = new File(path + tapName.split("\\.")[0] + ".tap_V655");
-            File NH6300_DNC = new File(toDncPath + File.separator + "Mori_Seiki_NH6300" + File.separator + tapName.split("\\.")[0]);
-            File NV7000_DNC = new File(toDncPath + File.separator + "Mori_Seiki_NV7000" + File.separator + tapName.split("\\.")[0]);
-            File V655_DNC = new File(toDncPath + File.separator + "mzk655" + File.separator + tapName.split("\\.")[0]);
+            String tapNamePrefix = tapName.split("\\.")[0];
+            File origin = new File(path + tapName);
+            File nh6300 = new File(path + tapNamePrefix + ".tap_MMC_NH6300");
+            File nv7000 = new File(path + tapNamePrefix + ".tap_MMC_NV7000");
+            File v655 = new File(path + tapNamePrefix + ".tap_V655");
+            File nh6300Dnc = new File(toDncPath + File.separator + "Mori_Seiki_NH6300" + File.separator + tapNamePrefix);
+            File nv7000Dnc = new File(toDncPath + File.separator + "Mori_Seiki_NV7000" + File.separator + tapNamePrefix);
+            File nv7000DncFinishing = new File(toDncPath + File.separator + "Final_NV7000" + File.separator + tapNamePrefix);
+            File v655Dnc = new File(toDncPath + File.separator + "mzk655" + File.separator + tapNamePrefix);
             try {
-                FileUtil.del(ORIGIN);
-                FileUtil.move(NH6300, NH6300_DNC, true);
-                FileUtil.move(NV7000, NV7000_DNC, true);
-                FileUtil.move(V655, V655_DNC, true);
+                FileUtil.del(origin);
+                FileUtil.move(nh6300, nh6300Dnc, true);
+                if(!checkIsFinishing(nv7000)){
+                    FileUtil.move(nv7000, nv7000Dnc, true);
+                }else {
+                    FileUtil.move(nv7000, nv7000DncFinishing, true);
+                }
+                FileUtil.move(v655, v655Dnc, true);
             } catch (IORuntimeException e) {
                 throw new RuntimeException(e);
             }
         }
         return new AjaxResult(200, "Success");
+    }
+
+    public boolean checkIsFinishing(File file){
+        boolean flag = false;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String lineString;
+            int line = 1;
+            while ((lineString = reader.readLine()) != null && line < 10) {
+                line++;
+                if (lineString.startsWith("(POST PROCESSOR") && lineString.contains("30,")) {
+                    flag = true;
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return flag;
     }
 
     /**

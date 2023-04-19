@@ -48,7 +48,7 @@ public class TransformTo7000 extends TransformBaseUtil {
                 int j = 1;
                 boolean flag = false;
                 while (i - j >= 0 && j <= 30) {
-                    if (CIRCULATING_DRILLING_T_VALUE.containsKey(content[i - j])) {
+                    if (CIRCULATING_DRILLING_NV7000_T_VALUE.containsKey(content[i - j])) {
                         flag = true;
                         newStr.append(content[i].replace("G81", "G83")).append(CIRCULATING_DRILLING_T_VALUE.get(content[i - j]));
                     }
@@ -60,7 +60,7 @@ public class TransformTo7000 extends TransformBaseUtil {
             } else if (content[i].contains("D#51999")) {
                 int j = 1;
                 boolean isMatch = false;
-                while (i - j >= 0 && j <= 10) {
+                while (i - j >= 0 && j <= 50) {
                     String mPattern = "(?<=\\.H)\\d+";
                     Pattern pattern = Pattern.compile(mPattern);
                     Matcher matcher = pattern.matcher(content[i - j]);
@@ -82,7 +82,7 @@ public class TransformTo7000 extends TransformBaseUtil {
                         for (String s : TOOL_BREAK_DETECTION.keySet()) {
                             if (Objects.equals(content[i - j], s)) {
                                 isMatch = true;
-                                newStr.append(content[i]).append(TOOL_BREAK_DETECTION.get(s));
+                                newStr.append(content[i]).append("\n").append(TOOL_BREAK_DETECTION.get(s));
                             }
                         }
                     }

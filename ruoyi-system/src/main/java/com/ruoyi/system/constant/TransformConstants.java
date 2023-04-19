@@ -30,7 +30,7 @@ public class TransformConstants implements ApplicationRunner {
     public static final Map<String, String> NH6300_M_TO_CHANGE = Map.of(
             "M50", "M51",
             "M09", "M89",
-            "M51", "M58");
+            "M51", "M88");
     public static final Map<String, String> NH6300_H_TO_CHANGE = new HashMap<>(120);
     public static final Map<String, String> NH6300_M_G_TO_CHANGE = Map.of(
             "G65P8771", "M98P8771(Z AXIS HEIGHT MEASUREMENT)",
@@ -62,14 +62,16 @@ public class TransformConstants implements ApplicationRunner {
     public static final Map<String, String> MAZAK655_BRACKETS_T_TO_CHANGE = new HashMap<>(20);
     public static final Map<String, String> MAZAK655_ALL_TO_CHANGE = new HashMap<>();
     public static final Map<String, String> CIRCULATING_DRILLING_T_VALUE = Map.of(
-            "T9904", "Q2.0",
-            "T9907", "Q2.0",
-            "T9908", "Q2.0",
-            "T9909", "Q2.0",
-            "T9965", "Q2.0",
-            "T9986", "Q2.0",
-            "T9988", "Q2.0"
+            "T4", "Q2.0",
+            "T7", "Q2.0",
+            "T8", "Q2.0",
+            "T9", "Q2.0",
+            "T65", "Q2.0",
+            "T86", "Q2.0",
+            "T88", "Q2.0"
     );
+    public static final Map<String, String> CIRCULATING_DRILLING_NV7000_T_VALUE = new HashMap<>();
+    public static final Map<String, String> CIRCULATING_DRILLING_MAZAK655_T_VALUE = new HashMap<>();
     public static final Map<String, String> WEAR_DETECTION = Map.of(
             "T1",
             "G325X-11.900Y1.400H01Q0.3T9002\n" +
@@ -174,14 +176,24 @@ public class TransformConstants implements ApplicationRunner {
             if (!nh6300.equals(nv7000)) {
                 NV7000_H_TO_CHANGE.put(h1, h2);
                 NV7000_BRACKETS_T_TO_CHANGE.put(nh6300, nv7000);
+                if (CIRCULATING_DRILLING_T_VALUE.containsKey(t1)) {
+                    CIRCULATING_DRILLING_NV7000_T_VALUE.put(t2, CIRCULATING_DRILLING_T_VALUE.get(t1));
+                }
             }
             if (!nh6300.equals(mazak655)) {
                 MAZAK655_H_TO_CHANGE.put(h1, h3);
                 MAZAK655_T_TO_CHANGE.put(t1, t3);
                 MAZAK655_BRACKETS_T_TO_CHANGE.put(nh6300, mazak655);
+                if (CIRCULATING_DRILLING_T_VALUE.containsKey(t1)) {
+                    CIRCULATING_DRILLING_MAZAK655_T_VALUE.put(t3, CIRCULATING_DRILLING_T_VALUE.get(t1));
+                }
             }
             NH6300_H_TO_CHANGE.put(h1, "H1");
             NV7000_T_TO_CHANGE.put(t1, t2);
+            if(CIRCULATING_DRILLING_T_VALUE.containsKey(t1)){
+                CIRCULATING_DRILLING_NV7000_T_VALUE.put(t2, CIRCULATING_DRILLING_T_VALUE.get(t1));
+                CIRCULATING_DRILLING_MAZAK655_T_VALUE.put(t3, CIRCULATING_DRILLING_T_VALUE.get(t1));
+            }
         });
         init();
     }
