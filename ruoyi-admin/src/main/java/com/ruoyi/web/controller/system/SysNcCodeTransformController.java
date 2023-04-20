@@ -16,6 +16,7 @@ import com.ruoyi.system.utils.transform.TransformTo655;
 import com.ruoyi.system.utils.transform.TransformTo7000;
 import com.ruoyi.system.domain.SysTapList;
 import com.ruoyi.system.service.ISysNcCodeTransformService;
+import com.ruoyi.system.utils.transform.TransformTo7000Finishing;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -123,7 +124,11 @@ public class SysNcCodeTransformController extends BaseController {
             }
             try {
                 FileUtil.copyFile(temp, file2, REPLACE_EXISTING);
-                TransformTo7000.transform(file2, 1);
+                if(!checkIsFinishing(file2)){
+                    TransformTo7000.transform(file2, 1);
+                }else {
+                    TransformTo7000Finishing.transform(file2, 3);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

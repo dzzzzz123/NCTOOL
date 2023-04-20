@@ -47,7 +47,7 @@ public class TransformBaseUtil {
             String[] content = str.split("\r\n");
             initProcess(flag);
             editFileHeader(content, flag);
-            content = processAllDelete(content);
+            content = processAllDelete(content, flag);
             processAllReplace(content, flag);
             StringBuilder newStr = new StringBuilder();
             // 对NC原始代码进行操作
@@ -61,6 +61,9 @@ public class TransformBaseUtil {
                     break;
                 case 2:
                     newStr = TransformTo655.processNcCode(content);
+                    break;
+                case 3:
+                    newStr = TransformTo7000Finishing.processNcCode(content);
                     break;
                 default:
                     break;
@@ -116,6 +119,12 @@ public class TransformBaseUtil {
                 BRACKETS_TO_CHANGE = MAZAK655_BRACKETS_T_TO_CHANGE;
                 DELETE_FLAG = "(TOOL, NAME : T100)";
                 break;
+            case 3:
+                TO_DELETE = NH6300_M_TO_DELETE;
+                FILENAME = NV7000_FINISHING_FILENAME + FILENAMEWITHOUTPREFIX + ")";
+                WHICH_PROGCAT = NV7000_FINISHING_M_PROGCAT;
+                ALL_TO_CHANGE = NV7000_ALL_TO_CHANGE;
+                break;
             default:
                 break;
         }
@@ -137,8 +146,14 @@ public class TransformBaseUtil {
                     content[i] = WHICH_PROGCAT;
                     break;
                 case 7:
-                    StringBuilder sb = new StringBuilder(content[i]).append("\r\n").append("(Processed by Platform: ").append(getTime()).append(")");
-                    content[i] = sb.toString();
+                    if (flag != 3) {
+                        content[i] += "\r\n" + "(Processed by Platform: " + getTime() + ")";
+                    }
+                    break;
+                case 9:
+                    if (flag == 3) {
+                        content[i] = "(Processed by Platform: " + getTime() + ")";
+                    }
                     break;
                 default:
                     if (content[i].startsWith("(TOOL NUMBER") && (flag == 1 || flag == 2)) {
@@ -177,32 +192,40 @@ public class TransformBaseUtil {
      * @param content 老字符串
      * @return 新字符串
      */
-    static String[] processAllDelete(String[] content) {
+    static String[] processAllDelete(String[] content, int flag) {
         ArrayList<Integer> indices = new ArrayList<>();
-        for (int i = 0; i < content.length; i++) {
-            // 删除掉T72相关代码块
-            if (content[i].startsWith(DELETE_FLAG)) {
-                indices.add(i);
-                i++;
-                while (true) {
-                    if (Objects.equals(content[i], "N50")) {
-                        break;
-                    }
+        if (flag != 3) {
+            for (int i = 0; i < content.length; i++) {
+                // 删除掉T72相关代码块
+                if (content[i].startsWith(DELETE_FLAG)) {
                     indices.add(i);
                     i++;
-                    if (Objects.equals(content[i], "N60")) {
+                    while (true) {
+                        if (Objects.equals(content[i], "N50")) {
+                            break;
+                        }
                         indices.add(i);
                         i++;
-                        break;
+                        if (Objects.equals(content[i], "N60")) {
+                            indices.add(i);
+                            i++;
+                            break;
+                        }
                     }
+                    i++;
+                } else if (content[i].startsWith("(72, T072") || content[i].startsWith("(72   T072") || Objects.equals(content[i], "(TOOL NAME : T072)")) {
+                    indices.add(i);
+                } else if (Arrays.asList(TO_DELETE).contains(content[i])) {
+                    indices.add(i);
+                } else if (content[i].startsWith("(100  T100") || content[i].startsWith("(100, T100")) {
+                    indices.add(i);
                 }
-                i++;
-            } else if (content[i].startsWith("(72, T072") || content[i].startsWith("(72   T072") || Objects.equals(content[i], "(TOOL NAME : T072)")) {
-                indices.add(i);
-            } else if (Arrays.asList(TO_DELETE).contains(content[i])) {
-                indices.add(i);
-            } else if (content[i].startsWith("(100  T100") || content[i].startsWith("(100, T100")) {
-                indices.add(i);
+            }
+        } else {
+            for (int i = 0; i < content.length; i++) {
+                if (Arrays.asList(TO_DELETE).contains(content[i])) {
+                    indices.add(i);
+                }
             }
         }
         return ArrayUtils.removeAll(content, indices.stream().mapToInt(Integer::intValue).toArray());

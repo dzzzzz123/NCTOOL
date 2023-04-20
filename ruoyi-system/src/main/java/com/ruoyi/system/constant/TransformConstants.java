@@ -20,9 +20,11 @@ import java.util.Map;
 public class TransformConstants implements ApplicationRunner {
     public static final String NH6300_M_PROGCAT = "(PROGCAT MORI SEIKI NH6300)";
     public static final String NV7000_M_PROGCAT = "(PROGCAT MORI SEIKI NV7000)";
+    public static final String NV7000_FINISHING_M_PROGCAT = "(PROGCAT Final NV7000)";
     public static final String MAZAK655_M_PROGCAT = "(PROGCAT MAZAK V655 PALLET)";
     public static final String NH6300_FILENAME = "(FILENAME E:\\NH6300\\";
     public static final String NV7000_FILENAME = "(FILENAME E:\\NV7000\\";
+    public static final String NV7000_FINISHING_FILENAME = "(FILENAME E:\\Final_NV7000\\";
     public static final String MAZAK655_FILENAME = "(FILENAME E:\\MZK502\\";
     public static final String[] NH6300_M_TO_DELETE = {"M37", "M38", "M39", "M58", "M100"};
     public static final String[] NV7000_M_TO_DELETE = {"M37", "M38", "M39", "M58", "M100"};
@@ -71,6 +73,7 @@ public class TransformConstants implements ApplicationRunner {
             "T88", "Q2.0"
     );
     public static final Map<String, String> CIRCULATING_DRILLING_NV7000_T_VALUE = new HashMap<>();
+    public static final Map<String, String> CIRCULATING_DRILLING_NV7000_FINISHING_T_VALUE = new HashMap<>();
     public static final Map<String, String> CIRCULATING_DRILLING_MAZAK655_T_VALUE = new HashMap<>();
     public static final Map<String, String> WEAR_DETECTION = Map.of(
             "T1",
@@ -116,6 +119,7 @@ public class TransformConstants implements ApplicationRunner {
                     "G30G91Z0.\n" +
                     "G0Y0."
     );
+
 
     public static final String TOOL_SET_DETECTION =
             "#991=-2\n" +

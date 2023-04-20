@@ -50,7 +50,7 @@ public class TransformTo7000 extends TransformBaseUtil {
                 while (i - j >= 0 && j <= 30) {
                     if (CIRCULATING_DRILLING_NV7000_T_VALUE.containsKey(content[i - j])) {
                         flag = true;
-                        newStr.append(content[i].replace("G81", "G83")).append(CIRCULATING_DRILLING_T_VALUE.get(content[i - j]));
+                        newStr.append(content[i].replace("G81", "G83")).append(CIRCULATING_DRILLING_NV7000_T_VALUE.get(content[i - j]));
                     }
                     j++;
                 }
@@ -96,7 +96,7 @@ public class TransformTo7000 extends TransformBaseUtil {
             } else if (Objects.equals(content[i], "T3") || Objects.equals(content[i], "G90T3")) {
                 newStr.append(content[i].replace("T3", "T9903"));
             } else if (Objects.equals(content[i], "T5") || Objects.equals(content[i], "G90T5")) {
-                newStr.append(content[i].replace("T5", "T9916"));
+                newStr.append(content[i].replace("T5", "T9914"));
             } else if (Objects.equals(content[i], "T8") || Objects.equals(content[i], "G90T8")) {
                 newStr.append(content[i].replace("T8", "T9908"));
             } else {

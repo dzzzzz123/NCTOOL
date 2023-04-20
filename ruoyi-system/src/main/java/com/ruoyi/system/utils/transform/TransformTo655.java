@@ -23,7 +23,7 @@ public class TransformTo655 extends TransformBaseUtil {
                 while (i - j >= 0 && j <= 30) {
                     if (CIRCULATING_DRILLING_MAZAK655_T_VALUE.containsKey(content[i - j])) {
                         flag3 = true;
-                        newStr.append(content[i].replace("G81", "G83")).append(CIRCULATING_DRILLING_T_VALUE.get(content[i - j]));
+                        newStr.append(content[i].replace("G81", "G83")).append(CIRCULATING_DRILLING_MAZAK655_T_VALUE.get(content[i - j]));
                     }
                     j++;
                 }
