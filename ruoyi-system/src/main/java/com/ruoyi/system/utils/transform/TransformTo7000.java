@@ -77,7 +77,8 @@ public class TransformTo7000 extends TransformBaseUtil {
             } else if (content[i].startsWith("G30G91") && content[i + 1].startsWith("M01")) {
                 int j = 1;
                 boolean isMatch = false;
-                while (i - j >= 0 && j <= 50) {
+                boolean hasMatch = false;
+                while (i - j >= 0 && j <= 50 && !hasMatch) {
                     if (content[i - j].startsWith("T")) {
                         for (String s : TOOL_BREAK_DETECTION.keySet()) {
                             if (Objects.equals(content[i - j], s)) {
@@ -85,6 +86,7 @@ public class TransformTo7000 extends TransformBaseUtil {
                                 newStr.append(content[i]).append("\n").append(TOOL_BREAK_DETECTION.get(s));
                             }
                         }
+                        hasMatch = true;
                     }
                     j++;
                 }

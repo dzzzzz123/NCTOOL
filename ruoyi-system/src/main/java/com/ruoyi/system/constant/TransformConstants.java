@@ -33,7 +33,7 @@ public class TransformConstants implements ApplicationRunner {
             "M50", "M51",
             "M09", "M89",
             "M51", "M88");
-    public static final Map<String, String> NH6300_H_TO_CHANGE = new HashMap<>(120);
+    public static final Map<String, String> NH6300_H_TO_CHANGE = new HashMap<>(150);
     public static final Map<String, String> NH6300_M_G_TO_CHANGE = Map.of(
             "G65P8771", "M98P8771(Z AXIS HEIGHT MEASUREMENT)",
             "G65P8881", "M98P8881(Z AXIS HEIGHT MEASUREMENT)"
@@ -46,11 +46,11 @@ public class TransformConstants implements ApplicationRunner {
             Map.entry("M88", "M08"),
             Map.entry("M51", "M08")
     );
-    public static final Map<String, String> NV7000_H_TO_CHANGE = new HashMap<>(120);
+    public static final Map<String, String> NV7000_H_TO_CHANGE = new HashMap<>(150);
     public static final Map<String, String> NV7000_G_TO_CHANGE = Map.ofEntries(
             Map.entry("G28", "G30")
     );
-    public static final Map<String, String> NV7000_T_TO_CHANGE = new HashMap<>(120);
+    public static final Map<String, String> NV7000_T_TO_CHANGE = new HashMap<>(150);
     public static final Map<String, String> NV7000_BRACKETS_T_TO_CHANGE = new HashMap<>(20);
     public static final Map<String, String> NV7000_ALL_TO_CHANGE = new HashMap<>();
     public static final Map<String, String> MAZAK655_M_TO_CHANGE = Map.ofEntries(
@@ -63,6 +63,8 @@ public class TransformConstants implements ApplicationRunner {
     public static final Map<String, String> MAZAK655_T_TO_CHANGE = new HashMap<>();
     public static final Map<String, String> MAZAK655_BRACKETS_T_TO_CHANGE = new HashMap<>(20);
     public static final Map<String, String> MAZAK655_ALL_TO_CHANGE = new HashMap<>();
+    public static final Map<String, String> NV7000_FINISHING_T_TO_CHANGE = new HashMap<>();
+    public static final Map<String, String> NV7000_FINISHING_ALL_TO_CHANGE = new HashMap<>();
     public static final Map<String, String> CIRCULATING_DRILLING_T_VALUE = Map.of(
             "T4", "Q2.0",
             "T7", "Q2.0",
@@ -73,7 +75,6 @@ public class TransformConstants implements ApplicationRunner {
             "T88", "Q2.0"
     );
     public static final Map<String, String> CIRCULATING_DRILLING_NV7000_T_VALUE = new HashMap<>();
-    public static final Map<String, String> CIRCULATING_DRILLING_NV7000_FINISHING_T_VALUE = new HashMap<>();
     public static final Map<String, String> CIRCULATING_DRILLING_MAZAK655_T_VALUE = new HashMap<>();
     public static final Map<String, String> WEAR_DETECTION = Map.of(
             "T1",
@@ -120,7 +121,6 @@ public class TransformConstants implements ApplicationRunner {
                     "G0Y0."
     );
 
-
     public static final String TOOL_SET_DETECTION =
             "#991=-2\n" +
                     "#992=1\n" +
@@ -157,6 +157,9 @@ public class TransformConstants implements ApplicationRunner {
         MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_H_TO_CHANGE);
         MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_G_TO_CHANGE);
         MAZAK655_ALL_TO_CHANGE.putAll(MAZAK655_T_TO_CHANGE);
+        NV7000_FINISHING_ALL_TO_CHANGE.putAll(NV7000_M_TO_CHANGE);
+        NV7000_FINISHING_ALL_TO_CHANGE.putAll(NV7000_G_TO_CHANGE);
+        NV7000_FINISHING_ALL_TO_CHANGE.putAll(NV7000_FINISHING_T_TO_CHANGE);
     }
 
     /**
@@ -171,12 +174,14 @@ public class TransformConstants implements ApplicationRunner {
             String nh6300 = sysTool.getNh6300().toString();
             String nv7000 = sysTool.getNv7000().toString();
             String mazak655 = sysTool.getMazak655().toString();
+            String toolId = sysTool.getMazak655().toString();
             String h1 = "H" + nh6300;
             String h2 = "H" + nv7000;
             String h3 = "H" + mazak655;
             String t1 = "T" + nh6300;
             String t2 = Integer.parseInt(nv7000) < Integer.parseInt("10") ? "T990" + nv7000 : "T99" + nv7000;
             String t3 = "T" + mazak655;
+            String t4 = Integer.parseInt(toolId) < Integer.parseInt("10") ? "T990" + toolId : "T99" + toolId;
             if (!nh6300.equals(nv7000)) {
                 NV7000_H_TO_CHANGE.put(h1, h2);
                 NV7000_BRACKETS_T_TO_CHANGE.put(nh6300, nv7000);
@@ -194,6 +199,7 @@ public class TransformConstants implements ApplicationRunner {
             }
             NH6300_H_TO_CHANGE.put(h1, "H1");
             NV7000_T_TO_CHANGE.put(t1, t2);
+            NV7000_FINISHING_T_TO_CHANGE.put(t1,t4);
             if(CIRCULATING_DRILLING_T_VALUE.containsKey(t1)){
                 CIRCULATING_DRILLING_NV7000_T_VALUE.put(t2, CIRCULATING_DRILLING_T_VALUE.get(t1));
                 CIRCULATING_DRILLING_MAZAK655_T_VALUE.put(t3, CIRCULATING_DRILLING_T_VALUE.get(t1));

@@ -1,0 +1,7 @@
+NAME Nc_Test
+startup dll
+EXEC_FILE  D:\Nc\Nc\Nc.dll
+TEXT_DIR   D:\Nc\text
+allow_stop true
+DELAY_START false
+END

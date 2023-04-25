@@ -4,7 +4,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.ruoyi.system.constant.TransformConstants.CIRCULATING_DRILLING_MAZAK655_T_VALUE;
-import static com.ruoyi.system.constant.TransformConstants.CIRCULATING_DRILLING_T_VALUE;
 
 /**
  * 将NC代码转换为655机床使用的G代码

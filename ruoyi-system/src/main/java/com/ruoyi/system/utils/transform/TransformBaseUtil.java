@@ -63,7 +63,8 @@ public class TransformBaseUtil {
                     newStr = TransformTo655.processNcCode(content);
                     break;
                 case 3:
-                    newStr = TransformTo7000Finishing.processNcCode(content);
+                    StringBuilder tempStr2 = TransformTo7000Finishing.processNcCode(content);
+                    newStr = deleteLastG30X0(tempStr2);
                     break;
                 default:
                     break;
@@ -123,7 +124,7 @@ public class TransformBaseUtil {
                 TO_DELETE = NH6300_M_TO_DELETE;
                 FILENAME = NV7000_FINISHING_FILENAME + FILENAMEWITHOUTPREFIX + ")";
                 WHICH_PROGCAT = NV7000_FINISHING_M_PROGCAT;
-                ALL_TO_CHANGE = NV7000_ALL_TO_CHANGE;
+                ALL_TO_CHANGE = NV7000_FINISHING_ALL_TO_CHANGE;
                 break;
             default:
                 break;
@@ -281,9 +282,32 @@ public class TransformBaseUtil {
     }
 
     /**
+     * 删除精加工NV7000代码中最后一个G30X0.
+     *
+     * @param tempSb 临时转换的字符串
+     * @return 输出的字符串
+     */
+    static StringBuilder deleteLastG30X0(StringBuilder tempSb) {
+        String[] content = tempSb.toString().split("\n");
+        int indices = content.length;
+        for (int i = content.length - 1; i >= 0; i--) {
+            if (content[i].startsWith("G30X0.")) {
+                indices = i;
+                break;
+            }
+        }
+        content = ArrayUtils.removeAll(content, indices);
+        StringBuilder sb = new StringBuilder();
+        for (String s : content) {
+            sb.append(s).append("\n");
+        }
+        return sb;
+    }
+
+    /**
      * 删除最后一个对刀检测代码
      *
-     * @param sb 已处理完的NH6300机床的G代码
+     * @param tempSb 已处理完的NH6300机床的G代码
      * @return newStr
      */
     static StringBuilder deleteLastDetection(StringBuilder tempSb) {
