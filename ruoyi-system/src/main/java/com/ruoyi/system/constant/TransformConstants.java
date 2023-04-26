@@ -174,7 +174,7 @@ public class TransformConstants implements ApplicationRunner {
             String nh6300 = sysTool.getNh6300().toString();
             String nv7000 = sysTool.getNv7000().toString();
             String mazak655 = sysTool.getMazak655().toString();
-            String toolId = sysTool.getMazak655().toString();
+            String toolId = sysTool.getToolId().toString();
             String h1 = "H" + nh6300;
             String h2 = "H" + nv7000;
             String h3 = "H" + mazak655;
