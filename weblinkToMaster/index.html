@@ -24,15 +24,14 @@
     <div class="home-container">
       <form name="JOB INFOR" class="home-form">
         <div class="home-container2">
-          <label class="home-text1">JOB:</label>
-          <input id="JOB" type="text" class="home-textinput input" />
+          <label class="home-text5">JOB:</label>
+          <input id="JOB" type="text" class="home-textinput1 input" />
 
           <label class="home-text1">MN TYPE:</label>
           <select id="MNTYPE" class="home-select">
             <option value="Option 2">SDQ</option>
             <option value="Option 3">RQEW</option>
             <option id="SMN" value="SMN">SMN</option>
-
           </select>
         </div>
         <div class="home-container2">
@@ -50,13 +49,12 @@
           <input id="PCR" type="text" class="home-textinput input" />
         </div>
         <div class="home-container2">
-          <label class="home-text1">MBPP:</label>
-          <input id="MBPP" type="text" class="home-textinput input" />
+          <label class="home-text6">MBPP:</label>
+          <input id="MBPP" type="text" class="home-textinput1 input" />
 
           <button class="home-button button" type="button" onclick="updateJobInFor()">Update JobInFor</button>
         </div>
       </form>
-      <hr>
 
       <form class="home-form1">
         <div class="home-container3">
@@ -288,7 +286,7 @@
 
   $("#BookNumbers").click(function () {
     $.ajax({
-      url: "http://localhost:8080/system/CeroDraw/bookProgramNumber/3",
+      url: "http://mmkun-camsvr01:8080/system/CeroDraw/bookProgramNumber/3",
       type: 'get',
       async: false,
       // data: 3,
