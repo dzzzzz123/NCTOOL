@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 25/04/2023 15:09:36
+ Date: 12/05/2023 08:49:52
 */
 
 SET NAMES utf8mb4;
@@ -156,7 +156,7 @@ CREATE TABLE `sys_menu`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2035 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2034 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -215,7 +215,7 @@ CREATE TABLE `sys_program_number`  (
 -- ----------------------------
 -- Records of sys_program_number
 -- ----------------------------
-INSERT INTO `sys_program_number` VALUES (306, 191);
+INSERT INTO `sys_program_number` VALUES (306, 215);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -237,7 +237,7 @@ CREATE TABLE `sys_role`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`role_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 101 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role
@@ -419,6 +419,100 @@ INSERT INTO `sys_tap_name` VALUES ('3041811');
 INSERT INTO `sys_tap_name` VALUES ('3041812');
 INSERT INTO `sys_tap_name` VALUES ('3047867');
 INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041742');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3041744');
+INSERT INTO `sys_tap_name` VALUES ('3041810');
+INSERT INTO `sys_tap_name` VALUES ('3041811');
+INSERT INTO `sys_tap_name` VALUES ('3041812');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041742');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3041744');
+INSERT INTO `sys_tap_name` VALUES ('3041810');
+INSERT INTO `sys_tap_name` VALUES ('3041811');
+INSERT INTO `sys_tap_name` VALUES ('3041812');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041742');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3041744');
+INSERT INTO `sys_tap_name` VALUES ('3041810');
+INSERT INTO `sys_tap_name` VALUES ('3041811');
+INSERT INTO `sys_tap_name` VALUES ('3041812');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041742');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3041744');
+INSERT INTO `sys_tap_name` VALUES ('3041810');
+INSERT INTO `sys_tap_name` VALUES ('3041811');
+INSERT INTO `sys_tap_name` VALUES ('3041812');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041742');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3041744');
+INSERT INTO `sys_tap_name` VALUES ('3041810');
+INSERT INTO `sys_tap_name` VALUES ('3041811');
+INSERT INTO `sys_tap_name` VALUES ('3041812');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041742');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3041744');
+INSERT INTO `sys_tap_name` VALUES ('3041810');
+INSERT INTO `sys_tap_name` VALUES ('3041811');
+INSERT INTO `sys_tap_name` VALUES ('3041812');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041742');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3041744');
+INSERT INTO `sys_tap_name` VALUES ('3041810');
+INSERT INTO `sys_tap_name` VALUES ('3041811');
+INSERT INTO `sys_tap_name` VALUES ('3041812');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041742');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3041744');
+INSERT INTO `sys_tap_name` VALUES ('3041810');
+INSERT INTO `sys_tap_name` VALUES ('3041811');
+INSERT INTO `sys_tap_name` VALUES ('3041812');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
 
 -- ----------------------------
 -- Table structure for sys_tool_pocket
@@ -474,7 +568,7 @@ CREATE TABLE `sys_tools`  (
   `MAZAK655` bigint(0) NOT NULL COMMENT '刀具在机床7000的位置',
   `del_flag` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '删除标准，1删除，0正常',
   PRIMARY KEY (`tool_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 133 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 132 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_tools
@@ -640,7 +734,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '马斯特', '00', 'master@163.com', '15888888888', '1', '/profile/avatar/2023/02/17/blob_20230217171420A001.png', '$2a$10$Tf8Er56RukTQTbfXfbSE8eaelVwHOwLb2RJh8U4/54V1onyW8Azsi', '0', '0', '127.0.0.1', '2023-04-11 16:00:34', 'admin', '2023-02-09 15:06:46', '', '2023-04-11 16:00:33', '管理员');
+INSERT INTO `sys_user` VALUES (1, 'admin', '马斯特', '00', 'master@163.com', '15888888888', '1', '/profile/avatar/2023/02/17/blob_20230217171420A001.png', '$2a$10$Tf8Er56RukTQTbfXfbSE8eaelVwHOwLb2RJh8U4/54V1onyW8Azsi', '0', '0', '127.0.0.1', '2023-05-11 20:35:15', 'admin', '2023-02-09 15:06:46', '', '2023-05-11 20:35:14', '管理员');
 INSERT INTO `sys_user` VALUES (2, 'dz', '马斯特', '00', 'master@163.com', '15666666666', '1', '', '$2a$10$43zeusYlA2mLiGEWq9dla.P1JYfQRmWMegYq6hEfrGSv815o8qdYe', '0', '0', '127.0.0.1', '2023-03-03 09:58:57', 'admin', '2023-02-09 15:06:46', 'admin', '2023-03-03 09:58:57', '测试员');
 INSERT INTO `sys_user` VALUES (100, 'test', 'test', '00', '', '', '0', '', '$2a$10$e1IF.ZBrDz/XUfYkt9U98.3rFulUe.c6W9JgvVU.ctomk0yQ1x8HO', '0', '2', '127.0.0.1', '2023-02-16 09:27:19', 'admin', '2023-02-13 13:44:12', '', '2023-02-16 09:27:18', NULL);
 

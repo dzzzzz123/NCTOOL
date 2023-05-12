@@ -113,23 +113,30 @@ public class SysNcCodeTransformController extends BaseController {
     public AjaxResult transformNcCode(@PathVariable String[] tapNames) {
         for (String tapName : tapNames) {
             File temp = new File(path + tapName);
-            File file = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NH6300");
-            File file2 = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NV7000");
-            File file3 = new File(path + tapName.split("\\.")[0] + ".tap_V655");
-            try {
-                FileUtil.copyFile(temp, file, REPLACE_EXISTING);
-                FileUtil.copyFile(temp, file2, REPLACE_EXISTING);
-                FileUtil.copyFile(temp, file3, REPLACE_EXISTING);
-                if (checkIsFinishing(file2)) {
-                    TransformTo7000Finishing.transform(file2, 3);
-                } else {
+            if (checkIsFinishing(temp)) {
+                File file = new File(path + tapName.split("\\.")[0] + ".final_NV7000");
+                try {
+                    FileUtil.copyFile(temp, file, REPLACE_EXISTING);
+                    TransformTo7000Finishing.transform(file, 3);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                File file = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NH6300");
+                File file2 = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NV7000");
+                File file3 = new File(path + tapName.split("\\.")[0] + ".tap_V655");
+                try {
+                    FileUtil.copyFile(temp, file, REPLACE_EXISTING);
+                    FileUtil.copyFile(temp, file2, REPLACE_EXISTING);
+                    FileUtil.copyFile(temp, file3, REPLACE_EXISTING);
                     TransformTo6300.transform(file, 0);
                     TransformTo7000.transform(file2, 1);
                     TransformTo655.transform(file3, 2);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+
         }
         return new AjaxResult(200, "Success");
     }
@@ -187,25 +194,32 @@ public class SysNcCodeTransformController extends BaseController {
     @GetMapping("/ToDNC/{tapNames}")
     public AjaxResult uploadToDnc(@PathVariable String[] tapNames) {
         for (String tapName : tapNames) {
+            File origin = new File(path + tapName);
             String tapNamePrefix = tapName.split("\\.")[0];
-            File nh6300 = new File(path + tapNamePrefix + ".tap_MMC_NH6300");
-            File nv7000 = new File(path + tapNamePrefix + ".tap_MMC_NV7000");
-            File v655 = new File(path + tapNamePrefix + ".tap_V655");
-            File nh6300Dnc = new File(toDncPath + File.separator + "Mori_Seiki_NH6300" + File.separator + tapNamePrefix);
-            File nv7000Dnc = new File(toDncPath + File.separator + "Mori_Seiki_NV7000" + File.separator + tapNamePrefix);
-            File nv7000DncFinishing = new File(toDncPath + File.separator + "Final_NV7000" + File.separator + tapNamePrefix);
-            File v655Dnc = new File(toDncPath + File.separator + "mzk655" + File.separator + tapNamePrefix);
-            try {
-                if (checkIsFinishing(nv7000)) {
+            if (checkIsFinishing(origin)) {
+                File nv7000 = new File(path + tapNamePrefix + ".final_NV7000");
+                try {
+                    File nv7000DncFinishing = new File(toDncPath + File.separator + "Final_NV7000" + File.separator + tapNamePrefix);
                     FileUtil.move(nv7000, nv7000DncFinishing, true);
-                } else {
+                } catch (IORuntimeException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                File nh6300 = new File(path + tapNamePrefix + ".tap_MMC_NH6300");
+                File nv7000 = new File(path + tapNamePrefix + ".tap_MMC_NV7000");
+                File v655 = new File(path + tapNamePrefix + ".tap_V655");
+                File nh6300Dnc = new File(toDncPath + File.separator + "Mori_Seiki_NH6300" + File.separator + tapNamePrefix);
+                File nv7000Dnc = new File(toDncPath + File.separator + "Mori_Seiki_NV7000" + File.separator + tapNamePrefix);
+                File v655Dnc = new File(toDncPath + File.separator + "mzk655" + File.separator + tapNamePrefix);
+                try {
                     FileUtil.move(nh6300, nh6300Dnc, true);
                     FileUtil.move(nv7000, nv7000Dnc, true);
                     FileUtil.move(v655, v655Dnc, true);
+                } catch (IORuntimeException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (IORuntimeException e) {
-                throw new RuntimeException(e);
             }
+
         }
         FileUtil.del(path);
         return new AjaxResult(200, "Success");

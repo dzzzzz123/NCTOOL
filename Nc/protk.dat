@@ -1,7 +1,7 @@
 NAME Nc_Test
 startup dll
-EXEC_FILE  D:\Nc\Nc\Nc.dll
-TEXT_DIR   D:\Nc\text
+EXEC_FILE  C:\Users\dirz\Desktop\Nc\Nc\Nc.dll
+TEXT_DIR   C:\Users\dirz\Desktop\Nc\text
 allow_stop true
 DELAY_START false
 END

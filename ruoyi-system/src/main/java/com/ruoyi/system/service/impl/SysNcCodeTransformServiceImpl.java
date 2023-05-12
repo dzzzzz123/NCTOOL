@@ -38,7 +38,10 @@ public class SysNcCodeTransformServiceImpl implements ISysNcCodeTransformService
         ArrayList<SysTapList> tapList = new ArrayList<>();
         scanFilesWithRecursion("D:\\upload");
         for (File scanFiles : SCAN_FILES_NAMES) {
-            if (scanFiles.getName().endsWith(".tap_MMC_NH6300") || scanFiles.getName().endsWith(".tap_MMC_NV7000") || scanFiles.getName().endsWith(".tap_V655")) {
+            if (scanFiles.getName().endsWith(".tap_MMC_NH6300")
+                    || scanFiles.getName().endsWith(".tap_MMC_NV7000")
+                    || scanFiles.getName().endsWith(".tap_V655")
+                    || scanFiles.getName().endsWith(".final_NV7000")) {
                 scanFilesFilterNames.add(scanFiles.getName());
             }
         }
@@ -68,13 +71,16 @@ public class SysNcCodeTransformServiceImpl implements ISysNcCodeTransformService
         File file = null;
         switch (split[1]) {
             case "tap_MMC_NH6300":
-                pathToScan += File.separator + "tap_MMC_NH6300";
+                pathToScan += "Mori_Seiki_NH6300";
                 break;
             case "tap_MMC_NV7000":
-                pathToScan += File.separator + "Final_NV7000";
+                pathToScan += "Mori_Seiki_NV7000";
                 break;
             case "tap_V655":
-                pathToScan += File.separator + "tap_V655";
+                pathToScan += "mzk655";
+                break;
+            case "final_NV7000":
+                pathToScan += "Final_NV7000";
                 break;
             default:
                 break;

@@ -3,8 +3,7 @@
     <el-row :gutter="20">
       <el-col :span="6">
         <el-upload ref="leftUpload" :file-list="leftUploadfileList" action="#" :show-file-list="false"
-          :on-change="leftHandleChange" accept=".tap_Original,.tap_MMC_NH6300,.tap_MMC_NV7000,.tap_V655"
-          :auto-upload="false" :limit="1">
+          :on-change="leftHandleChange" :auto-upload="false" :limit="1">
           <el-button slot="trigger" size="medium" type="primary" icon="el-icon-upload">上传左边的NC代码</el-button>
         </el-upload>
       </el-col>
@@ -14,8 +13,7 @@
       </el-col>
       <el-col :span="6">
         <el-upload ref="rightUpload" :file-list="rightUploadfileList" action="#" :show-file-list="false"
-          :on-change="rightHandleChange" accept=".tap_Original,.tap_MMC_NH6300,.tap_MMC_NV7000,.tap_V655"
-          :auto-upload="false" :limit="1">
+          :on-change="rightHandleChange" :auto-upload="false" :limit="1">
           <el-button slot="trigger" size="medium" type="primary" icon="el-icon-upload">上传右边的NC代码</el-button>
         </el-upload>
       </el-col>

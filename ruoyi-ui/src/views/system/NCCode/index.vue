@@ -74,8 +74,8 @@ export default {
             },
             diff: {
                 open: false,
-                oldStr: "",
-                newStr: "",
+                oldStr: "test",
+                newStr: "text",
                 // 不同地方上下间隔多少行不隐藏
                 context: 100,
                 // 展示的方式
