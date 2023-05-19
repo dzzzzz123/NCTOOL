@@ -29,8 +29,7 @@
 
           <label class="home-text1">MN TYPE:</label>
           <select id="MNTYPE" class="home-select">
-            <option value="Option 2">SDQ</option>
-            <option value="Option 3">RQEW</option>
+            <option id="SBR" value="SBR">SBR</option>
             <option id="SMN" value="SMN">SMN</option>
           </select>
         </div>
@@ -65,9 +64,9 @@
           <label class="home-text3">PROGRAM NUMBERS TO BOOK:</label>
           <input id="BOOKNUM" type="text" class="home-textinput2 input" />
           <button id="BookNumbers" class="home-button2 button" type="button">BOOK PROGRAM NUMBERS</button>
-          <button class="home-button2 button" type="button">SAVE PROGRAM NUMBERS TO CREO DRAWING</button>
-          <button class="home-button2 button" type="button">EXPORT SETUP SHEETS(PDF)</button>
-          <button class="home-button2 button" type="button">COPY CNC FILES TO WORKING DIRECTORY</button>
+          <button id="ToDrawing" class="home-button2 button" type="button">SAVE PROGRAM NUMBERS TO CREO DRAWING</button>
+          <input id="Programmer" type="text" class="input" placeholder="Please Input Your Programmer Name!" />
+          <button id="ToProgrammer" class="home-button2 button" type="button">Write Programmers to Drawings</button>
         </div>
         <input id="Directory" type="text" class="home-textinput3 input" />
         <label class="home-text4">CREO DRAWING:</label>
@@ -79,12 +78,13 @@
       </form>
     </div>
   </div>
+  <div id="test"></div>
 </body>
 <script>
   // 当前模型名称
   let ModelName;
+  let BookNumberModelName;
   let ModelNameDependencyName;
-  let ParametersNames = ["REVISION", "DRAWING_NO", "PART_TYPE", "PART_NO", "LINE_NO", "MBPP"];
   let ParametersNames_ASM = new Map([
     ["JOB_NO", ],
     ["MN_CODE", ],
@@ -93,10 +93,15 @@
     ["DWG_RL", ],
     ["PCR_NO", ],
     ["MBPP", ],
+    ["DATE", ],
+    ["PROGRAMMER", ],
   ])
-  let ParametersTypes = [103, 103, 102, 103, 103, 103];
-  let ParametersValues = [];
-  let ParametersValuesToChange = [];
+  let BookNumbers_Parameters = new Map([
+    ["MACHINE_NUMBER", ],
+    ["PROGRAM_NUMBER1", ],
+    ["PROGRAM_NUMBER2", ],
+    ["PROGRAM_NUMBER3", ],
+  ])
   // document.pwl.eval("PWL_MODEL") -1
   // document.pwl.eval("PWL_FEATURE") 3
   // document.pwl.eval("PWL_VALUE_DOUBLE")  101
@@ -140,7 +145,6 @@
     // ItemType = document.pwl.eval(PWL_MODEL)
     var ItemType = parseInt((IS_MODEL) ? -1 : 3);
     var FeatureID = parseInt((IS_MODEL) ? -1 : 52);
-    // var ParametersNames_TEMP = (IS_MODEL) ? ParametersNames.concat() : ParametersNames_ASM.concat();
     var FunctionName = (IS_MODEL) ? "pwlMdlParametersGet" : "pwlFeatureParametersGet";
     var ret = (IS_MODEL) ? document.pwl.pwlMdlParametersGet(ModelName) : document.pwl.pwlFeatureParametersGet(ModelName,
       FeatureID);
@@ -188,14 +192,12 @@
       netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
 
     var FunctionName = "pwlParameterValueSet";
-    // document.pwl.eval("PWL_MODEL");
     var ItemType = -1;
     var StringValue = parameterValue;
     var IntValue = parseInt(parameterValue);
     var FloatValue = parseFloat(parameterValue);
     var BoolValue = (parameterValue.toLowerCase() == "true") ? true : false;
     var featureID = -1;
-
 
     // In order to create usable trail file FloatValue cannot be NaN
     if (isNaN(FloatValue)) {
@@ -205,8 +207,10 @@
       IntValue = -5;
     }
 
+    BookNumberModelName = ModelName.split(".")[0] + ".drw";
+
     var ret = document.pwl.pwlParameterValueSet(
-      ModelName,
+      BookNumberModelName,
       ItemType,
       featureID,
       parameterName,
@@ -257,13 +261,19 @@
   }
 
   function getParameters() {
-    ParametersValuesToChange = [];
-    ParametersValuesToChange.push($("#MNTYPE option:selected").val());
     ParametersNames_ASM.set("JOB_NO", $("#JOB").val());
+    var temp = $("#MNTYPE option:selected").text();
+    $("#test").text(temp);
+    if (temp == "SMN") {
+      ParametersNames_ASM.set("MN_CODE", "0");
+    } else {
+      ParametersNames_ASM.set("MN_CODE", "1");
+    }
     ParametersNames_ASM.set("MN_NUMBER", $("#MN").val());
     ParametersNames_ASM.set("LINE", $("#LINE").val());
     ParametersNames_ASM.set("DWG_RL", $("#REV").val());
     ParametersNames_ASM.set("MBPP", $("#MBPP").val());
+    ParametersNames_ASM.set("PCR_NO", $("#PCR").val());
   }
 
   // 根据给定的模型获取相关的依赖文件
@@ -285,19 +295,59 @@
   }
 
   $("#BookNumbers").click(function () {
+    var number = $("#BOOKNUM").val();
+    var apiURL = "http://mmkun-camsvr01:8080/system/CeroDraw/bookProgramNumber/" + number;
+    // var apiURL = "http://localhost:8080/system/CeroDraw/bookProgramNumber/" + number;
     $.ajax({
-      url: "http://mmkun-camsvr01:8080/system/CeroDraw/bookProgramNumber/3",
+      url: apiURL,
       type: 'get',
-      async: false,
-      // data: 3,
-      // dataType: 'json',
+      dataType: 'json',
       // 服务器返回的数据类型
       scrossDomain: true,
       success: function (result) {
-        $("#PROG").text(result[0] + "\n" + result[1] + "\n" + result[2] + "\n");
+        var programNumbers = result.slice(0, number); // 获取指定数量的程序号
+        var programText = programNumbers.join("\n"); // 将程序号拼接为字符串
+        $("#PROG").text(programText);
+        BookNumbers_Parameters.set("MACHINE_NUMBER", programNumbers[0].substring(0, 3));
+        BookNumbers_Parameters.set("PROGRAM_NUMBER1", programNumbers[0].substring(3));
       },
     });
   })
+
+  $("#ToDrawing").click(function () {
+    WlParameterSetValue("MACHINE_NUMBER", BookNumbers_Parameters.get("MACHINE_NUMBER"), 102);
+    WlParameterSetValue("PROGRAM_NUMBER1", BookNumbers_Parameters.get("PROGRAM_NUMBER1"), 103);
+    alert("The value obtained from the number dispenser has been written into the engineering drawing！")
+  })
+
+  $("#ToProgrammer").click(function () {
+    ParametersNames_ASM.set("PROGRAMMER", $("#Programmer").val());
+    ParametersNames_ASM.set("DATE", dateFormat(new Date()));
+    if (ParametersNames_ASM.get("PROGRAMMER") == "") {
+      alert("Please enter the programmer's name！");
+      return;
+    } else {
+      WlParameterSetValue("PROGRAMMER", ParametersNames_ASM.get("PROGRAMMER"), 102);
+      WlParameterSetValue("DATE", ParametersNames_ASM.get("DATE"), 102);
+      alert("The programmer's name and date has been written into the engineering drawing！");
+    }
+  })
+
+  function dateFormat(date) {
+    var year = date.getFullYear(); // 年
+    var month = showTime(date.getMonth() + 1); // 月
+    var day = showTime(date.getDate()); // 日
+    var str = '';
+    str = str + year + '-' + month + '-' + day;
+    return str
+  }
+
+  // 封装一个不够两位数就补零的函数
+  function showTime(t) {
+    var time
+    time = t > 10 ? t : '0' + t
+    return time
+  }
 
 
   function initTable() {
@@ -306,36 +356,35 @@
     WlModelGetDirectory();
     WlParametersGet(false);
     // $("#test").text(ParametersValues);
-    // $("#test").text(document.pwl.eval("PWL_VALUE_STRING"));
-    // $("#test2").text(document.pwl.eval("PWL_VALUE_DOUBLE"));
-    // $("#test3").text(document.pwl.eval("PWL_VALUE_INTEGER"));
-    // $("#test4").text(document.pwl.eval("PWL_VALUE_BOOLEAN"));
-
     $("#JOB").val(ParametersNames_ASM.get("JOB_NO"));
     $("[selected]").attr("selected", false);
-    $("#SMN").attr("selected", "selected");
+    var temp = ParametersNames_ASM.get("MN_CODE");
+    var tempStr;
+    if (temp == "1") {
+      $("#SBR").attr("selected", "selected");
+      tempStr = "SBR";
+    } else {
+      $("#SMN").attr("selected", "selected");
+      tempStr = "SMN";
+    }
     $("#MN").val(ParametersNames_ASM.get("MN_NUMBER"));
     $("#LINE").val(ParametersNames_ASM.get("LINE"));
     $("#REV").val(ParametersNames_ASM.get("DWG_RL"));
     $("#PCR").val(ParametersNames_ASM.get("PCR_NO"));
     $("#MBPP").val(ParametersNames_ASM.get("MBPP"));
-    // $("#Directory").val(DirectoryPath);
-    $("#option1").html(ParametersNames_ASM.get("JOB_NO") + "SMN" + ParametersNames_ASM.get("MN_NUMBER") + "-" +
+
+    $("#option1").html(ParametersNames_ASM.get("JOB_NO") + tempStr + ParametersNames_ASM.get("MN_NUMBER") + "-" +
       ParametersNames_ASM.get("LINE"));
   }
 
   function updateJobInFor() {
     getParameters();
-    // for (let index = 0; index < ParametersNames.length; index++) {
-    //   $("#test").text(ParametersNames[index] + ParametersValuesToChange[index] + ParametersTypes[index]);
-    //   WlParameterSetValue(ParametersNames[index], ParametersValuesToChange[index], ParametersTypes[index]);
-    // }
     ParametersNames_ASM.forEach((value, key) => {
-      $("#test").text(key)
       if (ParametersNames_ASM.get(key) != "") {
         WlParameterSetValue2(key, value)
       }
     });
+    alert("更新成功!");
   }
 
   initTable();

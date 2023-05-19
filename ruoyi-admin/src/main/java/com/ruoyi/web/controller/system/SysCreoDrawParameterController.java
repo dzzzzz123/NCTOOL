@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
-
 /**
  * Creo加工参数接口控制层
  *
@@ -30,7 +29,7 @@ public class SysCreoDrawParameterController extends BaseController {
     @GetMapping("/bookProgramNumber/{bookNumber}")
     public ArrayList<String> getParameter(@PathVariable Integer bookNumber) {
         // 先把booknumber的值变成定值为3
-        bookNumber = 3;
+        // bookNumber = 3;
         ArrayList<SysProgramNumber> programNumberList = creoService.getProgramNumbers(bookNumber);
         ArrayList<String> strings = new ArrayList<>();
         for (SysProgramNumber programNumber : programNumberList) {
