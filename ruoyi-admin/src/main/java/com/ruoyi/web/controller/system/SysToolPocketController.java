@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,6 +101,7 @@ public class SysToolPocketController extends BaseController {
      * FeedRate         CUT_FEED
      * PeckDepth        PECK_DEPTH
      * SpindelSpeed     SPINDLE_SPEED
+     *
      * @param toolId 刀具id
      * @return 加工参数
      */
@@ -114,6 +116,23 @@ public class SysToolPocketController extends BaseController {
         modifiedParameter.put("PECK_DEPTH", parameter.getPeckDepth());
         modifiedParameter.put("SPINDLE_SPEED", parameter.getSpindelSpeed());
         ajax.put("Parameter", modifiedParameter);
+        return ajax;
+    }
+
+    /**
+     * 以json形式返回所有的刀具id
+     * @return 所有刀具id
+     */
+    @Anonymous
+    @GetMapping("/Creo/toolid")
+    public AjaxResult getAllToolId() {
+        AjaxResult ajax = new AjaxResult();
+        List<SysToolPocket> sysToolPockets = sysToolPocketService.selectSysToolPocketList(new SysToolPocket());
+        List<String> toolIds = new ArrayList<>();
+        for (SysToolPocket sysToolPocket : sysToolPockets) {
+            toolIds.add(sysToolPocket.getToolId());
+        }
+        ajax.put("toolid", toolIds);
         return ajax;
     }
 }
