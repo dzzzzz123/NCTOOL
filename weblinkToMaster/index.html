@@ -296,7 +296,8 @@
 
   $("#BookNumbers").click(function () {
     var number = $("#BOOKNUM").val();
-    var apiURL = "http://mmkun-camsvr01:8080/system/CeroDraw/bookProgramNumber/" + number;
+    var apiURL = "http://mmkun-camsvr02:8080/system/CeroDraw/bookProgramNumber/" + number;
+    // var apiURL = "http://mmkun-camsvr01:8080/system/CeroDraw/bookProgramNumber/" + number;
     // var apiURL = "http://localhost:8080/system/CeroDraw/bookProgramNumber/" + number;
     $.ajax({
       url: apiURL,
