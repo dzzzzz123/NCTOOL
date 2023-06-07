@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.constant.ToolsConstants;
 import com.ruoyi.common.constant.UserConstants;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,7 +41,8 @@ public class SysToolsController extends BaseController {
     /**
      * 查询刀具管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:tools:list')")
+//    @PreAuthorize("@ss.hasPermi('system:tools:list')")
+    @Anonymous
     @GetMapping("/list")
     public TableDataInfo list(SysTools sysTools) {
         startPage();

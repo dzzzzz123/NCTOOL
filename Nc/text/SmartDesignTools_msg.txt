@@ -15,8 +15,8 @@ Edit
 Edit
 #
 EX.Test.Title
-Test
-Test
+MasterNC
+MasterNC
 #
 CreoUdfToolchildmenu0
 SmartDesignConfig

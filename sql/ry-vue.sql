@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 19/05/2023 10:34:36
+ Date: 07/06/2023 09:59:57
 */
 
 SET NAMES utf8mb4;
@@ -156,12 +156,12 @@ CREATE TABLE `sys_menu`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2035 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2034 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
 -- ----------------------------
-INSERT INTO `sys_menu` VALUES (1, '系统管理', 0, 1, 'system', NULL, '', 1, 0, 'M', '0', '0', '', 'system', 'admin', '2023-02-09 15:06:46', '', NULL, '系统管理目录');
+INSERT INTO `sys_menu` VALUES (1, '系统管理', 0, 5, 'system', NULL, '', 1, 0, 'M', '0', '0', '', 'system', 'admin', '2023-02-09 15:06:46', 'admin', '2023-06-07 09:14:37', '系统管理目录');
 INSERT INTO `sys_menu` VALUES (100, '用户管理', 1, 1, 'user', 'system/user/index', '', 1, 0, 'C', '0', '0', 'system:user:list', 'user', 'admin', '2023-02-09 15:06:46', '', NULL, '用户管理菜单');
 INSERT INTO `sys_menu` VALUES (101, '角色管理', 1, 2, 'role', 'system/role/index', '', 1, 0, 'C', '0', '0', 'system:role:list', 'peoples', 'admin', '2023-02-09 15:06:46', '', NULL, '角色管理菜单');
 INSERT INTO `sys_menu` VALUES (102, '菜单管理', 1, 3, 'menu', 'system/menu/index', '', 1, 0, 'C', '0', '0', 'system:menu:list', 'tree-table', 'admin', '2023-02-09 15:06:46', '', NULL, '菜单管理菜单');
@@ -181,14 +181,9 @@ INSERT INTO `sys_menu` VALUES (1012, '菜单查询', 102, 1, '', '', '', 1, 0, '
 INSERT INTO `sys_menu` VALUES (1013, '菜单新增', 102, 2, '', '', '', 1, 0, 'F', '0', '0', 'system:menu:add', '#', 'admin', '2023-02-09 15:06:46', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (1014, '菜单修改', 102, 3, '', '', '', 1, 0, 'F', '0', '0', 'system:menu:edit', '#', 'admin', '2023-02-09 15:06:46', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (1015, '菜单删除', 102, 4, '', '', '', 1, 0, 'F', '0', '0', 'system:menu:remove', '#', 'admin', '2023-02-09 15:06:46', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2000, 'NC代码转换', 0, 4, 'NCCode', 'system/NCCode/index', NULL, 1, 0, 'C', '0', '0', '', 'edit', 'admin', '2023-02-13 10:24:02', 'admin', '2023-03-09 14:04:56', '');
-INSERT INTO `sys_menu` VALUES (2008, '刀具管理', 0, 2, 'tools', 'system/tools/index', NULL, 1, 0, 'C', '0', '0', 'system:tools:list', 'dashboard', 'admin', '2023-02-14 11:29:35', 'admin', '2023-02-17 15:13:31', '刀具管理菜单');
-INSERT INTO `sys_menu` VALUES (2009, '刀具管理查询', 2008, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'system:tools:query', '#', 'admin', '2023-02-14 11:29:35', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2010, '刀具管理新增', 2008, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'system:tools:add', '#', 'admin', '2023-02-14 11:29:35', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2011, '刀具管理修改', 2008, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'system:tools:edit', '#', 'admin', '2023-02-14 11:29:35', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2012, '刀具管理删除', 2008, 4, '#', '', NULL, 1, 0, 'F', '0', '0', 'system:tools:remove', '#', 'admin', '2023-02-14 11:29:35', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2013, '刀具管理导出', 2008, 5, '#', '', NULL, 1, 0, 'F', '0', '0', 'system:tools:export', '#', 'admin', '2023-02-14 11:29:35', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2021, '刀具加工参数', 0, 3, 'pocket', 'system/pocket/index', NULL, 1, 0, 'C', '0', '0', 'system:pocket:list', 'example', 'admin', '2023-02-21 09:29:44', 'admin', '2023-02-21 09:33:52', '刀具加工参数菜单');
+INSERT INTO `sys_menu` VALUES (2000, 'NC代码转换', 0, 3, 'NCCode', 'system/NCCode/index', NULL, 1, 0, 'C', '0', '0', '', 'edit', 'admin', '2023-02-13 10:24:02', 'admin', '2023-06-06 18:52:08', '');
+INSERT INTO `sys_menu` VALUES (2009, '刀具管理查询', 0, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'system:tools:query', '#', 'admin', '2023-02-14 11:29:35', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2021, '刀具加工参数', 0, 2, 'pocket', 'system/pocket/index', NULL, 1, 0, 'C', '0', '0', 'system:pocket:list', 'example', 'admin', '2023-02-21 09:29:44', 'admin', '2023-06-06 18:52:15', '刀具加工参数菜单');
 INSERT INTO `sys_menu` VALUES (2022, '刀具加工参数查询', 2021, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'system:pocket:query', '#', 'admin', '2023-02-21 09:29:44', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2023, '刀具加工参数新增', 2021, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'system:pocket:add', '#', 'admin', '2023-02-21 09:29:44', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2024, '刀具加工参数修改', 2021, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'system:pocket:edit', '#', 'admin', '2023-02-21 09:29:44', '', NULL, '');
@@ -198,7 +193,7 @@ INSERT INTO `sys_menu` VALUES (2027, 'NC代码转换', 2000, 1, '', NULL, NULL, 
 INSERT INTO `sys_menu` VALUES (2028, '上传NC代码', 2000, 2, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:NcCode:upload', '#', 'admin', '2023-02-28 10:11:44', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2029, '显示已转换NC代码列表', 2000, 3, 'system:NcCode:newTapList', NULL, NULL, 1, 0, 'F', '0', '0', 'system:NcCode:newTapList', '#', 'admin', '2023-03-01 15:35:20', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2030, 'NC代码比较', 2000, 4, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system.NcCode.compare', '#', 'admin', '2023-03-01 15:35:56', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2031, 'NC代码比较', 0, 5, 'NCCompare', 'system/NCCompare/index', NULL, 1, 0, 'C', '0', '0', NULL, 'log', 'admin', '2023-03-08 17:07:39', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2031, 'NC代码比较', 0, 4, 'NCCompare', 'system/NCCompare/index', NULL, 1, 0, 'C', '0', '0', '', 'log', 'admin', '2023-03-08 17:07:39', 'admin', '2023-06-06 18:52:03', '');
 INSERT INTO `sys_menu` VALUES (2032, '上传到dnc', 2000, 5, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:NcCode:ToDNC', '#', 'admin', '2023-03-22 09:50:53', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2033, '查询Tap文件', 2000, 6, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:NcCode:checkTap', '#', 'admin', '2023-04-04 10:31:26', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2034, '插入tap文件', 2000, 7, '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:NcCode:insertTap', '#', 'admin', '2023-04-04 13:49:57', '', NULL, '');
@@ -215,7 +210,7 @@ CREATE TABLE `sys_program_number`  (
 -- ----------------------------
 -- Records of sys_program_number
 -- ----------------------------
-INSERT INTO `sys_program_number` VALUES (306, 1285);
+INSERT INTO `sys_program_number` VALUES (306, 1308);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -243,8 +238,7 @@ CREATE TABLE `sys_role`  (
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` VALUES (1, '超级管理员', 'admin', 1, '1', 1, 1, '0', '0', 'admin', '2023-02-09 15:06:46', '', NULL, '超级管理员');
-INSERT INTO `sys_role` VALUES (2, '普通角色', 'common', 3, '2', 1, 1, '0', '0', 'admin', '2023-02-09 15:06:46', 'admin', '2023-03-03 09:57:46', '普通角色');
-INSERT INTO `sys_role` VALUES (100, '测试角色', 'test', 2, '1', 1, 1, '0', '2', 'admin', '2023-02-09 16:54:10', 'admin', '2023-02-14 14:59:42', '无');
+INSERT INTO `sys_role` VALUES (2, '普通角色', 'common', 2, '2', 1, 1, '0', '0', 'admin', '2023-02-09 15:06:46', 'admin', '2023-06-07 09:49:42', '普通角色');
 
 -- ----------------------------
 -- Table structure for sys_role_menu
@@ -260,9 +254,7 @@ CREATE TABLE `sys_role_menu`  (
 -- Records of sys_role_menu
 -- ----------------------------
 INSERT INTO `sys_role_menu` VALUES (2, 2000);
-INSERT INTO `sys_role_menu` VALUES (2, 2008);
 INSERT INTO `sys_role_menu` VALUES (2, 2009);
-INSERT INTO `sys_role_menu` VALUES (2, 2013);
 INSERT INTO `sys_role_menu` VALUES (2, 2021);
 INSERT INTO `sys_role_menu` VALUES (2, 2022);
 INSERT INTO `sys_role_menu` VALUES (2, 2026);
@@ -270,6 +262,9 @@ INSERT INTO `sys_role_menu` VALUES (2, 2027);
 INSERT INTO `sys_role_menu` VALUES (2, 2028);
 INSERT INTO `sys_role_menu` VALUES (2, 2029);
 INSERT INTO `sys_role_menu` VALUES (2, 2030);
+INSERT INTO `sys_role_menu` VALUES (2, 2032);
+INSERT INTO `sys_role_menu` VALUES (2, 2033);
+INSERT INTO `sys_role_menu` VALUES (2, 2034);
 
 -- ----------------------------
 -- Table structure for sys_tap_name
@@ -282,6 +277,14 @@ CREATE TABLE `sys_tap_name`  (
 -- ----------------------------
 -- Records of sys_tap_name
 -- ----------------------------
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
 
 -- ----------------------------
 -- Table structure for sys_tool_pocket
@@ -337,7 +340,7 @@ CREATE TABLE `sys_tools`  (
   `MAZAK655` bigint(0) NOT NULL COMMENT '刀具在机床7000的位置',
   `del_flag` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '删除标准，1删除，0正常',
   PRIMARY KEY (`tool_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 133 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 132 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_tools
@@ -503,9 +506,8 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '马斯特', '00', 'master@163.com', '15888888888', '1', '/profile/avatar/2023/02/17/blob_20230217171420A001.png', '$2a$10$Tf8Er56RukTQTbfXfbSE8eaelVwHOwLb2RJh8U4/54V1onyW8Azsi', '0', '0', '127.0.0.1', '2023-05-18 09:27:59', 'admin', '2023-02-09 15:06:46', '', '2023-05-18 09:27:59', '管理员');
-INSERT INTO `sys_user` VALUES (2, 'dz', '马斯特', '00', 'master@163.com', '15666666666', '1', '', '$2a$10$43zeusYlA2mLiGEWq9dla.P1JYfQRmWMegYq6hEfrGSv815o8qdYe', '0', '0', '127.0.0.1', '2023-03-03 09:58:57', 'admin', '2023-02-09 15:06:46', 'admin', '2023-03-03 09:58:57', '测试员');
-INSERT INTO `sys_user` VALUES (100, 'test', 'test', '00', '', '', '0', '', '$2a$10$e1IF.ZBrDz/XUfYkt9U98.3rFulUe.c6W9JgvVU.ctomk0yQ1x8HO', '0', '2', '127.0.0.1', '2023-02-16 09:27:19', 'admin', '2023-02-13 13:44:12', '', '2023-02-16 09:27:18', NULL);
+INSERT INTO `sys_user` VALUES (1, 'admin', '马斯特', '00', 'master@163.com', '15888888888', '1', '/profile/avatar/2023/02/17/blob_20230217171420A001.png', '$2a$10$Tf8Er56RukTQTbfXfbSE8eaelVwHOwLb2RJh8U4/54V1onyW8Azsi', '0', '0', '127.0.0.1', '2023-06-07 09:55:29', 'admin', '2023-02-09 15:06:46', '', '2023-06-07 09:55:29', '管理员');
+INSERT INTO `sys_user` VALUES (2, 'common', '马斯特', '00', 'master@163.com', '15666666666', '1', '', '$2a$10$T3aBr2PuGwx3e2e9DAljb.5MPwxBNZ/3w6hm.Xqtl06uljVNlw/ma', '0', '0', '127.0.0.1', '2023-06-07 09:51:30', 'admin', '2023-02-09 15:06:46', 'admin', '2023-06-07 09:51:29', '测试员');
 
 -- ----------------------------
 -- Table structure for sys_user_role

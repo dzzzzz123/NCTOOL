@@ -1,4 +1,4 @@
-NAME Nc_Test
+NAME MasterNC
 startup dll
 EXEC_FILE  D:\Nc\Nc\Nc.dll
 TEXT_DIR   D:\Nc\text
