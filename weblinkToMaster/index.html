@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Pertinent Impressive Mink</title>
+  <title>Master Parameter Update Program</title>
   <meta property="og:title" content="Pertinent Impressive Mink" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta charset="utf-8" />
@@ -50,7 +50,7 @@
         <div class="home-container2">
           <label class="home-text6">MBPP:</label>
           <input id="MBPP" type="text" class="home-textinput1 input" />
-
+          <button class="home-button button" type="button" onclick="initTable()">Init Table</button>
           <button class="home-button button" type="button" onclick="updateJobInFor()">Update JobInFor</button>
         </div>
       </form>
@@ -78,7 +78,6 @@
       </form>
     </div>
   </div>
-  <div id="test"></div>
 </body>
 <script>
   // 当前模型名称
@@ -263,7 +262,6 @@
   function getParameters() {
     ParametersNames_ASM.set("JOB_NO", $("#JOB").val());
     var temp = $("#MNTYPE option:selected").text();
-    $("#test").text(temp);
     if (temp == "SMN") {
       ParametersNames_ASM.set("MN_CODE", "0");
     } else {
@@ -356,7 +354,6 @@
     WlModelGetDependencies();
     WlModelGetDirectory();
     WlParametersGet(false);
-    // $("#test").text(ParametersValues);
     $("#JOB").val(ParametersNames_ASM.get("JOB_NO"));
     $("[selected]").attr("selected", false);
     var temp = ParametersNames_ASM.get("MN_CODE");
@@ -388,7 +385,6 @@
     alert("更新成功!");
   }
 
-  initTable();
 </script>
 
 </html>
