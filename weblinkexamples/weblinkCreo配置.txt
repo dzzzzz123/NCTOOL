@@ -3,4 +3,3 @@ web_link_file_read yes
 web_link_file_write yes
 web_link_proe_read yes
 web_link_proe_write yes
-windows_browser_type 

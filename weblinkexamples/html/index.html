@@ -9,14 +9,15 @@
   <meta property="twitter:card" content="summary_large_image" />
 
   <script src="../jscript/pfcUtils.js"></script>
-  <script src="../jscript/jquery-3.1.0.js"></script>
+  <script src="./static/jquery-3.1.0.js"></script>
+  <script src="./static/layui/layui.js"></script>
   <script src="../jscript/wl_header.js">
     document.writeln("Error loading Pro/Web.Link header!");
   </script>
-  <link href="./style.css" rel="stylesheet" />
-  <link href="./home.css" rel="stylesheet" />
-  <link rel="stylesheet" href="milligram.css">
-  <link rel="stylesheet" href="milligram.min.css">
+  <link href="./static/style.css" rel="stylesheet" />
+  <link href="./static/home.css" rel="stylesheet" />
+  <link rel="stylesheet" href="static/milligram.css">
+  <link rel="stylesheet" href="static/milligram.min.css">
 </head>
 
 <body>
@@ -65,21 +66,15 @@
           <input id="BOOKNUM" type="text" class="home-textinput2 input" />
           <button id="BookNumbers" class="home-button2 button" type="button">BOOK PROGRAM NUMBERS</button>
           <button id="ToDrawing" class="home-button2 button" type="button">SAVE PROGRAM NUMBERS TO CREO DRAWING</button>
-          <input id="Programmer" type="text" class="input" placeholder="Please Input Your Programmer Name!" />
+          <input id="Programmer" type="text" class="input" />
           <button id="ToProgrammer" class="home-button2 button" type="button">Write Programmers to Drawings</button>
         </div>
-        <input id="Directory" type="text" class="home-textinput3 input" />
-        <label class="home-text4">CREO DRAWING:</label>
-        <select id="CREODRAWING" class="home-select2">
-          <option id="option1" value="Option 1">Option 1</option>
-          <option value="Option 2">Option 2</option>
-          <option value="Option 3">Option 3</option>
-        </select>
       </form>
     </div>
   </div>
 </body>
 <script>
+  var layer = layui.layer
   // 当前模型名称
   let ModelName;
   let BookNumberModelName;
@@ -185,7 +180,7 @@
     }
   }
 
-  // 创建或修改参数
+  // 创建或修改参数没有featureid的
   function WlParameterSetValue(parameterName, parameterValue, ValueType) {
     if (pfcIsMozilla())
       netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
@@ -222,7 +217,7 @@
     }
   }
 
-  // 创建或修改参数
+  // 创建或修改参数featuerid为52
   function WlParameterSetValue2(parameterName, parameterValue) {
     if (pfcIsMozilla())
       netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
@@ -316,19 +311,22 @@
   $("#ToDrawing").click(function () {
     WlParameterSetValue("MACHINE_NUMBER", BookNumbers_Parameters.get("MACHINE_NUMBER"), 102);
     WlParameterSetValue("PROGRAM_NUMBER1", BookNumbers_Parameters.get("PROGRAM_NUMBER1"), 103);
-    alert("The value obtained from the number dispenser has been written into the engineering drawing！")
+    popUp("The value obtained from the number dispenser has been written into the engineering drawing！")
   })
 
   $("#ToProgrammer").click(function () {
     ParametersNames_ASM.set("PROGRAMMER", $("#Programmer").val());
     ParametersNames_ASM.set("DATE", dateFormat(new Date()));
+
+    // 判断PROGRAMMER是否为空，然后分情况处理写入
     if (ParametersNames_ASM.get("PROGRAMMER") == "") {
-      alert("Please enter the programmer's name！");
+      popUp("Please enter the programmer's name！");
       return;
     } else {
+      localStorage.setItem('Programmer', ParametersNames_ASM.get("PROGRAMMER"));
       WlParameterSetValue("PROGRAMMER", ParametersNames_ASM.get("PROGRAMMER"), 102);
       WlParameterSetValue("DATE", ParametersNames_ASM.get("DATE"), 102);
-      alert("The programmer's name and date has been written into the engineering drawing！");
+      popUp("The programmer's name and date has been written into the engineering drawing！");
     }
   })
 
@@ -354,7 +352,21 @@
     WlModelGetDependencies();
     WlModelGetDirectory();
     WlParametersGet(false);
-    $("#JOB").val(ParametersNames_ASM.get("JOB_NO"));
+
+    // 设置JOB
+    if (ModelName.length >= 7) {
+      var tempNum = ModelName.slice(0, 7)
+      var parsedNum = parseInt(tempNum); // 将截取的字符串转换为数字类型
+      if (!isNaN(parsedNum)) {
+        $("#JOB").val(tempNum);
+      } else {
+        $("#JOB").val(ParametersNames_ASM.get("JOB_NO"));
+      }
+    } else {
+      $("#JOB").val(ParametersNames_ASM.get("JOB_NO"));
+    }
+
+    // 设置MN TYPE
     $("[selected]").attr("selected", false);
     var temp = ParametersNames_ASM.get("MN_CODE");
     var tempStr;
@@ -365,14 +377,20 @@
       $("#SMN").attr("selected", "selected");
       tempStr = "SMN";
     }
+
+    // 设置其他数据
     $("#MN").val(ParametersNames_ASM.get("MN_NUMBER"));
     $("#LINE").val(ParametersNames_ASM.get("LINE"));
     $("#REV").val(ParametersNames_ASM.get("DWG_RL"));
     $("#PCR").val(ParametersNames_ASM.get("PCR_NO"));
     $("#MBPP").val(ParametersNames_ASM.get("MBPP"));
+    // 设置编程员人名PROGRAMMER
 
-    $("#option1").html(ParametersNames_ASM.get("JOB_NO") + tempStr + ParametersNames_ASM.get("MN_NUMBER") + "-" +
-      ParametersNames_ASM.get("LINE"));
+    // 从 localStorage 中获取 Programmer 值
+    const programmerValue = localStorage.getItem('Programmer');
+    // 进行相应的处理逻辑
+    ParametersNames_ASM.set("PROGRAMMER", programmerValue);
+    $("#Programmer").val(ParametersNames_ASM.get("PROGRAMMER"));
   }
 
   function updateJobInFor() {
@@ -382,9 +400,17 @@
         WlParameterSetValue2(key, value)
       }
     });
-    alert("更新成功!");
+    popUp("Update Succeed!");
   }
 
+  // 封装layui的弹出层
+  function popUp(msg) {
+    layer.msg(msg, {
+      skin: 'class-layer-demo-custom',
+      offset: '16px',
+      time: 1500
+    });
+  }
 </script>
 
 </html>
