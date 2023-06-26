@@ -17,7 +17,7 @@
                 </el-dropdown>
             </el-button>
             <el-button @click="transform" size="small" type="primary" style="margin-left: 15px;">转换NC代码</el-button>
-            <el-button @click="uploadPdf" size="small" type="primary" style="margin-left: 15px;">上传pdf文档</el-button>
+            <el-button @click="uploadPdf2" size="small" type="primary" style="margin-left: 15px;">上传pdf文档</el-button>
             <el-table v-loading="toTransForm.loading" :data="toTransForm.tapList" :show-header="false"
                 @row-click="toTransFormrowClick" :row-class-name="toTransFormrowClassName" :row-style="toTransFormrowStyle"
                 :stripe="false" style=" background: aliceblue !important; margin-top: 20px; border:none;">
@@ -37,15 +37,14 @@
         </div>
         <el-dialog title="NC代码比较" :visible.sync="diff.open" :fullscreen="true">
             <code-diff :old-string="diff.oldStr" :new-string="diff.newStr" :context="diff.context"
-                :output-format="diff.outputFormat" :draw-file-list="diff.drawFileList"
-                :render-nothing-when-empty="diff.renderNothingWhenEmpty" :diff-style="diff.diffStyle"
-                :file-name="diff.fileName" :is-show-no-change="diff.isShowNoChange" />
+                :output-format="diff.outputFormat" :diff-style="diff.diffStyle" :file-name="diff.fileName"
+                :noDiffLineFeed="diff.noDiffLineFeed" />
         </el-dialog>
     </div>
 </template>
 
 <script>
-import CodeDiff from 'vue-code-diff'
+import { CodeDiff } from 'v-code-diff'
 import FileUpload from 'vue-upload-component'
 import { uploadNcCode, uploadPdf, transFormNcCode, newTapList, compareDownload, uploadToDNC, getTapNames, insertTapNames } from "@/api/system/nccode.js"
 export default {
@@ -81,15 +80,13 @@ export default {
                 // 展示的方式
                 outputFormat: "side-by-side",
                 // 每行中对比差异级别
-                diffStyle: 'char',
+                diffStyle: 'word',
                 // 展示对比文件列表	
                 fileName: '',
-                // 当无对比时展示源代码
-                isShowNoChange: true,
-                // 展示对比文件列表
-                drawFileList: false,
-                // 当无对比时不渲染
-                renderNothingWhenEmpty: false,
+                // 不 diff windows 换行符(CRLF)与 linux 换行符(LF)
+                noDiffLineFeed: true,
+                // 移除字符串前后空白字符
+                trim: true
             }
         }
     },
@@ -129,10 +126,15 @@ export default {
                 if (arr.length !== this.fileList.length) {
                     this.$message.warning("已过滤重复与不是以.tap结尾的文件");
                 }
-                this.fileList = arr;
                 // 上传文件后，自动把文件传给后台，这里做了一个防抖，等待500ms后在传给后台
-                this.debounce(this.uploadTap, 500);
-                this.getNcList();
+                if (this.fileList.length > 0) {
+                    this.fileList = arr;
+                    this.debounce(this.uploadTap, 500);
+                    this.getNcList();
+                }
+                if (this.pdfFileList.length > 0) {
+                    this.pdfFileList = this.filterRepetition2(this.pdfFileList);
+                }
             }
             if (newFile && oldFile) {
                 // update
@@ -192,6 +194,18 @@ export default {
                     } else {
                         this.pdfFileList.push(arr[i]);
                     }
+                }
+            }
+            return newArr;
+        },
+        // 过滤pdf重复
+        filterRepetition2(arr) {
+            let arr1 = []; //存id
+            let newArr = []; //存新数组
+            for (let i in arr) {
+                if (arr1.indexOf(arr[i].file.name) == -1) {
+                    arr1.push(arr[i].file.name);
+                    newArr.push(arr[i]);
                 }
             }
             return newArr;
@@ -287,8 +301,7 @@ export default {
                 }
             });
         },
-        uploadPdf() {
-            console.info(this.pdfFileList);
+        uploadPdf2() {
             this.debounce(this.uploadPdf, 500);
         },
         async uploadPdf() {

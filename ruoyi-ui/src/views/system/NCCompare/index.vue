@@ -24,15 +24,14 @@
     </el-row>
     <el-row :gutter="20">
       <code-diff :old-string="diff.oldStr" :new-string="diff.newStr" :context="diff.context"
-        :output-format="diff.outputFormat" :draw-file-list="diff.drawFileList"
-        :render-nothing-when-empty="diff.renderNothingWhenEmpty" :diff-style="diff.diffStyle" :file-name="diff.fileName"
-        :is-show-no-change="diff.isShowNoChange" />
+        :output-format="diff.outputFormat" :diff-style="diff.diffStyle" :file-name="diff.fileName"
+        :noDiffLineFeed="diff.noDiffLineFeed" />
     </el-row>
   </div>
 </template>
 
 <script>
-import CodeDiff from 'vue-code-diff'
+import { CodeDiff } from 'v-code-diff'
 
 export default {
   name: 'NCCompare',
@@ -45,22 +44,20 @@ export default {
       leftFileName: "",
       rightFileName: "",
       diff: {
-        open: false,
         oldStr: "test",
         newStr: "text",
         // 不同地方上下间隔多少行不隐藏
         context: 100,
         // 展示的方式
         outputFormat: "side-by-side",
-        // 展示对比文件列表
-        diffStyle: 'char',
+        // 每行中对比差异级别
+        diffStyle: 'word',
+        // 展示对比文件列表	
         fileName: '',
-        // 当无对比时展示源代码
-        isShowNoChange: true,
-        // 展示对比文件列表
-        drawFileList: false,
-        // 当无对比时不渲染
-        renderNothingWhenEmpty: false,
+        // 不 diff windows 换行符(CRLF)与 linux 换行符(LF)
+        noDiffLineFeed: true,
+        // 移除字符串前后空白字符
+        trim: true
       }
     }
   },

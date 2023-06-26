@@ -23,11 +23,6 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
-import org.apache.poi.ooxml.POIXMLProperties;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.openxml4j.opc.PackageAccess;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,14 +31,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 import static com.ruoyi.framework.datasource.DynamicDataSourceContextHolder.log;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -71,6 +69,25 @@ public class SysNcCodeTransformController extends BaseController {
     private String toPdfPath;
 
     /**
+     * 获取当前系统的Windows用户名
+     * @param request 请求
+     * @return 用户名
+     */
+    private String getCurrentWindowsUser(HttpServletRequest request) {
+        String currentWindowsUser = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("username")) {
+                    currentWindowsUser= cookie.getValue();
+                }
+            }
+        }
+        System.out.println("currentWindowsUser的值是" + currentWindowsUser);
+        return currentWindowsUser;
+    }
+
+    /**
      * 判断文件是pdf文件还是tap文件，然后进行上传
      *
      * @param files 前端传递过来的tap文件和pdf文档
@@ -81,37 +98,61 @@ public class SysNcCodeTransformController extends BaseController {
     @PreAuthorize("@ss.hasAnyPermi('system:NcCode:upload')")
     @Log(title = "上传NC代码到后端", businessType = BusinessType.UPLOAD)
     @PostMapping("/upload")
-    public AjaxResult uploadTapFile(@RequestParam("file") MultipartFile[] files) throws IOException, InvalidExtensionException {
-        // 获取当前系统的Windows用户名
-//        String currentWindowsUser = System.getProperty("user.name");
-        for (MultipartFile file : files) {
-            String originalFileName = file.getOriginalFilename();
-            String fileName = FilenameUtils.getName(originalFileName);
-            String extension = FilenameUtils.getExtension(originalFileName);
+    public AjaxResult uploadTapFile(@RequestParam("file") MultipartFile[] files,HttpServletRequest request) {
+        // 在上传到本地文件夹之前，先清空存储tap文件的临时文件夹
+        FileUtil.del(path);
+        try {
+            List<CompletableFuture<Void>> futures = new ArrayList<>();
 
-            if (Objects.requireNonNull(fileName).length() > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH) {
-                throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
-            }
-            FileUploadUtils.assertAllowed(file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
-            Path fileDir;
-            // 判断上传文件类型，时tap文件还是pdf文件
-            if (extension.equals("tap")) {
-                fileDir = Paths.get(path);
-            } else {
-                fileDir = Paths.get(toPdfPath);
-            }
-            if (!Files.exists(fileDir)) {
-                Files.createDirectories(fileDir);
+            for (MultipartFile file : files) {
+                String originalFileName = file.getOriginalFilename();
+                String fileName = FilenameUtils.getName(originalFileName);
+                String extension = FilenameUtils.getExtension(originalFileName);
+
+                if (Objects.requireNonNull(fileName).length() > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH) {
+                    throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
+                }
+
+                FileUploadUtils.assertAllowed(file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
+
+                Path fileDir;
+                // 判断上传文件类型，是tap文件还是pdf文件
+                if (extension.equals("tap")) {
+                    fileDir = Paths.get(path);
+                } else {
+                    fileDir = Paths.get(toPdfPath);
+                }
+
+                if (!Files.exists(fileDir)) {
+                    Files.createDirectories(fileDir);
+                }
+
+                Path targetPath = fileDir.resolve(fileName);
+
+                CompletableFuture<Void> uploadFuture = CompletableFuture.runAsync(() -> {
+                    try {
+                        Files.write(targetPath, file.getBytes());
+
+                        // 如果是pdf文件，上传后再修改文件的作者属性
+                        if (extension.equals("pdf")) {
+                            setAuthor(targetPath.toFile(), getCurrentWindowsUser(request));
+                        }
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                });
+                futures.add(uploadFuture);
             }
 
-            Path targetPath = fileDir.resolve(fileName);
-            Files.write(targetPath, file.getBytes());
-            // 如果是pdf文件，上传后再修改文件的作者属性
-//            if (extension.equals("pdf")) {
-//                setAuthor(targetPath.toFile(), currentWindowsUser);
-//            }
+            // 等待所有文件上传操作完成
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+            return AjaxResult.success("Success");
+        } catch (IOException e) {
+            return AjaxResult.error("Failed to upload files");
+        } catch (InvalidExtensionException e) {
+            throw new RuntimeException(e);
         }
-        return new AjaxResult(200, "Success");
     }
 
     /**
@@ -234,23 +275,28 @@ public class SysNcCodeTransformController extends BaseController {
             }
 
         }
-        FileUtil.del(path);
         return new AjaxResult(200, "Success");
     }
 
     private void setAuthor(File file, String author) {
         try {
+            // 加载PDF文档
             PDDocument document = PDDocument.load(file);
-            PDDocumentInformation info = document.getDocumentInformation();
-            info.setAuthor(author);
+            // 获取文档的详细信息
+            PDDocumentInformation documentInformation = document.getDocumentInformation();
+            // 修改详细信息
+            documentInformation.setAuthor(author);
+            // 保存修改后的PDF文件
             document.save(file);
+            // 关闭文档
             document.close();
+            System.out.println("PDF文件的详细信息已成功修改！");
         } catch (IOException e) {
-            throw new RuntimeException("Failed to set author property for file: " + file.getAbsolutePath(), e);
+            e.printStackTrace();
         }
     }
 
-        public boolean checkIsFinishing(File file) {
+    public boolean checkIsFinishing(File file) {
         boolean flag = false;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String lineString;

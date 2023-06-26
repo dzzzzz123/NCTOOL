@@ -116,19 +116,6 @@
     ModelName = ret.MdlNameExt;
   }
 
-  //根据模型名获取地址
-  function WlModelGetDirectory() {
-    if (pfcIsMozilla())
-      netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
-    var ret = document.pwl.pwlDirectoryCurrentGet();
-
-    if (!ret.Status) {
-      alert("pwlDirectoryCurrentGet failed (" + ret.ErrorCode + ")");
-      return;
-    }
-    DirectoryPath = ret.DirectoryPath;
-  }
-
   // 根据参数名，获取到模型的参数名对应的参数值
   function WlParametersGet(IS_MODEL) {
     if (pfcIsMozilla())
@@ -284,6 +271,17 @@
     }
     if (ModelNameDependencyName.length === 1) {
       ModelName = ModelNameDependencyName[0];
+    } else {
+      for (let i = 0; i < ModelNameDependencyName.length; i++) {
+        const value = ModelNameDependencyName[i];
+        // 检查值的结尾是否为.asm
+        if (value.endsWith('.asm')) {
+          // 找到结尾为.asm的值
+          ModelName = value;
+          break; // 如果只需找到第一个符合条件的值，可以添加 break 语句来终止循环
+        }
+      }
+      popUp("Please confirm if your Model or Contact the administrator!");
     }
   }
 
@@ -350,7 +348,6 @@
   function initTable() {
     WlModelGetCurrent();
     WlModelGetDependencies();
-    WlModelGetDirectory();
     WlParametersGet(false);
 
     // 设置JOB
@@ -391,13 +388,17 @@
     // 进行相应的处理逻辑
     ParametersNames_ASM.set("PROGRAMMER", programmerValue);
     $("#Programmer").val(ParametersNames_ASM.get("PROGRAMMER"));
+    // 模拟点击写入编程员按钮
+    $("#ToProgrammer").click()
   }
 
   function updateJobInFor() {
     getParameters();
     ParametersNames_ASM.forEach((value, key) => {
-      if (ParametersNames_ASM.get(key) != "") {
-        WlParameterSetValue2(key, value)
+      if (key != "DATE" && key != "PROGRAMMER") {
+        if (ParametersNames_ASM.get(key) != "") {
+          WlParameterSetValue2(key, value)
+        }
       }
     });
     popUp("Update Succeed!");
