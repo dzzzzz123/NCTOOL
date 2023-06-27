@@ -27,6 +27,7 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,39 +69,17 @@ public class SysNcCodeTransformController extends BaseController {
     @Value("${upload.pdf}")
     private String toPdfPath;
 
-    /**
-     * 获取当前系统的Windows用户名
-     * @param request 请求
-     * @return 用户名
-     */
-    private String getCurrentWindowsUser(HttpServletRequest request) {
-        String currentWindowsUser = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("username")) {
-                    currentWindowsUser= cookie.getValue();
-                }
-            }
-        }
-        System.out.println("currentWindowsUser的值是" + currentWindowsUser);
-        return currentWindowsUser;
-    }
 
     /**
      * 判断文件是pdf文件还是tap文件，然后进行上传
      *
      * @param files 前端传递过来的tap文件和pdf文档
      * @return 返回结果集传递给前端
-     * @throws IOException               异常
-     * @throws InvalidExtensionException 异常
      */
     @PreAuthorize("@ss.hasAnyPermi('system:NcCode:upload')")
     @Log(title = "上传NC代码到后端", businessType = BusinessType.UPLOAD)
     @PostMapping("/upload")
     public AjaxResult uploadTapFile(@RequestParam("file") MultipartFile[] files,HttpServletRequest request) {
-        // 在上传到本地文件夹之前，先清空存储tap文件的临时文件夹
-        FileUtil.del(path);
         try {
             List<CompletableFuture<Void>> futures = new ArrayList<>();
 
@@ -134,9 +113,9 @@ public class SysNcCodeTransformController extends BaseController {
                         Files.write(targetPath, file.getBytes());
 
                         // 如果是pdf文件，上传后再修改文件的作者属性
-                        if (extension.equals("pdf")) {
-                            setAuthor(targetPath.toFile(), getCurrentWindowsUser(request));
-                        }
+//                        if (extension.equals("pdf")) {
+//                            setAuthor(targetPath.toFile(), getCurrentWindowsUser(request));
+//                        }
                     } catch (IOException e) {
                         throw new UncheckedIOException(e);
                     }
@@ -266,9 +245,9 @@ public class SysNcCodeTransformController extends BaseController {
                 File nv7000Dnc = new File(toDncPath + File.separator + "Mori_Seiki_NV7000" + File.separator + tapNamePrefix);
                 File v655Dnc = new File(toDncPath + File.separator + "mzk655" + File.separator + tapNamePrefix);
                 try {
-                    FileUtil.move(nh6300, nh6300Dnc, true);
-                    FileUtil.move(nv7000, nv7000Dnc, true);
-                    FileUtil.move(v655, v655Dnc, true);
+                    FileUtil.copyFile(nh6300, nh6300Dnc, REPLACE_EXISTING);
+                    FileUtil.copyFile(nv7000, nv7000Dnc, REPLACE_EXISTING);
+                    FileUtil.copyFile(v655, v655Dnc, REPLACE_EXISTING);
                 } catch (IORuntimeException e) {
                     throw new RuntimeException(e);
                 }
@@ -278,23 +257,7 @@ public class SysNcCodeTransformController extends BaseController {
         return new AjaxResult(200, "Success");
     }
 
-    private void setAuthor(File file, String author) {
-        try {
-            // 加载PDF文档
-            PDDocument document = PDDocument.load(file);
-            // 获取文档的详细信息
-            PDDocumentInformation documentInformation = document.getDocumentInformation();
-            // 修改详细信息
-            documentInformation.setAuthor(author);
-            // 保存修改后的PDF文件
-            document.save(file);
-            // 关闭文档
-            document.close();
-            System.out.println("PDF文件的详细信息已成功修改！");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     public boolean checkIsFinishing(File file) {
         boolean flag = false;
@@ -344,5 +307,53 @@ public class SysNcCodeTransformController extends BaseController {
             tapNameToInsert.add(tapName.split("\\.")[0]);
         }
         transformService.insertTapNames(tapNameToInsert);
+    }
+
+    /**
+     * 获取当前系统的Windows用户名
+     * @param request 请求
+     * @return 用户名
+     */
+    private String getCurrentWindowsUser(HttpServletRequest request) {
+        String currentWindowsUser = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("username")) {
+                    currentWindowsUser= cookie.getValue();
+                }
+            }
+        }
+        System.out.println("currentWindowsUser的值是" + currentWindowsUser);
+        return currentWindowsUser;
+    }
+
+    private void setAuthor(File file, String author) {
+        try {
+            // 加载PDF文档
+            PDDocument document = PDDocument.load(file);
+            // 获取文档的详细信息
+            PDDocumentInformation documentInformation = document.getDocumentInformation();
+            // 修改详细信息
+            documentInformation.setAuthor(author);
+            // 保存修改后的PDF文件
+            document.save(file);
+            // 关闭文档
+            document.close();
+            System.out.println("PDF文件的详细信息已成功修改！");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 每天午夜执行任务
+     * 任务：删除upload文件夹中的所有文件
+     */
+    @Scheduled(cron = "0 0 0 * * *")
+    public void dailyTask() {
+        // 在这里编写你的定时任务逻辑
+        // 在上传到本地文件夹之前，先清空存储tap文件的临时文件夹
+        FileUtil.del(path);
     }
 }

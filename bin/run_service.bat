@@ -1,0 +1,1 @@
+java -jar D:\nctool-master\ruoyi-admin\target\ruoyi-admin.jar

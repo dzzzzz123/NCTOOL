@@ -28,8 +28,8 @@ public class SysNcCodeTransformServiceImpl implements ISysNcCodeTransformService
     private SysTapNameMapper sysTapNameMapper;
     private static ArrayList<File> SCAN_FILES_NAMES;
 
-    @Value("${upload.toDNCPath}")
-    private String toDncPath;
+    @Value("${upload.path}")
+    private String path;
 
     @Override
     public ArrayList<SysTapList> selectTapList(String[] tapNames) {
@@ -64,30 +64,12 @@ public class SysNcCodeTransformServiceImpl implements ISysNcCodeTransformService
      */
     @Override
     public File compareNcCode(String fileName) {
-        String[] split = fileName.split("\\.");
-        String pathToScan = toDncPath;
-        String fileNameWithoutSuffix = split[0];
+        String pathToScan = path;
         SCAN_FILES_NAMES = new ArrayList<>();
         File file = null;
-        switch (split[1]) {
-            case "tap_MMC_NH6300":
-                pathToScan += "Mori_Seiki_NH6300";
-                break;
-            case "tap_MMC_NV7000":
-                pathToScan += "Mori_Seiki_NV7000";
-                break;
-            case "tap_V655":
-                pathToScan += "mzk655";
-                break;
-            case "final_NV7000":
-                pathToScan += "Final_NV7000";
-                break;
-            default:
-                break;
-        }
         scanFilesWithRecursion(pathToScan);
         for (File scanFile : SCAN_FILES_NAMES) {
-            if (scanFile.getName().equals(fileNameWithoutSuffix)) {
+            if (scanFile.getName().equals(fileName)) {
                 file = scanFile;
             }
         }
