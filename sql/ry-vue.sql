@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 07/06/2023 09:59:57
+ Date: 30/06/2023 11:08:03
 */
 
 SET NAMES utf8mb4;
@@ -156,7 +156,7 @@ CREATE TABLE `sys_menu`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2034 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2035 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -232,13 +232,14 @@ CREATE TABLE `sys_role`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`role_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 101 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` VALUES (1, '超级管理员', 'admin', 1, '1', 1, 1, '0', '0', 'admin', '2023-02-09 15:06:46', '', NULL, '超级管理员');
-INSERT INTO `sys_role` VALUES (2, '普通角色', 'common', 2, '2', 1, 1, '0', '0', 'admin', '2023-02-09 15:06:46', 'admin', '2023-06-07 09:49:42', '普通角色');
+INSERT INTO `sys_role` VALUES (2, '普通角色', 'common', 3, '2', 1, 1, '0', '0', 'admin', '2023-02-09 15:06:46', 'admin', '2023-06-30 09:55:25', '普通角色');
+INSERT INTO `sys_role` VALUES (101, '工程师', 'Engineer', 2, '1', 0, 1, '0', '0', 'admin', '2023-06-30 09:55:16', '', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_role_menu
@@ -265,6 +266,22 @@ INSERT INTO `sys_role_menu` VALUES (2, 2030);
 INSERT INTO `sys_role_menu` VALUES (2, 2032);
 INSERT INTO `sys_role_menu` VALUES (2, 2033);
 INSERT INTO `sys_role_menu` VALUES (2, 2034);
+INSERT INTO `sys_role_menu` VALUES (101, 2000);
+INSERT INTO `sys_role_menu` VALUES (101, 2009);
+INSERT INTO `sys_role_menu` VALUES (101, 2021);
+INSERT INTO `sys_role_menu` VALUES (101, 2022);
+INSERT INTO `sys_role_menu` VALUES (101, 2023);
+INSERT INTO `sys_role_menu` VALUES (101, 2024);
+INSERT INTO `sys_role_menu` VALUES (101, 2025);
+INSERT INTO `sys_role_menu` VALUES (101, 2026);
+INSERT INTO `sys_role_menu` VALUES (101, 2027);
+INSERT INTO `sys_role_menu` VALUES (101, 2028);
+INSERT INTO `sys_role_menu` VALUES (101, 2029);
+INSERT INTO `sys_role_menu` VALUES (101, 2030);
+INSERT INTO `sys_role_menu` VALUES (101, 2031);
+INSERT INTO `sys_role_menu` VALUES (101, 2032);
+INSERT INTO `sys_role_menu` VALUES (101, 2033);
+INSERT INTO `sys_role_menu` VALUES (101, 2034);
 
 -- ----------------------------
 -- Table structure for sys_tap_name
@@ -277,6 +294,102 @@ CREATE TABLE `sys_tap_name`  (
 -- ----------------------------
 -- Records of sys_tap_name
 -- ----------------------------
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
+INSERT INTO `sys_tap_name` VALUES ('2996430');
+INSERT INTO `sys_tap_name` VALUES ('3041743');
+INSERT INTO `sys_tap_name` VALUES ('3047867');
+INSERT INTO `sys_tap_name` VALUES ('3047868');
 INSERT INTO `sys_tap_name` VALUES ('2996430');
 INSERT INTO `sys_tap_name` VALUES ('3041743');
 INSERT INTO `sys_tap_name` VALUES ('3047867');
@@ -340,7 +453,7 @@ CREATE TABLE `sys_tools`  (
   `MAZAK655` bigint(0) NOT NULL COMMENT '刀具在机床7000的位置',
   `del_flag` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '删除标准，1删除，0正常',
   PRIMARY KEY (`tool_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 132 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 133 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_tools
@@ -506,8 +619,13 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '马斯特', '00', 'master@163.com', '15888888888', '1', '/profile/avatar/2023/02/17/blob_20230217171420A001.png', '$2a$10$Tf8Er56RukTQTbfXfbSE8eaelVwHOwLb2RJh8U4/54V1onyW8Azsi', '0', '0', '127.0.0.1', '2023-06-07 09:55:29', 'admin', '2023-02-09 15:06:46', '', '2023-06-07 09:55:29', '管理员');
+INSERT INTO `sys_user` VALUES (1, 'admin', '马斯特', '00', 'master@163.com', '15888888888', '1', '/profile/avatar/2023/02/17/blob_20230217171420A001.png', '$2a$10$Tf8Er56RukTQTbfXfbSE8eaelVwHOwLb2RJh8U4/54V1onyW8Azsi', '0', '0', '127.0.0.1', '2023-06-30 11:01:07', 'admin', '2023-02-09 15:06:46', '', '2023-06-30 11:01:07', '管理员');
 INSERT INTO `sys_user` VALUES (2, 'common', '马斯特', '00', 'master@163.com', '15666666666', '1', '', '$2a$10$T3aBr2PuGwx3e2e9DAljb.5MPwxBNZ/3w6hm.Xqtl06uljVNlw/ma', '0', '0', '127.0.0.1', '2023-06-07 09:51:30', 'admin', '2023-02-09 15:06:46', 'admin', '2023-06-07 09:51:29', '测试员');
+INSERT INTO `sys_user` VALUES (101, 'JCHu', '胡工', '00', '18888888888@qq.com', '18888888888', '0', '', '$2a$10$JL1ZHB9hAGTVM18H3nzeDOuYRrO0p5/EU0TnS1DnHnYXGoTVS.Tue', '0', '0', '127.0.0.1', '2023-06-30 10:13:08', 'admin', '2023-06-30 09:21:35', 'admin', '2023-06-30 10:13:08', NULL);
+INSERT INTO `sys_user` VALUES (102, 'dz', 'DZ', '00', '18888888888@qq.com', '18888888888', '0', '', '$2a$10$sVnbcEPvj0LwsMuih.eUWeuV9eMiaTMRYeXbxwS1Xlv7cc75jZg0u', '0', '2', '', NULL, 'admin', '2023-06-30 09:52:34', 'admin', '2023-06-30 09:53:02', NULL);
+INSERT INTO `sys_user` VALUES (103, '用户', 'users', '00', '18888888888@qq.com', '18888888888', '0', '', '$2a$10$JYgQ8PgVbL9Hlpd0/Wc/wO8wSuZAIkOUz9GYD7E.WJsPHqDwSuM9q', '0', '2', '', NULL, 'admin', '2023-06-30 10:57:12', '', NULL, NULL);
+INSERT INTO `sys_user` VALUES (104, 'Users', '测试用户', '00', '18888888888@qq.com', '18888888888', '0', '', '$2a$10$9nCobmgzfgUMIOxvGfh0B.nJm6IKxfuLKOzhdUKMQa7fzJ8fhZVI.', '0', '0', '127.0.0.1', '2023-06-30 10:57:53', 'admin', '2023-06-30 10:57:41', '', '2023-06-30 10:57:53', NULL);
+INSERT INTO `sys_user` VALUES (105, 'dz', 'dz', '00', '18888888888@qq.com', '18888888888', '0', '', '$2a$10$zkmo6eBUv6jXHYFldgj3COp6.II5IwQz.I7UBf7ClAaIWWprMg4wG', '0', '0', '127.0.0.1', '2023-06-30 11:01:29', 'admin', '2023-06-30 11:01:20', '', '2023-06-30 11:01:28', NULL);
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -524,5 +642,8 @@ CREATE TABLE `sys_user_role`  (
 -- ----------------------------
 INSERT INTO `sys_user_role` VALUES (1, 1);
 INSERT INTO `sys_user_role` VALUES (2, 2);
+INSERT INTO `sys_user_role` VALUES (101, 101);
+INSERT INTO `sys_user_role` VALUES (104, 101);
+INSERT INTO `sys_user_role` VALUES (105, 101);
 
 SET FOREIGN_KEY_CHECKS = 1;

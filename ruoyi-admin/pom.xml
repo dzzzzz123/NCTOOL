@@ -35,13 +35,6 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-framework</artifactId>
         </dependency>
-
-        <!-- 用来修改pdf和tap文件作者 -->
-        <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>
-            <version>2.0.28</version>
-        </dependency>
     </dependencies>
 
     <build>

@@ -11,19 +11,16 @@ import com.ruoyi.common.exception.file.InvalidExtensionException;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.common.utils.file.MimeTypeUtils;
+import com.ruoyi.system.domain.SysTapList;
+import com.ruoyi.system.service.ISysNcCodeTransformService;
 import com.ruoyi.system.utils.transform.TransformTo6300;
 import com.ruoyi.system.utils.transform.TransformTo655;
 import com.ruoyi.system.utils.transform.TransformTo7000;
-import com.ruoyi.system.domain.SysTapList;
-import com.ruoyi.system.service.ISysNcCodeTransformService;
 import com.ruoyi.system.utils.transform.TransformTo7000Finishing;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDDocumentInformation;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -36,14 +33,17 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.FileSystem;
+import java.nio.file.*;
+import java.nio.file.attribute.FileOwnerAttributeView;
+import java.nio.file.attribute.UserPrincipal;
+import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
+import static com.ruoyi.common.core.domain.AjaxResult.CODE_TAG;
 import static com.ruoyi.framework.datasource.DynamicDataSourceContextHolder.log;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -79,10 +79,8 @@ public class SysNcCodeTransformController extends BaseController {
     @PreAuthorize("@ss.hasAnyPermi('system:NcCode:upload')")
     @Log(title = "上传NC代码到后端", businessType = BusinessType.UPLOAD)
     @PostMapping("/upload")
-    public AjaxResult uploadTapFile(@RequestParam("file") MultipartFile[] files,HttpServletRequest request) {
+    public AjaxResult uploadTapFile(@RequestParam("file") MultipartFile[] files, HttpServletRequest request) {
         try {
-            List<CompletableFuture<Void>> futures = new ArrayList<>();
-
             for (MultipartFile file : files) {
                 String originalFileName = file.getOriginalFilename();
                 String fileName = FilenameUtils.getName(originalFileName);
@@ -101,31 +99,26 @@ public class SysNcCodeTransformController extends BaseController {
                 } else {
                     fileDir = Paths.get(toPdfPath);
                 }
-
                 if (!Files.exists(fileDir)) {
                     Files.createDirectories(fileDir);
                 }
 
                 Path targetPath = fileDir.resolve(fileName);
 
-                CompletableFuture<Void> uploadFuture = CompletableFuture.runAsync(() -> {
-                    try {
-                        Files.write(targetPath, file.getBytes());
-
-                        // 如果是pdf文件，上传后再修改文件的作者属性
-//                        if (extension.equals("pdf")) {
-//                            setAuthor(targetPath.toFile(), getCurrentWindowsUser(request));
-//                        }
-                    } catch (IOException e) {
-                        throw new UncheckedIOException(e);
+                try {
+                    Files.write(targetPath, file.getBytes());
+                    // 如果是pdf文件，上传后再修改文件的作者属性
+                    if (extension.equals("pdf")) {
+                        Boolean flag = setAuthor(targetPath.toFile(), getCurrentWindowsUser(request));
+                        if (!flag) {
+                            FileUtil.del(targetPath.toFile());
+                            return AjaxResult.error("请检查您的账户和windows账户是否一致！");
+                        }
                     }
-                });
-                futures.add(uploadFuture);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-
-            // 等待所有文件上传操作完成
-            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-
             return AjaxResult.success("Success");
         } catch (IOException e) {
             return AjaxResult.error("Failed to upload files");
@@ -257,8 +250,6 @@ public class SysNcCodeTransformController extends BaseController {
         return new AjaxResult(200, "Success");
     }
 
-
-
     public boolean checkIsFinishing(File file) {
         boolean flag = false;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -311,6 +302,7 @@ public class SysNcCodeTransformController extends BaseController {
 
     /**
      * 获取当前系统的Windows用户名
+     *
      * @param request 请求
      * @return 用户名
      */
@@ -320,30 +312,39 @@ public class SysNcCodeTransformController extends BaseController {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("username")) {
-                    currentWindowsUser= cookie.getValue();
+                    currentWindowsUser = cookie.getValue();
                 }
             }
         }
-        System.out.println("currentWindowsUser的值是" + currentWindowsUser);
         return currentWindowsUser;
     }
 
-    private void setAuthor(File file, String author) {
+    /**
+     * 修改pdf文件的所有者信息
+     *
+     * @param file   需要修改所有者信息的pdf文件
+     * @param author 所有者信息
+     * @return 结果集
+     */
+    private Boolean setAuthor(File file, String author) {
         try {
-            // 加载PDF文档
-            PDDocument document = PDDocument.load(file);
-            // 获取文档的详细信息
-            PDDocumentInformation documentInformation = document.getDocumentInformation();
-            // 修改详细信息
-            documentInformation.setAuthor(author);
-            // 保存修改后的PDF文件
-            document.save(file);
-            // 关闭文档
-            document.close();
-            System.out.println("PDF文件的详细信息已成功修改！");
+            Path path = Paths.get(file.getAbsolutePath());
+            FileOwnerAttributeView foav = Files.getFileAttributeView(path, FileOwnerAttributeView.class);
+
+            UserPrincipal owner = foav.getOwner();
+
+            FileSystem fs = FileSystems.getDefault();
+            UserPrincipalLookupService upls = fs.getUserPrincipalLookupService();
+
+            UserPrincipal newOwner = upls.lookupPrincipalByName(author);
+            foav.setOwner(newOwner);
+
+            UserPrincipal changedOwner = foav.getOwner();
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     /**

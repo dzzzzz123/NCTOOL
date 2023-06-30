@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,26 @@ public class SysUserController extends BaseController
     }
 
 
+    /**
+     * 根据用户编号获取详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:query')")
+    @GetMapping(value = { "/", "/{userId}" })
+    public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId)
+    {
+        userService.checkUserDataScope(userId);
+        AjaxResult ajax = AjaxResult.success();
+        List<SysRole> roles = roleService.selectRoleAll();
+        ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
+        if (StringUtils.isNotNull(userId))
+        {
+            SysUser sysUser = userService.selectUserById(userId);
+            ajax.put(AjaxResult.DATA_TAG, sysUser);
+            ajax.put("roleIds", sysUser.getRoles().stream().map(SysRole::getRoleId).collect(Collectors.toList()));
+        }
+        return ajax;
+    }
+
 
     /**
      * 新增用户
@@ -100,16 +121,6 @@ public class SysUserController extends BaseController
         if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user)))
         {
             return error("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
-        }
-        else if (StringUtils.isNotEmpty(user.getPhonenumber())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user)))
-        {
-            return error("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
-        }
-        else if (StringUtils.isNotEmpty(user.getEmail())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user)))
-        {
-            return error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
         user.setCreateBy(getUsername());
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
