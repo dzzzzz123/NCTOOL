@@ -133,7 +133,7 @@ export default {
                     this.getNcList();
                 }
                 if (this.pdfFileList.length > 0) {
-                    this.pdfFileList = this.filterRepetition2(this.pdfFileList);
+                    this.pdfFileList = this.filterPDFRepetition(this.pdfFileList);
                 }
             }
             if (newFile && oldFile) {
@@ -186,8 +186,11 @@ export default {
         filterRepetition(arr) {
             let arr1 = []; //存id
             let newArr = []; //存新数组
+
             for (let i in arr) {
-                if (arr1.indexOf(arr[i].file.name) == -1) {
+                const fileAbsolutePath = arr[i].file.webkitRelativePath;
+
+                if (this.countSlashes(fileAbsolutePath) < 2 && arr1.indexOf(arr[i].file.name) == -1) {
                     if (arr[i].name.endsWith(".tap")) {
                         arr1.push(arr[i].file.name);
                         newArr.push(arr[i]);
@@ -199,16 +202,28 @@ export default {
             return newArr;
         },
         // 过滤pdf重复
-        filterRepetition2(arr) {
+        filterPDFRepetition(arr) {
             let arr1 = []; //存id
             let newArr = []; //存新数组
+            const regex = /.*S.*S.*R.*\.pdf/i; // 匹配格式的正则表达式
+
             for (let i in arr) {
-                if (arr1.indexOf(arr[i].file.name) == -1) {
-                    arr1.push(arr[i].file.name);
+                const fileName = arr[i].file.name;
+                const match = fileName.match(regex);
+
+                if (match && arr1.indexOf(fileName) === -1) {
+                    arr1.push(fileName);
                     newArr.push(arr[i]);
                 }
             }
             return newArr;
+        },
+        // 用来判断字符串中包含多少/
+        countSlashes(str) {
+            const regex = /\//g;
+            const matches = str.match(regex);
+            const count = matches ? matches.length : 0;
+            return count;
         },
         // element上传多个文件时，会把每个文件做个单独请求
         // 这里的方法是请求最后一次

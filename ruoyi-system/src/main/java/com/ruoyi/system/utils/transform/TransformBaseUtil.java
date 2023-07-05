@@ -288,7 +288,7 @@ public class TransformBaseUtil {
      * @return 输出的字符串
      */
     static StringBuilder deleteLastG30X0(StringBuilder tempSb) {
-        String[] content = tempSb.toString().split("\n");
+        String[] content = tempSb.toString().split("\r\n");
         int indices = content.length;
         for (int i = content.length - 1; i >= 0; i--) {
             if (content[i].startsWith("G30X0.")) {
@@ -299,7 +299,7 @@ public class TransformBaseUtil {
         content = ArrayUtils.removeAll(content, indices);
         StringBuilder sb = new StringBuilder();
         for (String s : content) {
-            sb.append(s).append("\n");
+            sb.append(s).append("\r\n");
         }
         return sb;
     }
@@ -311,7 +311,7 @@ public class TransformBaseUtil {
      * @return newStr
      */
     static StringBuilder deleteLastDetection(StringBuilder tempSb) {
-        String[] content = tempSb.toString().split("\n");
+        String[] content = tempSb.toString().split("\r\n");
         ArrayList<Integer> indices = new ArrayList<>();
         for (int i = content.length - 1; i >= 0; i--) {
             if (content[i].startsWith("IF[#1004NE1]GOTO9000")) {
@@ -328,7 +328,7 @@ public class TransformBaseUtil {
         content = ArrayUtils.removeAll(content, indices.stream().mapToInt(Integer::intValue).toArray());
         StringBuilder sb = new StringBuilder();
         for (String s : content) {
-            sb.append(s).append("\n");
+            sb.append(s).append("\r\n");
         }
         return sb;
     }

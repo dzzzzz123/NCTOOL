@@ -49,7 +49,7 @@ public class TransformTo655 extends TransformBaseUtil {
             } else {
                 newStr.append(content[i]);
             }
-            newStr.append("\n");
+            newStr.append("\r\n");
         }
         return newStr;
     }

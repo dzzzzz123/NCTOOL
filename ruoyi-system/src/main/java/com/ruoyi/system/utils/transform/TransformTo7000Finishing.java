@@ -23,21 +23,21 @@ public class TransformTo7000Finishing extends TransformBaseUtil {
                     Matcher matcher = pattern.matcher(content[i - j]);
                     if (matcher.matches()) {
                         String msCode = matcher.group().substring(matcher.group().indexOf("S"), matcher.group().indexOf("S") + 4);
-                        newStr.append(TAPTEETH).append(msCode).append("\n").append(content[i]).append("\n");
+                        newStr.append(TAPTEETH).append(msCode).append("\r\n").append(content[i]).append("\r\n");
                         break;
                     }
                     if (j == 49) {
                         String msCode = "S243";
-                        newStr.append(TAPTEETH).append(msCode).append("\n").append(content[i]).append("\n");
+                        newStr.append(TAPTEETH).append(msCode).append("\r\n").append(content[i]).append("\r\n");
                     }
                     j++;
                 }
                 i++;
                 while (i < content.length && !content[i].startsWith("G80")) {
-                    newStr.append(content[i]).append("\n");
+                    newStr.append(content[i]).append("\r\n");
                     i++;
                 }
-                newStr.append("G80").append("\n").append("G94");
+                newStr.append("G80").append("\r\n").append("G94");
             } else if (content[i].startsWith("G30X0.Y0.")) {
                 newStr.append("G30Y0.");
             } else if (content[i].startsWith("G65P9220")) {
@@ -53,7 +53,7 @@ public class TransformTo7000Finishing extends TransformBaseUtil {
             } else {
                 newStr.append(content[i]);
             }
-            newStr.append("\n");
+            newStr.append("\r\n");
         }
         return newStr;
     }

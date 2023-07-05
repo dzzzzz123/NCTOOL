@@ -27,11 +27,11 @@ public class TransformTo6300 extends TransformBaseUtil {
             if (content[i].contains("D#51999")) {
                 newStr.append(content[i].replace("#51999", "1"));
             } else if (content[i].startsWith("T") && Objects.equals(content[i + 1], "M06")) {
-                newStr.append("G91G30X0.Y0.Z0.").append("\n").append("G54G90G0B0.").append("\n").append(content[i]).append("\n");
+                newStr.append("G91G30X0.Y0.Z0.").append("\r\n").append("G54G90G0B0.").append("\r\n").append(content[i]).append("\r\n");
                 i++;
-                newStr.append(content[i]).append("\n");
+                newStr.append(content[i]).append("\r\n");
                 i++;
-                newStr.append(content[i]).append("\n");
+                newStr.append(content[i]).append("\r\n");
                 if (flag2 > 1) {
                     newStr.append(TOOL_SET_DETECTION);
                     continue;
@@ -45,28 +45,28 @@ public class TransformTo6300 extends TransformBaseUtil {
                     Matcher matcher = pattern.matcher(content[i - j]);
                     if (matcher.matches()) {
                         String msCode = matcher.group().substring(matcher.group().indexOf("S"), matcher.group().indexOf("S") + 4);
-                        newStr.append(TAPTEETH).append(msCode).append("\n").append(content[i]).append("\n");
+                        newStr.append(TAPTEETH).append(msCode).append("\r\n").append(content[i]).append("\r\n");
                         break;
                     }
                     if (j == 49) {
                         String msCode = "S243";
-                        newStr.append(TAPTEETH).append(msCode).append("\n").append(content[i]).append("\n");
+                        newStr.append(TAPTEETH).append(msCode).append("\r\n").append(content[i]).append("\r\n");
                     }
                     j++;
                 }
                 i++;
                 while (i < content.length && !content[i].startsWith("G80")) {
-                    newStr.append(content[i]).append("\n");
+                    newStr.append(content[i]).append("\r\n");
                     i++;
                 }
-                newStr.append("G80").append("\n").append("G94");
+                newStr.append("G80").append("\r\n").append("G94");
             } else if (Objects.equals(content[i], "M01") && !Objects.equals(flag, "")) {
                 newStr.append(WEAR_DETECTION.get(flag)).append("M01");
                 flag = "";
             } else {
                 newStr.append(content[i]);
             }
-            newStr.append("\n");
+            newStr.append("\r\n");
         }
         return newStr;
     }

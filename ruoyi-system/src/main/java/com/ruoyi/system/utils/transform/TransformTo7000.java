@@ -19,7 +19,7 @@ public class TransformTo7000 extends TransformBaseUtil {
         for (int i = 0; i < content.length; i++) {
             // 在每一把刀之前都加上G91G30X0.Y0.Z0.
             if (content[i].startsWith("T")) {
-                newStr.append("G91G30X0.Y0.Z0.\n");
+                newStr.append("G91G30X0.Y0.Z0.\r\n");
             }
             if (content[i].startsWith("G84")) {
                 int j = 1;
@@ -29,21 +29,21 @@ public class TransformTo7000 extends TransformBaseUtil {
                     Matcher matcher = pattern.matcher(content[i - j]);
                     if (matcher.matches()) {
                         String msCode = matcher.group().substring(matcher.group().indexOf("S"), matcher.group().indexOf("S") + 4);
-                        newStr.append(TAPTEETH).append(msCode).append("\n").append(content[i]).append("\n");
+                        newStr.append(TAPTEETH).append(msCode).append("\r\n").append(content[i]).append("\r\n");
                         break;
                     }
                     if (j == 49) {
                         String msCode = "S243";
-                        newStr.append(TAPTEETH).append(msCode).append("\n").append(content[i]).append("\n");
+                        newStr.append(TAPTEETH).append(msCode).append("\r\n").append(content[i]).append("\r\n");
                     }
                     j++;
                 }
                 i++;
                 while (i < content.length && !content[i].startsWith("G80")) {
-                    newStr.append(content[i]).append("\n");
+                    newStr.append(content[i]).append("\r\n");
                     i++;
                 }
-                newStr.append("G80").append("\n").append("G94");
+                newStr.append("G80").append("\r\n").append("G94");
             } else if (content[i].startsWith("G81")) {
                 int j = 1;
                 boolean flag = false;
@@ -83,7 +83,7 @@ public class TransformTo7000 extends TransformBaseUtil {
                         for (String s : TOOL_BREAK_DETECTION.keySet()) {
                             if (Objects.equals(content[i - j], s)) {
                                 isMatch = true;
-                                newStr.append(content[i]).append("\n").append(TOOL_BREAK_DETECTION.get(s));
+                                newStr.append(content[i]).append("\r\n").append(TOOL_BREAK_DETECTION.get(s));
                             }
                         }
                         hasMatch = true;
@@ -104,7 +104,7 @@ public class TransformTo7000 extends TransformBaseUtil {
             } else {
                 newStr.append(content[i]);
             }
-            newStr.append("\n");
+            newStr.append("\r\n");
         }
         return newStr;
     }
