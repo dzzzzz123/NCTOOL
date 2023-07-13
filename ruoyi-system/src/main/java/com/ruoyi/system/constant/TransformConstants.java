@@ -18,6 +18,12 @@ import java.util.Map;
  */
 @Component
 public class TransformConstants implements ApplicationRunner {
+    public static final String POST_PROCESSOR_30 = "30,";
+    public static final String POST_PROCESSOR_98 = "98,";
+    public static final String POST_PROCESSOR_IS_30 = "30";
+    public static final String POST_PROCESSOR_IS_98 = "98";
+    public static final String POST_PROCESSOR_IS_DEFAULT = "DEFAULT";
+
     public static final String NH6300_M_PROGCAT = "(PROGCAT MORI SEIKI NH6300)";
     public static final String NV7000_M_PROGCAT = "(PROGCAT MORI SEIKI NV7000)";
     public static final String NV7000_FINISHING_M_PROGCAT = "(PROGCAT Final NV7000)";
@@ -78,61 +84,61 @@ public class TransformConstants implements ApplicationRunner {
     public static final Map<String, String> CIRCULATING_DRILLING_MAZAK655_T_VALUE = new HashMap<>();
     public static final Map<String, String> WEAR_DETECTION = Map.of(
             "T1",
-            "G325X-11.900Y1.400H01Q0.3T9002\n" +
-                    "G325X7.200Y7.600H01Q0.3T9002\n" +
-                    "G325X4.500Y-11.000H01Q0.3T9002\n",
+            "G325X-11.900Y1.400H01Q0.3T9002\r\n" +
+                    "G325X7.200Y7.600H01Q0.3T9002\r\n" +
+                    "G325X4.500Y-11.000H01Q0.3T9002\r\n",
             "T26",
-            "G325X1.800Y-6.500H01Q0.3T9002\n" +
-                    "G325X3.100Y3.500H01Q0.3T9002\n" +
-                    "G325X-5.900Y0.500H01Q0.3T9002\n",
+            "G325X1.800Y-6.500H01Q0.3T9002\r\n" +
+                    "G325X3.100Y3.500H01Q0.3T9002\r\n" +
+                    "G325X-5.900Y0.500H01Q0.3T9002\r\n",
             "T30",
-            "G325X2.400Y-8.100H01Q0.3T9002\n" +
-                    "G325X5.300Y4.200H01Q0.3T9002\n" +
-                    "G325X-6.600Y1.3000H01Q0.3T9002\n",
+            "G325X2.400Y-8.100H01Q0.3T9002\r\n" +
+                    "G325X5.300Y4.200H01Q0.3T9002\r\n" +
+                    "G325X-6.600Y1.3000H01Q0.3T9002\r\n",
             "T84",
-            "G325X7.300Y-0.500H01Q0.3T9002\n" +
-                    "G325X-8.400Y0.500H01Q0.3T9002\n",
+            "G325X7.300Y-0.500H01Q0.3T9002\r\n" +
+                    "G325X-8.400Y0.500H01Q0.3T9002\r\n",
             "T104",
-            "G325X1.800Y-4.900H01Q0.3T9002\n" +
-                    "G325X-5.300Y0.000H01Q0.3T9002\n" +
-                    "G325X2.200Y3.300H01Q0.3T9002\n"
+            "G325X1.800Y-4.900H01Q0.3T9002\r\n" +
+                    "G325X-5.300Y0.000H01Q0.3T9002\r\n" +
+                    "G325X2.200Y3.300H01Q0.3T9002\r\n"
     );
 
     public static final Map<String, String> TOOL_BREAK_DETECTION = Map.of(
             "T9903",
-            "G325H3\n" +
-                    "G30G91Z0.\n" +
+            "G325H3\r\n" +
+                    "G30G91Z0.\r\n" +
                     "G0Y0.",
             "T9910",
-            "G325H10\n" +
-                    "G30G91Z0.\n" +
+            "G325H10\r\n" +
+                    "G30G91Z0.\r\n" +
                     "G0Y0.",
             "T9915",
-            "G325H15\n" +
-                    "G30G91Z0.\n" +
+            "G325H15\r\n" +
+                    "G30G91Z0.\r\n" +
                     "G0Y0.",
             "T9917",
-            "G325H17\n" +
-                    "G30G91Z0.\n" +
+            "G325H17\r\n" +
+                    "G30G91Z0.\r\n" +
                     "G0Y0.",
             "T9918",
-            "G325H18\n" +
-                    "G30G91Z0.\n" +
+            "G325H18\r\n" +
+                    "G30G91Z0.\r\n" +
                     "G0Y0."
     );
 
     public static final String TOOL_SET_DETECTION =
-            "#991=-2\n" +
-                    "#992=1\n" +
-                    "#1133=4\n" +
-                    "M67\n" +
-                    "G04\n" +
-                    "#1133=200\n" +
-                    "M101\n" +
-                    "M102\n" +
-                    "IF[#1004NE1]GOTO9000\n";
+            "#991=-2\r\n" +
+                    "#992=1\r\n" +
+                    "#1133=4\r\n" +
+                    "M67\r\n" +
+                    "G04\r\n" +
+                    "#1133=200\r\n" +
+                    "M101\r\n" +
+                    "M102\r\n" +
+                    "IF[#1004NE1]GOTO9000\r\n";
 
-    public static final String TAPTEETH = "G95\n" +
+    public static final String TAPTEETH = "G95\r\n" +
             "M29";
     private static ISysNcCodeTransformService transformService;
 

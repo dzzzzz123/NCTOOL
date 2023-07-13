@@ -32,19 +32,19 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.nio.file.FileSystem;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.FileOwnerAttributeView;
 import java.nio.file.attribute.UserPrincipal;
 import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
-import static com.ruoyi.common.core.domain.AjaxResult.CODE_TAG;
 import static com.ruoyi.framework.datasource.DynamicDataSourceContextHolder.log;
+import static com.ruoyi.system.constant.TransformConstants.*;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
@@ -138,31 +138,39 @@ public class SysNcCodeTransformController extends BaseController {
     @GetMapping("/transform/{tapNames}")
     public AjaxResult transformNcCode(@PathVariable String[] tapNames) {
         for (String tapName : tapNames) {
-            File temp = new File(path + tapName);
-            if (checkIsFinishing(temp)) {
-                File file = new File(path + tapName.split("\\.")[0] + ".final_NV7000");
-                try {
-                    FileUtil.copyFile(temp, file, REPLACE_EXISTING);
-                    TransformTo7000Finishing.transform(file, 3);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            File origin = new File(path + tapName);
+            try {
+                String postRes = checkIsFinishing(origin);
+                switch (postRes) {
+                    case POST_PROCESSOR_IS_30: {
+                        File file = new File(path + tapName.split("\\.")[0] + ".final_NV7000");
+                        FileUtil.copyFile(origin, file, REPLACE_EXISTING);
+                        TransformTo7000Finishing.transform(file, 3);
+                        break;
+                    }
+                    case POST_PROCESSOR_IS_98: {
+                        File file = new File(path + tapName.split("\\.")[0] + ".final_NV7000");
+                        FileUtil.copyFile(origin, file, REPLACE_EXISTING);
+                        break;
+                    }
+                    case POST_PROCESSOR_IS_DEFAULT: {
+                        File file = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NH6300");
+                        File file2 = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NV7000");
+                        File file3 = new File(path + tapName.split("\\.")[0] + ".tap_V655");
+                        FileUtil.copyFile(origin, file, REPLACE_EXISTING);
+                        FileUtil.copyFile(origin, file2, REPLACE_EXISTING);
+                        FileUtil.copyFile(origin, file3, REPLACE_EXISTING);
+                        TransformTo6300.transform(file, 0);
+                        TransformTo7000.transform(file2, 1);
+                        TransformTo655.transform(file3, 2);
+                        break;
+                    }
+                    default:
+                        break;
                 }
-            } else {
-                File file = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NH6300");
-                File file2 = new File(path + tapName.split("\\.")[0] + ".tap_MMC_NV7000");
-                File file3 = new File(path + tapName.split("\\.")[0] + ".tap_V655");
-                try {
-                    FileUtil.copyFile(temp, file, REPLACE_EXISTING);
-                    FileUtil.copyFile(temp, file2, REPLACE_EXISTING);
-                    FileUtil.copyFile(temp, file3, REPLACE_EXISTING);
-                    TransformTo6300.transform(file, 0);
-                    TransformTo7000.transform(file2, 1);
-                    TransformTo655.transform(file3, 2);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
         }
         return new AjaxResult(200, "Success");
     }
@@ -222,50 +230,64 @@ public class SysNcCodeTransformController extends BaseController {
         for (String tapName : tapNames) {
             File origin = new File(path + tapName);
             String tapNamePrefix = tapName.split("\\.")[0];
-            if (checkIsFinishing(origin)) {
-                File nv7000 = new File(path + tapNamePrefix + ".final_NV7000");
-                try {
+            String postRes = checkIsFinishing(origin);
+            switch (postRes) {
+                case POST_PROCESSOR_IS_30: {
+                    File nv7000 = new File(path + tapNamePrefix + ".final_NV7000");
+                    try {
+                        File nv7000DncFinishing = new File(toDncPath + File.separator + "Final_NV7000" + File.separator + tapNamePrefix);
+                        FileUtil.move(nv7000, nv7000DncFinishing, true);
+                    } catch (IORuntimeException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                }
+                case POST_PROCESSOR_IS_98:
                     File nv7000DncFinishing = new File(toDncPath + File.separator + "Final_NV7000" + File.separator + tapNamePrefix);
-                    FileUtil.move(nv7000, nv7000DncFinishing, true);
-                } catch (IORuntimeException e) {
-                    throw new RuntimeException(e);
+                    FileUtil.move(origin, nv7000DncFinishing, true);
+                    break;
+                case POST_PROCESSOR_IS_DEFAULT: {
+                    File nh6300 = new File(path + tapNamePrefix + ".tap_MMC_NH6300");
+                    File nv7000 = new File(path + tapNamePrefix + ".tap_MMC_NV7000");
+                    File v655 = new File(path + tapNamePrefix + ".tap_V655");
+                    File nh6300Dnc = new File(toDncPath + File.separator + "Mori_Seiki_NH6300" + File.separator + tapNamePrefix);
+                    File nv7000Dnc = new File(toDncPath + File.separator + "Mori_Seiki_NV7000" + File.separator + tapNamePrefix);
+                    File v655Dnc = new File(toDncPath + File.separator + "mzk655" + File.separator + tapNamePrefix);
+                    try {
+                        FileUtil.copyFile(nh6300, nh6300Dnc, REPLACE_EXISTING);
+                        FileUtil.copyFile(nv7000, nv7000Dnc, REPLACE_EXISTING);
+                        FileUtil.copyFile(v655, v655Dnc, REPLACE_EXISTING);
+                    } catch (IORuntimeException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
                 }
-            } else {
-                File nh6300 = new File(path + tapNamePrefix + ".tap_MMC_NH6300");
-                File nv7000 = new File(path + tapNamePrefix + ".tap_MMC_NV7000");
-                File v655 = new File(path + tapNamePrefix + ".tap_V655");
-                File nh6300Dnc = new File(toDncPath + File.separator + "Mori_Seiki_NH6300" + File.separator + tapNamePrefix);
-                File nv7000Dnc = new File(toDncPath + File.separator + "Mori_Seiki_NV7000" + File.separator + tapNamePrefix);
-                File v655Dnc = new File(toDncPath + File.separator + "mzk655" + File.separator + tapNamePrefix);
-                try {
-                    FileUtil.copyFile(nh6300, nh6300Dnc, REPLACE_EXISTING);
-                    FileUtil.copyFile(nv7000, nv7000Dnc, REPLACE_EXISTING);
-                    FileUtil.copyFile(v655, v655Dnc, REPLACE_EXISTING);
-                } catch (IORuntimeException e) {
-                    throw new RuntimeException(e);
-                }
+                default:
+                    break;
             }
 
         }
         return new AjaxResult(200, "Success");
     }
 
-    public boolean checkIsFinishing(File file) {
-        boolean flag = false;
+    public String checkIsFinishing(File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String lineString;
             int line = 1;
-            while ((lineString = reader.readLine()) != null && line < 10) {
+            while ((lineString = reader.readLine()) != null && line < 15) {
                 line++;
-                if (lineString.startsWith("(POST PROCESSOR") && lineString.contains("30,")) {
-                    flag = true;
-                    break;
+                if (lineString.startsWith("(POST PROCESSOR")) {
+                    if (lineString.contains(POST_PROCESSOR_30)) {
+                        return POST_PROCESSOR_IS_30;
+                    } else if (lineString.contains(POST_PROCESSOR_98)) {
+                        return POST_PROCESSOR_IS_98;
+                    }
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return flag;
+        return POST_PROCESSOR_IS_DEFAULT;
     }
 
     /**
@@ -331,15 +353,11 @@ public class SysNcCodeTransformController extends BaseController {
             Path path = Paths.get(file.getAbsolutePath());
             FileOwnerAttributeView foav = Files.getFileAttributeView(path, FileOwnerAttributeView.class);
 
-            UserPrincipal owner = foav.getOwner();
-
             FileSystem fs = FileSystems.getDefault();
             UserPrincipalLookupService upls = fs.getUserPrincipalLookupService();
 
             UserPrincipal newOwner = upls.lookupPrincipalByName(author);
             foav.setOwner(newOwner);
-
-            UserPrincipal changedOwner = foav.getOwner();
         } catch (IOException e) {
             e.printStackTrace();
             return false;
