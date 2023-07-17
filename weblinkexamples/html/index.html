@@ -30,8 +30,8 @@
 
           <label class="home-text1">MN TYPE:</label>
           <select id="MNTYPE" class="home-select">
-            <option id="SBR" value="SBR">SBR</option>
             <option id="SMN" value="SMN">SMN</option>
+            <option id="SBR" value="SBR">SBR</option>
           </select>
         </div>
         <div class="home-container2">
@@ -402,6 +402,12 @@
       }
     });
     popUp("Update Succeed!");
+
+    var ret = document.pwl.pwlMdlRegenerate(ModelName);
+    if (!ret.Status) {
+      alert("pwlMdlRegenerate failed (" + ret.ErrorCode + ")");
+      return;
+    }
   }
 
   // 封装layui的弹出层
