@@ -98,14 +98,14 @@ public class TransformBaseUtil {
     static void initProcess(int flag) {
         switch (flag) {
             case 0:
-                TO_DELETE = NH6300_M_TO_DELETE;
+                TO_DELETE = NH6300_TO_DELETE;
                 FILENAME = NH6300_FILENAME + FILENAMEWITHOUTPREFIX + ")";
                 WHICH_PROGCAT = NH6300_M_PROGCAT;
                 ALL_TO_CHANGE = NH6300_ALL_TO_CHANGE;
                 DELETE_FLAG = "T72";
                 break;
             case 1:
-                TO_DELETE = NV7000_M_TO_DELETE;
+                TO_DELETE = NV7000_TO_DELETE;
                 FILENAME = NV7000_FILENAME + FILENAMEWITHOUTPREFIX + ")";
                 WHICH_PROGCAT = NV7000_M_PROGCAT;
                 ALL_TO_CHANGE = NV7000_ALL_TO_CHANGE;
@@ -113,7 +113,7 @@ public class TransformBaseUtil {
                 DELETE_FLAG = "(TOOL, NAME : T100)";
                 break;
             case 2:
-                TO_DELETE = MAZAK655_M_TO_DELETE;
+                TO_DELETE = MAZAK655_TO_DELETE;
                 FILENAME = MAZAK655_FILENAME + FILENAMEWITHOUTPREFIX + ")";
                 WHICH_PROGCAT = MAZAK655_M_PROGCAT;
                 ALL_TO_CHANGE = MAZAK655_ALL_TO_CHANGE;
@@ -121,7 +121,7 @@ public class TransformBaseUtil {
                 DELETE_FLAG = "(TOOL, NAME : T100)";
                 break;
             case 3:
-                TO_DELETE = NH6300_M_TO_DELETE;
+                TO_DELETE = NH6300_TO_DELETE;
                 FILENAME = NV7000_FINISHING_FILENAME + FILENAMEWITHOUTPREFIX + ")";
                 WHICH_PROGCAT = NV7000_FINISHING_M_PROGCAT;
                 ALL_TO_CHANGE = NV7000_FINISHING_ALL_TO_CHANGE;

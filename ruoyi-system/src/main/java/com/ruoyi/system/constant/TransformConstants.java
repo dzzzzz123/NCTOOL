@@ -32,9 +32,9 @@ public class TransformConstants implements ApplicationRunner {
     public static final String NV7000_FILENAME = "(FILENAME E:\\NV7000\\";
     public static final String NV7000_FINISHING_FILENAME = "(FILENAME E:\\Final_NV7000\\";
     public static final String MAZAK655_FILENAME = "(FILENAME E:\\MZK502\\";
-    public static final String[] NH6300_M_TO_DELETE = {"M37", "M38", "M39", "M58", "M100"};
-    public static final String[] NV7000_M_TO_DELETE = {"M37", "M38", "M39", "M58", "M100"};
-    public static final String[] MAZAK655_M_TO_DELETE = {"M37", "M38", "M39", "M58", "M100"};
+    public static final String[] NH6300_TO_DELETE = {"M37", "M38", "M39", "M58", "M100"};
+    public static final String[] NV7000_TO_DELETE = {"M37", "M38", "M39", "M58", "M100", "G90T100"};
+    public static final String[] MAZAK655_TO_DELETE = {"M37", "M38", "M39", "M58", "M100", "G90T100"};
     public static final Map<String, String> NH6300_M_TO_CHANGE = Map.of(
             "M50", "M51",
             "M09", "M89",
@@ -205,8 +205,8 @@ public class TransformConstants implements ApplicationRunner {
             }
             NH6300_H_TO_CHANGE.put(h1, "H1");
             NV7000_T_TO_CHANGE.put(t1, t2);
-            NV7000_FINISHING_T_TO_CHANGE.put(t1,t4);
-            if(CIRCULATING_DRILLING_T_VALUE.containsKey(t1)){
+            NV7000_FINISHING_T_TO_CHANGE.put(t1, t4);
+            if (CIRCULATING_DRILLING_T_VALUE.containsKey(t1)) {
                 CIRCULATING_DRILLING_NV7000_T_VALUE.put(t2, CIRCULATING_DRILLING_T_VALUE.get(t1));
                 CIRCULATING_DRILLING_MAZAK655_T_VALUE.put(t3, CIRCULATING_DRILLING_T_VALUE.get(t1));
             }
