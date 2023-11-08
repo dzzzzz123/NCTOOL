@@ -71,6 +71,7 @@ public class TransformTo7000 extends TransformBaseUtil {
                         isMatch = true;
                         String hCode = matcher.group();
                         newStr.append(content[i].replace("#51999", hCode));
+                        break;
                     }
                     j++;
                 }

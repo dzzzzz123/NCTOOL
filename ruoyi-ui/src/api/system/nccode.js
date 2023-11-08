@@ -5,7 +5,8 @@ export function uploadNcCode(data) {
   return request({
     url: '/system/nccode/upload',
     method: 'post',
-    data: data
+    data: data,
+    timeout: 100000 // 100秒
   })
 }
 
@@ -13,7 +14,8 @@ export function uploadPdf(data) {
   return request({
     url: '/system/nccode/upload',
     method: 'post',
-    data: data
+    data: data,
+    timeout: 100000 // 100秒
   })
 }
 
@@ -21,6 +23,7 @@ export function transFormNcCode(tapNames) {
   return request({
     url: '/system/nccode/transform/' + tapNames,
     method: 'get',
+    timeout: 100000 // 100秒
   })
 }
 
@@ -46,7 +49,8 @@ export function compareDownload(oldFileName, newFileName) {
 export function uploadToDNC(tapNames) {
   return request({
     url: '/system/nccode/ToDNC/'+tapNames,
-    method: 'get'
+    method: 'get',
+    timeout: 100000 // 100秒
   })
 }
 
