@@ -30,11 +30,14 @@ public class SysCreoDrawParameterController extends BaseController {
     public ArrayList<String> getParameter(@PathVariable Integer bookNumber) {
         // 先把booknumber的值变成定值为3
         // bookNumber = 3;
-        ArrayList<SysProgramNumber> programNumberList = creoService.getProgramNumbers(bookNumber);
-        ArrayList<String> strings = new ArrayList<>();
-        for (SysProgramNumber programNumber : programNumberList) {
-            strings.add(programNumber.toString());
+        // 添加synchronized来让这个接口线程安全
+        synchronized(this) {
+            ArrayList<SysProgramNumber> programNumberList = creoService.getProgramNumbers(bookNumber);
+            ArrayList<String> strings = new ArrayList<>();
+            for (SysProgramNumber programNumber : programNumberList) {
+                strings.add(programNumber.toString());
+            }
+            return strings;
         }
-        return strings;
     }
 }

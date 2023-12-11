@@ -18,6 +18,9 @@
             </el-button>
             <el-button @click="transform" size="small" type="primary" style="margin-left: 15px;">转换NC代码</el-button>
             <el-button @click="uploadPdf2" size="small" type="primary" style="margin-left: 15px;">上传pdf文档</el-button>
+            <p id="log4User">
+                文件已上传成功！<br>
+            </p>
             <el-table v-loading="toTransForm.loading" :data="toTransForm.tapList" :show-header="false"
                 @row-click="toTransFormrowClick" :row-class-name="toTransFormrowClassName" :row-style="toTransFormrowStyle"
                 :stripe="false" style=" background: aliceblue !important; margin-top: 20px; border:none;">
@@ -246,6 +249,8 @@ export default {
                     this.$message.success("上传成功！");
                 }
             });
+            const logElement = document.getElementById('log4User');
+            logElement.style.display = 'inline-block';
         },
         // 修改vue-diff的左边代码
         handleDiffLeft(file) {
@@ -315,9 +320,13 @@ export default {
                     this.uploadDNC(response.code);
                 }
             });
+            const logElement = document.getElementById('log4User');
+            logElement.innerHTML += 'NC代码已转换并已上传到服务器！<br>';
         },
         uploadPdf2() {
             this.debounce(this.uploadPdf, 500);
+            const logElement = document.getElementById('log4User');
+            logElement.innerHTML += 'PDF已上传到服务器！<br>';
         },
         async uploadPdf() {
             let formData = new FormData();
@@ -387,5 +396,12 @@ export default {
 
 .el-icon-arrow-down {
     font-size: 12px;
+}
+
+#log4User {
+    display: none;
+    color: red;
+    font-size: 12px;
+    margin-left: 25px;
 }
 </style>
