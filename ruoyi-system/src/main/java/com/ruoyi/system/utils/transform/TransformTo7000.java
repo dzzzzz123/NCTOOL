@@ -44,13 +44,16 @@ public class TransformTo7000 extends TransformBaseUtil {
                     i++;
                 }
                 newStr.append("G80").append("\r\n").append("G94");
-            } else if (content[i].startsWith("G81")) {
+            }
+            // 更新内容：G83->G81出现重复，falg重置出现问题，添加break;
+            else if (content[i].startsWith("G81")) {
                 int j = 1;
                 boolean flag = false;
                 while (i - j >= 0 && j <= 30) {
                     if (CIRCULATING_DRILLING_NV7000_T_VALUE.containsKey(content[i - j])) {
                         flag = true;
                         newStr.append(content[i].replace("G81", "G83")).append(CIRCULATING_DRILLING_NV7000_T_VALUE.get(content[i - j]));
+                        break;
                     }
                     j++;
                 }
@@ -68,6 +71,7 @@ public class TransformTo7000 extends TransformBaseUtil {
                         isMatch = true;
                         String hCode = matcher.group();
                         newStr.append(content[i].replace("#51999", hCode));
+                        break;
                     }
                     j++;
                 }

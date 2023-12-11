@@ -16,6 +16,7 @@ public class TransformTo655 extends TransformBaseUtil {
     static StringBuilder processNcCode(String[] content) {
         StringBuilder newStr = new StringBuilder();
         for (int i = 0; i < content.length; i++) {
+            // 更新内容：G83->G81出现重复，falg重置出现问题，添加break;
             if (content[i].startsWith("G81")) {
                 int j = 1;
                 boolean flag3 = false;
@@ -23,6 +24,7 @@ public class TransformTo655 extends TransformBaseUtil {
                     if (CIRCULATING_DRILLING_MAZAK655_T_VALUE.containsKey(content[i - j])) {
                         flag3 = true;
                         newStr.append(content[i].replace("G81", "G83")).append(CIRCULATING_DRILLING_MAZAK655_T_VALUE.get(content[i - j]));
+                        break;
                     }
                     j++;
                 }
