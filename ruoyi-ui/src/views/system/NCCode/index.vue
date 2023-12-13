@@ -247,10 +247,12 @@ export default {
             uploadNcCode(formData).then(response => {
                 if (response.code === 200) {
                     this.$message.success("上传成功！");
+                    setTimeout(() => {
+                        const logElement = document.getElementById('log4User');
+                        logElement.style.display = 'inline-block';
+                    }, 1000);
                 }
             });
-            const logElement = document.getElementById('log4User');
-            logElement.style.display = 'inline-block';
         },
         // 修改vue-diff的左边代码
         handleDiffLeft(file) {
@@ -318,15 +320,15 @@ export default {
                     this.getTapList(this.fileList);
                     this.$message.info("正在将NC代码上传到DNC！");
                     this.uploadDNC(response.code);
+                    setTimeout(() => {
+                        const logElement = document.getElementById('log4User');
+                        logElement.innerHTML += 'NC代码已转换并已上传到服务器！<br>';
+                    }, 1000);
                 }
             });
-            const logElement = document.getElementById('log4User');
-            logElement.innerHTML += 'NC代码已转换并已上传到服务器！<br>';
         },
         uploadPdf2() {
             this.debounce(this.uploadPdf, 500);
-            const logElement = document.getElementById('log4User');
-            logElement.innerHTML += 'PDF已上传到服务器！<br>';
         },
         async uploadPdf() {
             let formData = new FormData();
@@ -336,6 +338,10 @@ export default {
             uploadPdf(formData).then(response => {
                 if (response.code === 200) {
                     this.$message.success("上传PDF文档成功！");
+                    setTimeout(() => {
+                        const logElement = document.getElementById('log4User');
+                        logElement.innerHTML += 'PDF已上传到服务器！<br>';
+                    }, 1000);
                 }
             });
         },
