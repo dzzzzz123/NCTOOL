@@ -34,7 +34,7 @@ public class TransformTo655 extends TransformBaseUtil {
             } else if (content[i].contains("D#51999")) {
                 int j = 1;
                 boolean isMatch = false;
-                while (i - j >= 0 && j <= 50) {
+                while (i - j >= 0) {
                     String mPattern = "(?<=\\.H)\\d+";
                     Pattern pattern = Pattern.compile(mPattern);
                     Matcher matcher = pattern.matcher(content[i - j]);
