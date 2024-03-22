@@ -41,8 +41,8 @@ public class TransformConstants implements ApplicationRunner {
             "M51", "M88");
     public static final Map<String, String> NH6300_H_TO_CHANGE = new HashMap<>(150);
     public static final Map<String, String> NH6300_M_G_TO_CHANGE = Map.of(
-            "G65P8771", "M98P8771(Z AXIS HEIGHT MEASUREMENT)",
-            "G65P8881", "M98P8881(Z AXIS HEIGHT MEASUREMENT)"
+            "G65P8771", "M98P8771(Z AXIS HEIGHT MEASUREMENT)"
+//            , "G65P8881", "M98P8881(Z AXIS HEIGHT MEASUREMENT)"
     );
     public static final Map<String, String> NH6300_ALL_TO_CHANGE = new HashMap<>();
     public static final Map<String, String> NV7000_M_TO_CHANGE = Map.ofEntries(

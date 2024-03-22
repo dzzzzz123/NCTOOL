@@ -53,15 +53,15 @@ spring:
   messages:
     # 国际化资源文件路径
     basename: i18n/messages
-  profiles: 
+  profiles:
     active: druid
   # 文件上传
   servlet:
-     multipart:
-       # 单个文件大小
-       max-file-size:  100MB
-       # 设置总上传的文件大小
-       max-request-size:  1000MB
+    multipart:
+      # 单个文件大小
+      max-file-size: 100MB
+      # 设置总上传的文件大小
+      max-request-size: 1000MB
   # 服务模块
   devtools:
     restart:
@@ -76,7 +76,7 @@ spring:
     # 数据库索引
     database: 0
     # 密码
-    password: 
+    password:
     # 连接超时时间
     timeout: 30s
     lettuce:
@@ -92,13 +92,13 @@ spring:
 
 # token配置
 token:
-    # 令牌自定义标识
-    header: Authorization
-    # 令牌密钥
-    secret: abcdefghijklmnopqrstuvwxyz
-    # 令牌有效期（默认30分钟）
-    expireTime: 30
-  
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期（默认30分钟）
+  expireTime: 30
+
 # MyBatisPlus配置
 mybatis-plus:
   # 搜索指定包别名
@@ -116,10 +116,10 @@ mybatis-plus:
     map-underscore-to-camel-case: true
 
 # PageHelper分页插件
-pagehelper: 
+pagehelper:
   helperDialect: mysql
   supportMethodsArguments: true
-  params: count=countSql 
+  params: count=countSql
 
 # Swagger配置
 swagger:
@@ -129,7 +129,7 @@ swagger:
   pathMapping: /dev-api
 
 # 防止XSS攻击
-xss: 
+xss:
   # 过滤开关
   enabled: true
   # 排除链接（多个用逗号分隔）
@@ -139,7 +139,7 @@ xss:
 
 upload:
   path: "d:/upload/"
-  toDNCPath: "\\\\mm.local\\mmc\\MMCDNC\\MN_Programs\\"
-#  toDNCPath: "d:/Program/MMPRC_DNC/MN_Programs/"
-  pdf: "\\\\mm.local\\mmc\\engineering\\images\\Transfers\\CAM"
-#  pdf: "d:/images/Transfers/CAM"
+  #  toDNCPath: "\\\\mm.local\\mmc\\MMCDNC\\MN_Programs\\"
+  toDNCPath: "d:/Program/MMPRC_DNC/MN_Programs/"
+  #  pdf: "\\\\mm.local\\mmc\\engineering\\images\\Transfers\\CAM"
+  pdf: "d:/images/Transfers/CAM"

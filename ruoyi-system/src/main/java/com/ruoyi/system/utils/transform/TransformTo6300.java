@@ -1,10 +1,9 @@
 package com.ruoyi.system.utils.transform;
 
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static com.ruoyi.system.constant.TransformConstants.*;
+import static com.ruoyi.system.constant.TransformConstants.TOOL_SET_DETECTION;
+import static com.ruoyi.system.constant.TransformConstants.WEAR_DETECTION;
 
 /**
  * 将NC代码转换为6300机床使用的G代码
@@ -38,31 +37,20 @@ public class TransformTo6300 extends TransformBaseUtil {
                 }
                 flag2++;
             } else if (content[i].startsWith("G84")) {
-                int j = 1;
-                String mPattern = ".*S\\d{3}M\\d{2}$";
-                Pattern pattern = Pattern.compile(mPattern);
-                while (i - j >= 0 && j <= 50) {
-                    Matcher matcher = pattern.matcher(content[i - j]);
-                    if (matcher.matches()) {
-                        String msCode = matcher.group().substring(matcher.group().indexOf("S"), matcher.group().indexOf("S") + 4);
-                        newStr.append(TAPTEETH).append(msCode).append("\r\n").append(content[i]).append("\r\n");
-                        break;
-                    }
-                    if (j == 49) {
-                        String msCode = "S243";
-                        newStr.append(TAPTEETH).append(msCode).append("\r\n").append(content[i]).append("\r\n");
-                    }
-                    j++;
-                }
-                i++;
-                while (i < content.length && !content[i].startsWith("G80")) {
-                    newStr.append(content[i]).append("\r\n");
-                    i++;
-                }
-                newStr.append("G80").append("\r\n").append("G94");
+                i = processTAPTEETH(content, newStr, i);
             } else if (Objects.equals(content[i], "M01") && !Objects.equals(flag, "")) {
                 newStr.append(WEAR_DETECTION.get(flag)).append("M01");
                 flag = "";
+            } else if (content[i].startsWith("#610=")) {
+                String tempStr = content[i].startsWith("#610=2") ? "M98P8881(Z AXIS HEIGHT MEASUREMENT)" : "M98P8992(Z AXIS HEIGHT MEASUREMENT)";
+                while (true) {
+                    if (content[i].equals("G65P8881")) {
+                        newStr.append(tempStr).append("\r\n");
+                        break;
+                    }
+                    newStr.append(content[i]).append("\r\n");
+                    i++;
+                }
             } else {
                 newStr.append(content[i]);
             }
@@ -70,4 +58,6 @@ public class TransformTo6300 extends TransformBaseUtil {
         }
         return newStr;
     }
+
+
 }

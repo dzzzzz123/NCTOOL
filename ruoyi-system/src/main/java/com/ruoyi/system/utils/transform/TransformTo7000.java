@@ -1,10 +1,9 @@
 package com.ruoyi.system.utils.transform;
 
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static com.ruoyi.system.constant.TransformConstants.*;
+import static com.ruoyi.system.constant.TransformConstants.CIRCULATING_DRILLING_NV7000_T_VALUE;
+import static com.ruoyi.system.constant.TransformConstants.TOOL_BREAK_DETECTION;
 
 /**
  * 将NC代码转换为7000机床使用的G代码,内容以及非常混乱了，但是没有很好的办法
@@ -22,28 +21,7 @@ public class TransformTo7000 extends TransformBaseUtil {
                 newStr.append("G91G30X0.Y0.Z0.\r\n");
             }
             if (content[i].startsWith("G84")) {
-                int j = 1;
-                String mPattern = ".*S\\d{3}M\\d{2}$";
-                Pattern pattern = Pattern.compile(mPattern);
-                while (i - j >= 0 && j <= 50) {
-                    Matcher matcher = pattern.matcher(content[i - j]);
-                    if (matcher.matches()) {
-                        String msCode = matcher.group().substring(matcher.group().indexOf("S"), matcher.group().indexOf("S") + 4);
-                        newStr.append(TAPTEETH).append(msCode).append("\r\n").append(content[i]).append("\r\n");
-                        break;
-                    }
-                    if (j == 49) {
-                        String msCode = "S243";
-                        newStr.append(TAPTEETH).append(msCode).append("\r\n").append(content[i]).append("\r\n");
-                    }
-                    j++;
-                }
-                i++;
-                while (i < content.length && !content[i].startsWith("G80")) {
-                    newStr.append(content[i]).append("\r\n");
-                    i++;
-                }
-                newStr.append("G80").append("\r\n").append("G94");
+                i = processTAPTEETH(content, newStr, i);
             }
             // 更新内容：G83->G81出现重复，falg重置出现问题，添加break;
             else if (content[i].startsWith("G81")) {
@@ -61,23 +39,7 @@ public class TransformTo7000 extends TransformBaseUtil {
                     newStr.append(content[i]);
                 }
             } else if (content[i].contains("D#51999")) {
-                int j = 1;
-                boolean isMatch = false;
-                while (i - j >= 0) {
-                    String mPattern = "(?<=\\.H)\\d+";
-                    Pattern pattern = Pattern.compile(mPattern);
-                    Matcher matcher = pattern.matcher(content[i - j]);
-                    if (matcher.find()) {
-                        isMatch = true;
-                        String hCode = matcher.group();
-                        newStr.append(content[i].replace("#51999", hCode));
-                        break;
-                    }
-                    j++;
-                }
-                if (!isMatch) {
-                    newStr.append(content[i]);
-                }
+                process51999(content, newStr, i);
             } else if (content[i].startsWith("G30G91") && content[i + 1].startsWith("M01")) {
                 int j = 1;
                 boolean isMatch = false;
@@ -97,19 +59,33 @@ public class TransformTo7000 extends TransformBaseUtil {
                 if (!isMatch) {
                     newStr.append(content[i]);
                 }
-            } else if (Objects.equals(content[i], "T1") || Objects.equals(content[i], "G90T1")) {
-                newStr.append(content[i].replace("T1", "T9901"));
-            } else if (Objects.equals(content[i], "T3") || Objects.equals(content[i], "G90T3")) {
-                newStr.append(content[i].replace("T3", "T9903"));
-            } else if (Objects.equals(content[i], "T5") || Objects.equals(content[i], "G90T5")) {
-                newStr.append(content[i].replace("T5", "T9914"));
-            } else if (Objects.equals(content[i], "T8") || Objects.equals(content[i], "G90T8")) {
-                newStr.append(content[i].replace("T8", "T9908"));
             } else {
-                newStr.append(content[i]);
+                replace99(content, newStr, i);
             }
             newStr.append("\r\n");
         }
         return newStr;
+    }
+
+
+    /**
+     * 将7000机床的刀具前面加上99
+     *
+     * @param content 每行G代码
+     * @param newStr  生成出来新的每行G代码
+     * @param i       G代码指针
+     */
+    static void replace99(String[] content, StringBuilder newStr, int i) {
+        if (Objects.equals(content[i], "T1") || Objects.equals(content[i], "G90T1")) {
+            newStr.append(content[i].replace("T1", "T9901"));
+        } else if (Objects.equals(content[i], "T3") || Objects.equals(content[i], "G90T3")) {
+            newStr.append(content[i].replace("T3", "T9903"));
+        } else if (Objects.equals(content[i], "T5") || Objects.equals(content[i], "G90T5")) {
+            newStr.append(content[i].replace("T5", "T9914"));
+        } else if (Objects.equals(content[i], "T8") || Objects.equals(content[i], "G90T8")) {
+            newStr.append(content[i].replace("T8", "T9908"));
+        } else {
+            newStr.append(content[i]);
+        }
     }
 }

@@ -1,8 +1,5 @@
 package com.ruoyi.system.utils.transform;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static com.ruoyi.system.constant.TransformConstants.CIRCULATING_DRILLING_MAZAK655_T_VALUE;
 
 /**
@@ -16,7 +13,7 @@ public class TransformTo655 extends TransformBaseUtil {
     static StringBuilder processNcCode(String[] content) {
         StringBuilder newStr = new StringBuilder();
         for (int i = 0; i < content.length; i++) {
-            // 更新内容：G83->G81出现重复，falg重置出现问题，添加break;
+            // 更新内容：G83->G81出现重复，flag重置出现问题，添加break;
             if (content[i].startsWith("G81")) {
                 int j = 1;
                 boolean flag3 = false;
@@ -32,23 +29,7 @@ public class TransformTo655 extends TransformBaseUtil {
                     newStr.append(content[i]);
                 }
             } else if (content[i].contains("D#51999")) {
-                int j = 1;
-                boolean isMatch = false;
-                while (i - j >= 0) {
-                    String mPattern = "(?<=\\.H)\\d+";
-                    Pattern pattern = Pattern.compile(mPattern);
-                    Matcher matcher = pattern.matcher(content[i - j]);
-                    if (matcher.find()) {
-                        isMatch = true;
-                        String hCode = matcher.group();
-                        newStr.append(content[i].replace("#51999", hCode));
-                        break;
-                    }
-                    j++;
-                }
-                if (!isMatch) {
-                    newStr.append(content[i]);
-                }
+                process51999(content, newStr, i);
             } else {
                 newStr.append(content[i]);
             }

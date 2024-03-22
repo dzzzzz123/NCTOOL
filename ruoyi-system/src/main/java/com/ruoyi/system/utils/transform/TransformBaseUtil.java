@@ -75,9 +75,13 @@ public class TransformBaseUtil {
             e1.printStackTrace();
         } finally {
             try {
-                out.flush();
-                out.close();
-                in.close();
+                if (out != null) {
+                    out.flush();
+                    out.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -194,17 +198,25 @@ public class TransformBaseUtil {
      * @return 新字符串
      */
     static String[] processAllDelete(String[] content, int flag) {
-        ArrayList<Integer> indices = new ArrayList<>();
-        if (flag != 3) {
-            for (int i = 0; i < content.length; i++) {
-                // 删除掉T72相关代码块
-                if (content[i].startsWith(DELETE_FLAG)) {
+        List<Integer> indices = new ArrayList<>();
+
+        for (int i = 0; i < content.length; i++) {
+            if ((flag != 0) && (content[i].startsWith("T71") || content[i].startsWith("T93"))) {
+                int temp = i - 10;
+                while (temp < i) {
+                    if (content[temp].startsWith("(")) {
+                        indices.add(temp);
+                    }
+                    temp++;
+                }
+                while (!(content[i - 2].startsWith("M01") && content[i - 1].startsWith("M100"))) {
                     indices.add(i);
                     i++;
-                    while (true) {
-                        if (Objects.equals(content[i], "N50")) {
-                            break;
-                        }
+                }
+            } else if ((flag != 3) && (content[i].startsWith(DELETE_FLAG) || content[i].startsWith("(72") || Objects.equals(content[i], "(TOOL NAME : T072)"))) {
+                indices.add(i);
+                if (content[i].startsWith(DELETE_FLAG)) {
+                    while (!Objects.equals(content[i], "N50")) {
                         indices.add(i);
                         i++;
                         if (Objects.equals(content[i], "N60")) {
@@ -213,20 +225,11 @@ public class TransformBaseUtil {
                             break;
                         }
                     }
-                    i++;
-                } else if (content[i].startsWith("(72, T072") || content[i].startsWith("(72   T072") || Objects.equals(content[i], "(TOOL NAME : T072)")) {
-                    indices.add(i);
-                } else if (Arrays.asList(TO_DELETE).contains(content[i])) {
-                    indices.add(i);
-                } else if (content[i].startsWith("(100  T100") || content[i].startsWith("(100, T100")) {
-                    indices.add(i);
                 }
-            }
-        } else {
-            for (int i = 0; i < content.length; i++) {
-                if (Arrays.asList(TO_DELETE).contains(content[i])) {
-                    indices.add(i);
-                }
+            } else if ((flag == 3) && Arrays.asList(TO_DELETE).contains(content[i])) {
+                indices.add(i);
+            } else if ((flag != 3) && (Arrays.asList(TO_DELETE).contains(content[i]) || content[i].startsWith("(100  T100") || content[i].startsWith("(100, T100"))) {
+                indices.add(i);
             }
         }
         return ArrayUtils.removeAll(content, indices.stream().mapToInt(Integer::intValue).toArray());
@@ -332,4 +335,66 @@ public class TransformBaseUtil {
         }
         return sb;
     }
+
+    /**
+     * 处理D#51999相关逻辑 转换 H 数值
+     *
+     * @param content 每行G代码
+     * @param newStr  生成出来新的每行G代码
+     * @param i       指针
+     */
+    static void process51999(String[] content, StringBuilder newStr, int i) {
+        int j = 1;
+        boolean isMatch = false;
+        while (i - j >= 0) {
+            String mPattern = "(?<=\\.H)\\d+";
+            Pattern pattern = Pattern.compile(mPattern);
+            Matcher matcher = pattern.matcher(content[i - j]);
+            if (matcher.find()) {
+                isMatch = true;
+                String hCode = matcher.group();
+                newStr.append(content[i].replace("#51999", hCode));
+                break;
+            }
+            j++;
+        }
+        if (!isMatch) {
+            newStr.append(content[i]);
+        }
+    }
+
+    /**
+     * 处理攻牙相关代码逻辑
+     *
+     * @param content 每行G代码
+     * @param newStr  生成出来新的每行G代码
+     * @param i       指针
+     * @return 返回新的指针
+     */
+    public static int processTAPTEETH(String[] content, StringBuilder newStr, int i) {
+        int j = 1;
+        String mPattern = ".*S\\d{3}M\\d{2}$";
+        Pattern pattern = Pattern.compile(mPattern);
+        while (i - j >= 0 && j <= 50) {
+            Matcher matcher = pattern.matcher(content[i - j]);
+            if (matcher.matches()) {
+                String msCode = matcher.group().substring(matcher.group().indexOf("S"), matcher.group().indexOf("S") + 4);
+                newStr.append(TAPTEETH).append(msCode).append("\r\n").append(content[i]).append("\r\n");
+                break;
+            }
+            if (j == 49) {
+                String msCode = "S243";
+                newStr.append(TAPTEETH).append(msCode).append("\r\n").append(content[i]).append("\r\n");
+            }
+            j++;
+        }
+        i++;
+        while (i < content.length && !content[i].startsWith("G80")) {
+            newStr.append(content[i]).append("\r\n");
+            i++;
+        }
+        newStr.append("G80").append("\r\n").append("G94");
+        return i;
+    }
+
 }
