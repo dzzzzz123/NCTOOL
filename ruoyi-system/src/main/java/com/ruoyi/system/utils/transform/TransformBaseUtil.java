@@ -53,8 +53,9 @@ public class TransformBaseUtil {
             // 对NC原始代码进行操作
             switch (flag) {
                 case 0:
-                    StringBuilder tempStr = TransformTo6300.processNcCode(content);
-                    newStr = deleteLastDetection(tempStr);
+                    newStr = TransformTo6300.processNcCode(content);
+                    newStr = deleteLastDetection(newStr);
+                    newStr = addLastDetection(newStr);
                     break;
                 case 1:
                     newStr = TransformTo7000.processNcCode(content);
@@ -87,6 +88,7 @@ public class TransformBaseUtil {
             }
         }
     }
+
 
     static String getTime() {
         Date date = new Date();
@@ -318,12 +320,10 @@ public class TransformBaseUtil {
         ArrayList<Integer> indices = new ArrayList<>();
         for (int i = content.length - 1; i >= 0; i--) {
             if (content[i].startsWith("IF[#1004NE1]GOTO9000")) {
-                indices.add(i);
-                i--;
-                while (!content[i].startsWith("#991=-2")) {
+                do {
                     indices.add(i);
                     i--;
-                }
+                } while (!content[i].startsWith("#991=-2"));
                 indices.add(i);
                 break;
             }
@@ -335,6 +335,28 @@ public class TransformBaseUtil {
         }
         return sb;
     }
+
+    /**
+     * 对最后一个M01之前加上断刀检测代码
+     *
+     * @param str G代码
+     * @return {@link StringBuilder}
+     */
+    private static StringBuilder addLastDetection(StringBuilder str) {
+        String[] content = str.toString().split("\r\n");
+        for (int i = content.length - 1; i >= 0; i--) {
+            if (content[i].equals("M01")) {
+                content[i] = LAST_BROKEN_KNIFE_DETECTION;
+                break;
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String s : content) {
+            sb.append(s).append("\r\n");
+        }
+        return sb;
+    }
+
 
     /**
      * 处理D#51999相关逻辑 转换 H 数值

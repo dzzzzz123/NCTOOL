@@ -42,7 +42,15 @@ public class TransformTo6300 extends TransformBaseUtil {
                 newStr.append(WEAR_DETECTION.get(flag)).append("M01");
                 flag = "";
             } else if (content[i].startsWith("#610=")) {
-                String tempStr = content[i].startsWith("#610=2") ? "M98P8881(Z AXIS HEIGHT MEASUREMENT)" : "M98P8992(Z AXIS HEIGHT MEASUREMENT)";
+                String tempStr = "";
+                if (content[i].startsWith("#610=2")) {
+                    tempStr = "M98P8991(Z AXIS HEIGHT MEASUREMENT)";
+                } else if (content[i].startsWith("#610=3")) {
+                    tempStr = "M98P8992(Z AXIS HEIGHT MEASUREMENT)";
+                } else {
+                    newStr.append(content[i]).append("\r\n");
+                    continue;
+                }
                 while (true) {
                     if (content[i].equals("G65P8881")) {
                         newStr.append(tempStr).append("\r\n");
@@ -58,6 +66,4 @@ public class TransformTo6300 extends TransformBaseUtil {
         }
         return newStr;
     }
-
-
 }

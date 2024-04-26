@@ -23,6 +23,10 @@ public class TransformConstants implements ApplicationRunner {
     public static final String POST_PROCESSOR_IS_30 = "30";
     public static final String POST_PROCESSOR_IS_98 = "98";
     public static final String POST_PROCESSOR_IS_DEFAULT = "DEFAULT";
+    public static final String LAST_BROKEN_KNIFE_DETECTION = "G325H1\n" +
+            "G91G30Z0.\n" +
+            "G90GOX0.Y0.\n" +
+            "M01\n";
 
     public static final String NH6300_M_PROGCAT = "(PROGCAT MORI SEIKI NH6300)";
     public static final String NV7000_M_PROGCAT = "(PROGCAT MORI SEIKI NV7000)";
